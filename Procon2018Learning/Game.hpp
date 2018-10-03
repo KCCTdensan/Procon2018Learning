@@ -4,58 +4,59 @@
 #include <random>
 
 
-enum TeamNo {
+enum team_no
+{
 	None = -1,
 	Team_1P,
 	Team_2P,
 	NumTeams
 };
 
-enum IntentionActioin
+enum intention_action
 {
 	IA_MoveAgent,
 	IA_RemovePanel
 };
 
-class Panel
+class panel
 {
 	int Point;
 
 public:
-	Panel();
-	~Panel();
+	panel();
+	~panel();
 
 	void Init(int Point);
-	void MakeCard(TeamNo Team);
+	void MakeCard(team_no Team);
 	void RemoveCard();
 	int GetScore();
-	TeamNo GetState();
-	void SetSurrounded(bool IsSurrounded, TeamNo Team);
-	bool GetSurrounded(TeamNo Team);
+	team_no GetState();
+	void SetSurrounded(bool IsSurrounded, team_no Team);
+	bool GetSurrounded(team_no Team);
 };
 
-class Agent
+class agent
 {
-	TeamNo Team;
+	team_no Team;
 	int PositionX;
 	int PositionY;
 
 public:
-	Agent();
-	~Agent();
+	agent();
+	~agent();
 
-	void Init(int PositionX, int PositionY, TeamNo Team);
+	void Init(int PositionX, int PositionY, team_no Team);
 	void Move(int DeltaX, int DeltaY);
 };
 
-struct Intention
+struct intention
 {
 	int DeltaX;
 	int DeltaY;
-	IntentionActioin Action;
+	intention_action Action;
 };
 
-class Stage
+class stage
 {
 	const static int MaxTurn = 60;
 	const static int MaxX = 12;
@@ -63,8 +64,8 @@ class Stage
 	const static int NumAgents = 2;
 	int NumX;
 	int NumY;
-	Agent Agents[NumTeams][NumAgents];
-	Panel Panels[MaxY][MaxX];
+	agent Agents[NumTeams][NumAgents];
+	panel Panels[MaxY][MaxX];
 	int TileScore1P;
 	int TileScore2P;
 	int RegionScore1P;
@@ -75,9 +76,9 @@ class Stage
 	int PanelPointRandom();
 
 public:
-	Stage();
-	~Stage();
+	stage();
+	~stage();
 
-	void Action(Intention Intentions[]);
-	bool CanAction(Intention Intentions[]);
+	void Action(intention Intentions[]);
+	bool CanAction(intention Intentions[]);
 };

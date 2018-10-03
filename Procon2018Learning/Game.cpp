@@ -1,84 +1,84 @@
 #include "Game.hpp"
 
 
-Panel::Panel()
+panel::panel()
 {
 
 }
 
-Panel::~Panel()
+panel::~panel()
 {
 
 }
 
-void Panel::Init(int Point)
+void panel::Init(int Point)
 {
 	this->Point = Point;
 }
 
-void Panel::MakeCard(TeamNo Team)
+void panel::MakeCard(team_no Team)
 {
 
 }
 
-void Panel::RemoveCard()
+void panel::RemoveCard()
 {
 
 }
 
-int Panel::GetScore()
+int panel::GetScore()
 {
 	return 0;
 }
 
-TeamNo Panel::GetState()
+team_no panel::GetState()
 {
-	return TeamNo();
+	return team_no();
 }
 
-void Panel::SetSurrounded(bool IsSurrounded, TeamNo Team)
+void panel::SetSurrounded(bool IsSurrounded, team_no Team)
 {
 
 }
 
-bool Panel::GetSurrounded(TeamNo Team)
+bool panel::GetSurrounded(team_no Team)
 {
 	return false;
 }
 
 
-Agent::Agent()
+agent::agent()
 {
 
 }
 
-Agent::~Agent()
+agent::~agent()
 {
 
 }
 
-void Agent::Init(int PositionX, int PositionY, TeamNo Team)
+void agent::Init(int PositionX, int PositionY, team_no Team)
 {
 	this->PositionX = PositionX;
 	this->PositionY = PositionY;
 	this->Team = Team;
 }
 
-void Agent::Move(int DeltaX, int DeltaY)
+void agent::Move(int DeltaX, int DeltaY)
 {
 	PositionX += DeltaX;
 	PositionY += DeltaY;
 }
 
 
-int Stage::PanelPointRandom()
+int stage::PanelPointRandom()
 {
 	int abs = rand() % 17;
 	int Negative = rand() % 10;
 	return (Negative == 0) ? -abs : abs;
 }
 
-Stage::Stage()
+stage::stage()
 {
 	NumX = rand() % 10 + 3;
 	NumY = rand() % 10 + 3;
@@ -133,17 +133,17 @@ Stage::Stage()
 	}
 }
 
-Stage::~Stage()
+stage::~stage()
 {
 
 }
 
-void Stage::Action(Intention Intentions[])
+void stage::Action(intention Intentions[])
 {
 
 }
 
-bool Stage::CanAction(Intention Intentions[])
+bool stage::CanAction(intention Intentions[])
 {
 	return false;
 }
