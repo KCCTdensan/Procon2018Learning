@@ -1,84 +1,90 @@
 #include "Game.hpp"
 
 
-Panel::Panel()
+panel::panel()
 {
 
 }
 
-Panel::~Panel()
+panel::~panel()
 {
 
 }
 
-void Panel::Init(int Point)
+void panel::Init(int Point)
 {
 	this->Point = Point;
+	State = None;
 }
 
-void Panel::MakeCard(TeamNo Team)
+void panel::MakeCard(team_no Team)
+{
+	State = Team;
+}
+
+void panel::RemoveCard()
+{
+	State = None;
+}
+
+int panel::GetScore()
+{
+	return Point;
+}
+
+team_no panel::GetState()
+{
+	return State;
+}
+
+void panel::SetSurrounded(bool IsSurrounded, team_no Team)
+{
+	Surrounded[Team] = IsSurrounded;
+}
+
+bool panel::GetSurrounded(team_no Team)
+{
+	return Surrounded[Team];
+}
+
+
+agent::agent()
 {
 
 }
 
-void Panel::RemoveCard()
+agent::~agent()
 {
 
 }
 
-int Panel::GetScore()
+void agent::Init(int PositionX, int PositionY, team_no Team)
 {
-	return 0;
-}
-
-TeamNo Panel::GetState()
-{
-	return TeamNo();
-}
-
-void Panel::SetSurrounded(bool IsSurrounded, TeamNo Team)
-{
-
-}
-
-bool Panel::GetSurrounded(TeamNo Team)
-{
-	return false;
-}
-
-
-Agent::Agent()
-{
-
-}
-
-Agent::~Agent()
-{
-
-}
-
-void Agent::Init(int PositionX, int PositionY, TeamNo Team)
-{
-	this->PositionX = PositionX;
-	this->PositionY = PositionY;
+	Position.x = PositionX;
+	Position.y = PositionY;
 	this->Team = Team;
 }
 
-void Agent::Move(int DeltaX, int DeltaY)
+void agent::Move(int DeltaX, int DeltaY)
 {
-	PositionX += DeltaX;
-	PositionY += DeltaY;
+	Position.x += DeltaX;
+	Position.y += DeltaY;
+}
+
+position agent::GetPosition()
+{
+	return Position;
 }
 
 
-int Stage::PanelPointRandom()
+int stage::PanelPointRandom()
 {
 	int abs = rand() % 17;
 	int Negative = rand() % 10;
 	return (Negative == 0) ? -abs : abs;
 }
 
-void Stage::InitRandomStage()
+void stage::InitRandomStage()
 {
 	NumX = rand() % 10 + 3;
 	NumY = rand() % 10 + 3;
@@ -133,7 +139,7 @@ void Stage::InitRandomStage()
 	}
 }
 
-int Stage::UpdateRegionScore_Check(int x, int y, TeamNo Team, PanelCheck(&CheckedPanel)[NumTeams][MaxY][MaxX])
+int stage::UpdateRegionScore_Check(int x, int y, team_no Team, panel_check(&CheckedPanel)[NumTeams][MaxY][MaxX])
 {
 	if(Panels[y][x].GetState() == Team)
 	{
@@ -177,7 +183,7 @@ int Stage::UpdateRegionScore_Check(int x, int y, TeamNo Team, PanelCheck(&Checke
 	return 1;
 }
 
-void Stage::UpdateRegionScore_Set(int x, int y, TeamNo Team, bool Surrounded, PanelCheck(&CheckedPanel)[NumTeams][MaxY][MaxX])
+void stage::UpdateRegionScore_Set(int x, int y, team_no Team, bool Surrounded, panel_check(&CheckedPanel)[NumTeams][MaxY][MaxX])
 {
 	if(Panels[y][x].GetState() == Team)
 	{
@@ -207,9 +213,9 @@ void Stage::UpdateRegionScore_Set(int x, int y, TeamNo Team, bool Surrounded, Pa
 	}
 }
 
-void Stage::UpdateRegionScore()
+void stage::UpdateRegionScore()
 {
-	PanelCheck CheckedPanel[NumTeams][MaxY][MaxX] = {};
+	panel_check CheckedPanel[NumTeams][MaxY][MaxX] = {};
 	for(int t = 0; t < NumTeams; ++t)
 	{
 		for(int y = 0; y < NumY; ++y)
@@ -218,10 +224,10 @@ void Stage::UpdateRegionScore()
 			{
 				if(CheckedPanel[t][y][x] == 0)
 				{
-					int Ret = UpdateRegionScore_Check(x, y, (TeamNo)t, CheckedPanel);
+					int Ret = UpdateRegionScore_Check(x, y, (team_no)t, CheckedPanel);
 					if(Ret == 1)
 					{
-						UpdateRegionScore_Set(x, y, (TeamNo)t, true, CheckedPanel);
+						UpdateRegionScore_Set(x, y, (team_no)t, true, CheckedPanel);
 					}
 				}
 			}
@@ -229,7 +235,7 @@ void Stage::UpdateRegionScore()
 	}
 }
 
-void Stage::UpdateTileScore()
+void stage::UpdateTileScore()
 {
 	RegionScore1P = 0;
 	RegionScore2P = 0;
@@ -252,28 +258,28 @@ void Stage::UpdateTileScore()
 	}
 }
 
-Stage::Stage()
+stage::stage()
 {
 	InitRandomStage();
 }
 
-Stage::~Stage()
+stage::~stage()
 {
 
 }
 
-void Stage::UpdateScore()
+void stage::UpdateScore()
 {
 	UpdateRegionScore();
 	UpdateTileScore();
 }
 
-void Stage::Action(Intention Intentions[])
+void stage::Action(intention Intentions[])
 {
 
 }
 
-bool Stage::CanAction(Intention Intentions[])
+bool stage::CanAction(intention Intentions[])
 {
 	return false;
 }

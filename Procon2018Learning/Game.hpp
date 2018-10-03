@@ -1,10 +1,11 @@
 #pragma once
 
-#include<array>
+#include <array>
 #include <random>
+#include "General.hpp"
 
 
-enum TeamNo
+enum team_no
 {
 	None = -1,
 	Team_1P,
@@ -12,58 +13,60 @@ enum TeamNo
 	NumTeams
 };
 
-enum IntentionActioin
+enum intention_action
 {
 	IA_MoveAgent,
 	IA_RemovePanel
 };
 
-enum PanelCheck
+enum panel_check
 {
 	PC_Unchecked,
 	PC_Checked,
 	PC_Set
 };
 
-class Panel
+class panel
 {
 	int Point;
+	team_no State;
+	bool Surrounded[NumTeams];
 
 public:
-	Panel();
-	~Panel();
+	panel();
+	~panel();
 
 	void Init(int Point);
-	void MakeCard(TeamNo Team);
+	void MakeCard(team_no Team);
 	void RemoveCard();
 	int GetScore();
-	TeamNo GetState();
-	void SetSurrounded(bool IsSurrounded, TeamNo Team);
-	bool GetSurrounded(TeamNo Team);
+	team_no GetState();
+	void SetSurrounded(bool IsSurrounded, team_no Team);
+	bool GetSurrounded(team_no Team);
 };
 
-class Agent
+class agent
 {
-	TeamNo Team;
-	int PositionX;
-	int PositionY;
+	team_no Team;
+	position Position;
 
 public:
-	Agent();
-	~Agent();
+	agent();
+	~agent();
 
-	void Init(int PositionX, int PositionY, TeamNo Team);
+	void Init(int PositionX, int PositionY, team_no Team);
 	void Move(int DeltaX, int DeltaY);
+	position GetPosition();
 };
 
-struct Intention
+struct intention
 {
 	int DeltaX;
 	int DeltaY;
-	IntentionActioin Action;
+	intention_action Action;
 };
 
-class Stage
+class stage
 {
 	const static int MaxTurn = 60;
 	const static int MaxX = 12;
@@ -71,27 +74,27 @@ class Stage
 	const static int NumAgents = 2;
 	int NumX;
 	int NumY;
-	Agent Agents[NumTeams][NumAgents];
-	Panel Panels[MaxY][MaxX];
+	agent Agents[NumTeams][NumAgents];
+	panel Panels[MaxY][MaxX];
 	int TileScore1P;
 	int TileScore2P;
 	int RegionScore1P;
 	int RegionScore2P;
 
-	std::random_device rand;
+	std::random_device RandomDev;
 
 	int PanelPointRandom();
 	void InitRandomStage();
-	int UpdateRegionScore_Check(int x, int y, TeamNo Team, PanelCheck(&CheckedPanel)[NumTeams][MaxY][MaxX]);
-	void UpdateRegionScore_Set(int x, int y, TeamNo Team, bool Surrounded, PanelCheck(&CheckedPanel)[NumTeams][MaxY][MaxX]);
+	int UpdateRegionScore_Check(int x, int y, team_no Team, panel_check(&CheckedPanel)[NumTeams][MaxY][MaxX]);
+	void UpdateRegionScore_Set(int x, int y, team_no Team, bool Surrounded, panel_check(&CheckedPanel)[NumTeams][MaxY][MaxX]);
 	void UpdateRegionScore();
 	void UpdateTileScore();
 
 public:
-	Stage();
-	~Stage();
+	stage();
+	~stage();
 
 	void UpdateScore();
-	void Action(Intention Intentions[]);
-	bool CanAction(Intention Intentions[]);
+	void Action(intention Intentions[]);
+	bool CanAction(intention Intentions[]);
 };
