@@ -78,7 +78,7 @@ int Stage::PanelPointRandom()
 	return (Negative == 0) ? -abs : abs;
 }
 
-Stage::Stage()
+void Stage::InitRandomStage()
 {
 	NumX = rand() % 10 + 3;
 	NumY = rand() % 10 + 3;
@@ -87,9 +87,9 @@ Stage::Stage()
 	RegionScore1P = 0;
 	RegionScore2P = 0;
 
-	for (int y = 0; y < NumY / 2; ++y)
+	for(int y = 0; y < NumY / 2; ++y)
 	{
-		for (int x = 0; x < NumX / 2; ++x)
+		for(int x = 0; x < NumX / 2; ++x)
 		{
 			Panels[y][x].Init(PanelPointRandom());
 		}
@@ -99,11 +99,11 @@ Stage::Stage()
 	int AgentX = rand() % (NumX / 2);
 	int AgentY = rand() % (NumY / 2);
 
-	if (CopyType == 0)
+	if(CopyType == 0)
 	{
-		for (int y = 0; y < NumY; ++y)
+		for(int y = 0; y < NumY; ++y)
 		{
-			for (int x = 0; x < NumX / 2; ++x)
+			for(int x = 0; x < NumX / 2; ++x)
 			{
 				int xInv = NumX - x - 1;
 				int Score = Panels[y][x].GetScore();
@@ -117,9 +117,9 @@ Stage::Stage()
 	}
 	else
 	{
-		for (int y = 0; y < NumY / 2; ++y)
+		for(int y = 0; y < NumY / 2; ++y)
 		{
-			for (int x = 0; x < NumX; ++x)
+			for(int x = 0; x < NumX; ++x)
 			{
 				int yInv = NumY - y - 1;
 				int Score = Panels[y][x].GetScore();
@@ -133,9 +133,139 @@ Stage::Stage()
 	}
 }
 
+int Stage::UpdateRegionScore_Check(int x, int y, TeamNo Team, PanelCheck(&CheckedPanel)[NumTeams][MaxY][MaxX])
+{
+	if(Panels[y][x].GetState() == Team)
+	{
+		return 1;
+	}
+	if(CheckedPanel[Team][y][x] != PC_Unchecked)
+	{
+		return -1;
+	}
+	CheckedPanel[Team][y][x] = PC_Checked;
+	if((x == 0) || (x == NumX - 1) || (y == 0) || (y == NumY - 1))
+	{
+		UpdateRegionScore_Set(x, y, Team, false, CheckedPanel);
+		return 0;
+	}
+
+	int l = UpdateRegionScore_Check(x - 1, y, Team, CheckedPanel);
+	if(l == 0)
+	{
+		return 0;
+	}
+	int t = UpdateRegionScore_Check(x, y + 1, Team, CheckedPanel);
+	if(t == 0)
+	{
+		return 0;
+	}
+	int r = UpdateRegionScore_Check(x + 1, y, Team, CheckedPanel);
+	if(r == 0)
+	{
+		return 0;
+	}
+	int b = UpdateRegionScore_Check(x, y - 1, Team, CheckedPanel);
+	if(b == 0)
+	{
+		return 0;
+	}
+	if((l == -1 && t == -1) && (r == -1 && b == -1))
+	{
+		return -1;
+	}
+	return 1;
+}
+
+void Stage::UpdateRegionScore_Set(int x, int y, TeamNo Team, bool Surrounded, PanelCheck(&CheckedPanel)[NumTeams][MaxY][MaxX])
+{
+	if(Panels[y][x].GetState() == Team)
+	{
+		Panels[y][x].SetSurrounded(false, Team);
+	}
+	if(CheckedPanel[Team][y][x] == PC_Set)
+	{
+		return;
+	}
+	CheckedPanel[Team][y][x] = PC_Set;
+	Panels[y][x].SetSurrounded(Surrounded, Team);
+	if(x > 0)
+	{
+		UpdateRegionScore_Set(x - 1, y, Team, Surrounded, CheckedPanel);
+	}
+	if(y > 0)
+	{
+		UpdateRegionScore_Set(x, y - 1, Team, Surrounded, CheckedPanel);
+	}
+	if(x < NumX - 1)
+	{
+		UpdateRegionScore_Set(x + 1, y, Team, Surrounded, CheckedPanel);
+	}
+	if(y < NumY - 1)
+	{
+		UpdateRegionScore_Set(x, y + 1, Team, Surrounded, CheckedPanel);
+	}
+}
+
+void Stage::UpdateRegionScore()
+{
+	PanelCheck CheckedPanel[NumTeams][MaxY][MaxX] = {};
+	for(int t = 0; t < NumTeams; ++t)
+	{
+		for(int y = 0; y < NumY; ++y)
+		{
+			for(int x = 0; x < NumX; ++x)
+			{
+				if(CheckedPanel[t][y][x] == 0)
+				{
+					int Ret = UpdateRegionScore_Check(x, y, (TeamNo)t, CheckedPanel);
+					if(Ret == 1)
+					{
+						UpdateRegionScore_Set(x, y, (TeamNo)t, true, CheckedPanel);
+					}
+				}
+			}
+		}
+	}
+}
+
+void Stage::UpdateTileScore()
+{
+	RegionScore1P = 0;
+	RegionScore2P = 0;
+	for(int y = 0; y < NumY; ++y)
+	{
+		for(int x = 0; x < NumX; ++x)
+		{
+			int Score = Panels[y][x].GetScore();
+			switch(Panels[y][x].GetState())
+			{
+			case Team_1P:
+				RegionScore1P += Score;
+				break;
+
+			case Team_2P:
+				RegionScore2P += Score;
+				break;
+			}
+		}
+	}
+}
+
+Stage::Stage()
+{
+	InitRandomStage();
+}
+
 Stage::~Stage()
 {
 
+}
+
+void Stage::UpdateScore()
+{
+	UpdateRegionScore();
+	UpdateTileScore();
 }
 
 void Stage::Action(Intention Intentions[])

@@ -4,7 +4,8 @@
 #include <random>
 
 
-enum TeamNo {
+enum TeamNo
+{
 	None = -1,
 	Team_1P,
 	Team_2P,
@@ -15,6 +16,13 @@ enum IntentionActioin
 {
 	IA_MoveAgent,
 	IA_RemovePanel
+};
+
+enum PanelCheck
+{
+	PC_Unchecked,
+	PC_Checked,
+	PC_Set
 };
 
 class Panel
@@ -73,11 +81,17 @@ class Stage
 	std::random_device rand;
 
 	int PanelPointRandom();
+	void InitRandomStage();
+	int UpdateRegionScore_Check(int x, int y, TeamNo Team, PanelCheck(&CheckedPanel)[NumTeams][MaxY][MaxX]);
+	void UpdateRegionScore_Set(int x, int y, TeamNo Team, bool Surrounded, PanelCheck(&CheckedPanel)[NumTeams][MaxY][MaxX]);
+	void UpdateRegionScore();
+	void UpdateTileScore();
 
 public:
 	Stage();
 	~Stage();
 
+	void UpdateScore();
 	void Action(Intention Intentions[]);
 	bool CanAction(Intention Intentions[]);
 };
