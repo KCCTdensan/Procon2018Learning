@@ -3,12 +3,12 @@
 #include "Game.hpp"
 
 
-class BattleField
+class battle_field
 {
 	stage Stage;
 
 public:
-	BattleField();
-	~BattleField();
+	battle_field();
+	~battle_field();
 	void Battle(int NumTurn);
 };

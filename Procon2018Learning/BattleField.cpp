@@ -1,15 +1,15 @@
 #include "BattleField.hpp"
 
 
-BattleField::BattleField()
+battle_field::battle_field()
 {
 }
 
-BattleField::~BattleField()
+battle_field::~battle_field()
 {
 }
 
-void BattleField::Battle(int NumTurn)
+void battle_field::Battle(int NumTurn)
 {
 	for (int i = 0; i < NumTurn; ++i)
 	{
