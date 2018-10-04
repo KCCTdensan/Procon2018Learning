@@ -13,4 +13,5 @@ Stage Stage;
 public:
 	Node(Stage s);
 	void Search();
+	bool rollout();
 };

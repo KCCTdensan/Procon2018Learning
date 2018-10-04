@@ -1,4 +1,5 @@
 #include<iostream>
+#include<random>
 #include"Search.hpp"
 
 
@@ -92,4 +93,20 @@ void Node::Search(Stage stage) {
 			}
 		}
 	}
+}
+bool Node::rollout(Stage s) {
+	std::random_device rand;
+	Intention intentionA;
+	Intention intentionB;
+	Intention intentinoC;
+	Intention intentionD;
+	intentionA.DeltaX = rand()%3 -1;
+	intentionA.DeltaY = rand()%3 -1;
+	intentionB.DeltaX = rand() % 3 - 1;
+	intentionB.DeltaY = rand() % 3 - 1;
+	intentionC.DeltaX = rand() % 3 - 1;
+	intentionC.DeltaY = rand() % 3 - 1;
+	intentionD.DeltaX = rand() % 3 - 1;
+	intentionD.DeltaY = rand() % 3 - 1;
+
 }
