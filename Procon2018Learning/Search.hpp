@@ -12,8 +12,13 @@ class node
 	team_no Team;
 	node *Parent;
 	std::vector<node*> Child;
+	action_id Intention1;
+	action_id Intention2;
+
+	bool CanMove(action_id No, position Position);
 
 public:
-	node(stage &Stage);
+	node(node *Parent, stage &Stage);
+	~node();
 	void Expansion(team_no Team);
 };

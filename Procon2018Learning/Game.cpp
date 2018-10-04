@@ -14,7 +14,7 @@ panel::~panel()
 void panel::Init(int Point)
 {
 	this->Point = Point;
-	State = None;
+	State = Neutral;
 }
 
 void panel::MakeCard(team_no Team)
@@ -24,7 +24,7 @@ void panel::MakeCard(team_no Team)
 
 void panel::RemoveCard()
 {
-	State = None;
+	State = Neutral;
 }
 
 int panel::GetScore()
@@ -282,4 +282,19 @@ void stage::Action(intention Intentions[])
 bool stage::CanAction(intention Intentions[])
 {
 	return false;
+}
+
+int stage::GetNumX()
+{
+	return NumX;
+}
+
+int stage::GetNumY()
+{
+	return NumY;
+}
+
+agent* stage::GetAgent(team_no Team, int AgentNo)
+{
+	return &Agents[Team][AgentNo];
 }

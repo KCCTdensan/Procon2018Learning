@@ -1,13 +1,12 @@
 #pragma once
 
-#include <array>
 #include <random>
 #include "General.hpp"
 
 
 enum team_no
 {
-	None = -1,
+	Neutral = -1,
 	Team_1P,
 	Team_2P,
 	NumTeams
@@ -17,6 +16,28 @@ enum intention_action
 {
 	IA_MoveAgent,
 	IA_RemovePanel
+};
+
+enum action_id
+{
+	None = -1,
+	Stay,
+	Move_TopLeft,
+	Move_Top,
+	Move_TopRight,
+	Move_Left,
+	Move_Right,
+	Move_BottomLeft,
+	Move_Bottom,
+	Move_BottomRight,
+	Remove_TopLeft,
+	Remove_Top,
+	Remove_TopRight,
+	Remove_Left,
+	Remove_Right,
+	Remove_BottomLeft,
+	Remove_Bottom,
+	Remove_BottomRight
 };
 
 enum panel_check
@@ -72,6 +93,7 @@ class stage
 	const static int MaxX = 12;
 	const static int MaxY = 12;
 	const static int NumAgents = 2;
+	static std::random_device RandomDev;
 	int NumX;
 	int NumY;
 	agent Agents[NumTeams][NumAgents];
@@ -80,8 +102,6 @@ class stage
 	int TileScore2P;
 	int RegionScore1P;
 	int RegionScore2P;
-
-	std::random_device RandomDev;
 
 	int PanelPointRandom();
 	void InitRandomStage();
@@ -97,4 +117,7 @@ public:
 	void UpdateScore();
 	void Action(intention Intentions[]);
 	bool CanAction(intention Intentions[]);
+	int GetNumX();
+	int GetNumY();
+	agent* GetAgent(team_no Team, int AgentNo);
 };
