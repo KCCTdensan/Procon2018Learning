@@ -1,7 +1,8 @@
 #include<iostream>
 #include"Search.hpp"
 
-int Search(Stage stage){
+
+/*int Search(stage stage){
 	for (i = 0;i < 8;i++){
 		for (j = 0;j < 8;j++){
 			for (int k = 0; k < 4;k++){
@@ -77,7 +78,7 @@ int Search(Stage stage){
 		}
 	}
 	node Node();
-}
+}*/
 
 int Selection() {
 	
@@ -89,6 +90,11 @@ void Backup() {
 
 }
 
-Node::Node(Stage s){
-	this->Stage = s;
+node::node(stage &Stage){
+	//this->Stage = Stage;
+}
+
+void node::Expansion(team_no Team)
+{
+
 }

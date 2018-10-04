@@ -1,10 +1,19 @@
 #pragma once
-#include"Game.hpp"
 
-class Node{
-Stage Stage;
+#include "Game.hpp"
+#include <vector>
+
+
+class node
+{
+	stage Stage;
 	int Q;
 	int N;
-	Node* childnode;
-	Node(Stage s);
+	team_no Team;
+	node *Parent;
+	std::vector<node*> Child;
+
+public:
+	node(stage &Stage);
+	void Expansion(team_no Team);
 };
