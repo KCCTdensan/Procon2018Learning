@@ -12,6 +12,8 @@ Stage Stage;
 
 public:
 	Node(Stage s);
-	void Search();
-	bool rollout();
+	void Search(Stage s);
+	bool rollout(Stage s);
+	void Selection(){}
+	void Evaluation(){}
 };

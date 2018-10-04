@@ -4,13 +4,10 @@
 
 
 
-int Selection() {
+void Node::Selection(){
 	
 }
-int Evalution() {
-
-}
-void Backup() {
+void Node::Evalution(){
 
 }
 
@@ -94,19 +91,21 @@ void Node::Search(Stage stage) {
 		}
 	}
 }
-bool Node::rollout(Stage s) {
-	std::random_device rand;
-	Intention intentionA;
-	Intention intentionB;
-	Intention intentinoC;
-	Intention intentionD;
-	intentionA.DeltaX = rand()%3 -1;
-	intentionA.DeltaY = rand()%3 -1;
-	intentionB.DeltaX = rand() % 3 - 1;
-	intentionB.DeltaY = rand() % 3 - 1;
-	intentionC.DeltaX = rand() % 3 - 1;
-	intentionC.DeltaY = rand() % 3 - 1;
-	intentionD.DeltaX = rand() % 3 - 1;
-	intentionD.DeltaY = rand() % 3 - 1;
-
+bool Node::rollout(Stage s,int turn) {
+	for (int i = turn; i > 0;i--) {
+		std::random_device rand;
+		Intention intentionA;
+		Intention intentionB;
+		Intention intentinoC;
+		Intention intentionD;
+		intentionA.DeltaX = rand() % 3 - 1;
+		intentionA.DeltaY = rand() % 3 - 1;
+		intentionB.DeltaX = rand() % 3 - 1;
+		intentionB.DeltaY = rand() % 3 - 1;
+		intentionC.DeltaX = rand() % 3 - 1;
+		intentionC.DeltaY = rand() % 3 - 1;
+		intentionD.DeltaX = rand() % 3 - 1;
+		intentionD.DeltaY = rand() % 3 - 1;
+		s.Action({ intentionA,intentionB,intentinoC,intentionD });
+	}
 }
