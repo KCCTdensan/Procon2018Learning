@@ -20,5 +20,7 @@ class node
 public:
 	node(node *Parent, stage &Stage);
 	~node();
+	void Selection();
 	void Expansion(team_no Team);
+	void Evaluation();
 };

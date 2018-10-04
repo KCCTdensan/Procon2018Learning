@@ -104,6 +104,7 @@ void node::Expansion(team_no Team)
 				NewNode->Intention1 = None;
 				NewNode->Intention2 = None;
 			}
+			NewNode->Team = (Team == Team_1P) ? Team_2P : Team_1P;
 			Child.push_back(NewNode);
 		}
 	}
