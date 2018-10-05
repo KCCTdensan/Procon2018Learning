@@ -23,4 +23,5 @@ public:
 	void Selection();
 	void Expansion(team_no Team);
 	void Evaluation();
+	bool IsLeafNode();
 };

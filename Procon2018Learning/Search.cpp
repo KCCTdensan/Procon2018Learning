@@ -109,3 +109,8 @@ void node::Expansion(team_no Team)
 		}
 	}
 }
+
+bool node::IsLeafNode()
+{
+	return Child.size() == 0;
+}
