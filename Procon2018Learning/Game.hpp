@@ -96,6 +96,7 @@ class stage
 	static std::random_device RandomDev;
 	int NumX;
 	int NumY;
+	int CntTurn;
 	agent Agents[NumTeams][NumAgents];
 	panel Panels[MaxY][MaxX];
 	int TileScore1P;
@@ -119,5 +120,6 @@ public:
 	bool CanAction(intention Intentions[]);
 	int GetNumX();
 	int GetNumY();
+	int GetCntTurn();
 	agent* GetAgent(team_no Team, int AgentNo);
 };

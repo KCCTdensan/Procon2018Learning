@@ -88,6 +88,7 @@ void stage::InitRandomStage()
 {
 	NumX = rand() % 10 + 3;
 	NumY = rand() % 10 + 3;
+	CntTurn = 0;
 	TileScore1P = 0;
 	TileScore2P = 0;
 	RegionScore1P = 0;
@@ -292,6 +293,11 @@ int stage::GetNumX()
 int stage::GetNumY()
 {
 	return NumY;
+}
+
+int stage::GetCntTurn()
+{
+	return CntTurn;
 }
 
 agent* stage::GetAgent(team_no Team, int AgentNo)
