@@ -1,4 +1,5 @@
 #include "Game.hpp"
+#include <iostream>
 
 
 panel::panel()
@@ -285,6 +286,12 @@ bool stage::CanAction(intention Intentions[])
 	return false;
 }
 
+bool stage::OnPanel(intention Intention)
+{
+	return Panels[Intention.DeltaX][Intention.DeltaY].GetState == Team_1P ||
+		Panels[Intention.DeltaX][Intention.DeltaY].GetState == Team_2P;
+}
+
 int stage::GetNumX()
 {
 	return NumX;
@@ -300,33 +307,27 @@ int stage::GetCntTurn()
 	return CntTurn;
 }
 
+int stage::GetScore1P()
+{
+	return TileScore1P + RegionScore1P;
+}
+
+int stage::GetScore2P()
+{
+	return TileScore2P + RegionScore2P;
+}
+
 agent* stage::GetAgent(team_no Team, int AgentNo)
 {
 	return &Agents[Team][AgentNo];
 }
 
-bool stage::OnPanel(Intention _intention)
+void stage::Print()
 {
-	return Panels[_intention.DeltaX][_intention.DeltaY].GetState == Team_1P ||
-		Panels[_intention.DeltaX][_intention.DeltaY].GetState == Team_2P);
-}
-
-int stage::getScore1P()
-{
-	return RegionScore1P + TileScore1P;
-}
-
-int stage::getScore2P()
-{
-	return RegionScore2P + TileScore2P;
-}
-
-void stage::PrintStage()
-{
-	using namespase std;
-	for (int y = 0; y < MaxY; y++)
+	using namespace std;
+	for(int y = 0; y < MaxY; y++)
 	{
-		for (int x = 0; x < MaxX; x++)cout << Panels[y][x].GetScore << " ";
+		for(int x = 0; x < MaxX; x++)cout << Panels[y][x].GetScore << " ";
 		cout << endl;
 	}
 }

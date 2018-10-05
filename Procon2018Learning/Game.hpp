@@ -118,8 +118,12 @@ public:
 	void UpdateScore();
 	void Action(intention Intentions[]);
 	bool CanAction(intention Intentions[]);
+	bool OnPanel(intention Intention);
 	int GetNumX();
 	int GetNumY();
 	int GetCntTurn();
+	int GetScore1P();
+	int GetScore2P();
 	agent* GetAgent(team_no Team, int AgentNo);
+	void Print();
 };
