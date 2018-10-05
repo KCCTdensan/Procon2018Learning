@@ -24,4 +24,6 @@ public:
 	void Expansion(team_no Team);
 	void Evaluation();
 	bool IsLeafNode();
+	void Search(Stage s);
+	bool rollout(Stage s);
 };
