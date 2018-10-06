@@ -2,6 +2,7 @@
 
 #include "Game.hpp"
 #include <vector>
+#include <random>
 
 
 class node
@@ -14,17 +15,18 @@ class node
 	std::vector<node*> Child;
 	action_id Intention1;
 	action_id Intention2;
-	static std::random_device rand;
+	std::random_device rand;
 
-	bool CanMove(action_id No, position Position);
+	
 
 public:
 	node(node *Parent, stage &Stage);
 	~node();
+	bool CanMove(action_id No, position Position);
 	void Search(stage Stage);
 	void Selection();
 	void Expansion(team_no Team);
 	void Evaluation();
-	bool Rollout(stage Stage, int NumTurn);
+	int Rollout(stage Stage, int NumTurn);
 	bool IsLeafNode();
 };

@@ -95,14 +95,6 @@ void stage::InitRandomStage()
 	RegionScore1P = 0;
 	RegionScore2P = 0;
 
-	for(int y = 0; y < NumY / 2; ++y)
-	{
-		for(int x = 0; x < NumX / 2; ++x)
-		{
-			Panels[y][x].Init(PanelPointRandom());
-		}
-	}
-
 	int CopyType = rand() % 2;
 	int AgentX = rand() % (NumX / 2);
 	int AgentY = rand() % (NumY / 2);
@@ -113,6 +105,7 @@ void stage::InitRandomStage()
 		{
 			for(int x = 0; x < NumX / 2; ++x)
 			{
+				Panels[y][x].Init(PanelPointRandom());
 				int xInv = NumX - x - 1;
 				int Score = Panels[y][x].GetScore();
 				Panels[y][xInv].Init(Score);
@@ -129,6 +122,7 @@ void stage::InitRandomStage()
 		{
 			for(int x = 0; x < NumX; ++x)
 			{
+				Panels[y][x].Init(PanelPointRandom());
 				int yInv = NumY - y - 1;
 				int Score = Panels[y][x].GetScore();
 				Panels[yInv][x].Init(Score);
@@ -288,8 +282,7 @@ bool stage::CanAction(intention Intentions[])
 
 bool stage::OnPanel(intention Intention)
 {
-	return Panels[Intention.DeltaX][Intention.DeltaY].GetState == Team_1P ||
-		Panels[Intention.DeltaX][Intention.DeltaY].GetState == Team_2P;
+	return (Panels[Intention.DeltaX][Intention.DeltaY].GetState() == 0) || (Panels[Intention.DeltaX][Intention.DeltaY].GetState() == 0);
 }
 
 int stage::GetNumX()
@@ -322,12 +315,13 @@ agent* stage::GetAgent(team_no Team, int AgentNo)
 	return &Agents[Team][AgentNo];
 }
 
-void stage::Print()
+void stage::PrintStage()
 {
 	using namespace std;
-	for(int y = 0; y < MaxY; y++)
+	cout << NumY << "~" << NumX << endl;
+	for(int y = 0; y < NumY; y++)
 	{
-		for(int x = 0; x < MaxX; x++)cout << Panels[y][x].GetScore << " ";
+		for(int x = 0; x < NumX; x++)cout << Panels[y][x].GetScore() << " ";
 		cout << endl;
 	}
 }

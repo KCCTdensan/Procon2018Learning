@@ -64,7 +64,7 @@ node::~node()
 	Child.clear();
 }
 
-void node::Search(stage stage)
+void node::Search(stage Stage)
 {
 	for(int i = 0; i < 8; i++)
 	{
@@ -200,7 +200,7 @@ bool node::IsLeafNode()
 	return Child.size() == 0;
 }
 
-bool node::Rollout(stage Stage, int turn)
+int node::Rollout(stage Stage, int turn)
 {
 	for(int i = turn; i > 0; i--)
 	{
@@ -212,4 +212,18 @@ bool node::Rollout(stage Stage, int turn)
 		}
 		Stage.Action(Intentions);
 	}
+
+	if (Stage.GetScore1P() > Stage.GetScore2P())
+	{
+		return 1;
+	}
+	else if (Stage.GetScore1P() == Stage.GetScore2P())
+	{
+		return 0;
+	}
+	else
+	{
+		return - 1;
+	}
+	
 }
