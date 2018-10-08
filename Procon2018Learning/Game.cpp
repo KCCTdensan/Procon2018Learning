@@ -318,7 +318,6 @@ agent* stage::GetAgent(team_no Team, int AgentNo)
 void stage::PrintStage()
 {
 	using namespace std;
-	cout << NumY << "~" << NumX << endl;
 	for(int y = 0; y < NumY; y++)
 	{
 		for(int x = 0; x < NumX; x++)cout << Panels[y][x].GetScore() << " ";
