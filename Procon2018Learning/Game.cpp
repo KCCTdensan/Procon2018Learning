@@ -2,6 +2,76 @@
 #include <iostream>
 
 
+intention::intention(action_id ID)
+{
+	switch(ID)
+	{
+	case Move_TopLeft:
+	case Remove_TopLeft:
+	case Move_Top:
+	case Remove_Top:
+	case Move_TopRight:
+	case Remove_TopRight:
+		DeltaY = -1;
+		break;
+
+	case Move_BottomLeft:
+	case Remove_BottomLeft:
+	case Move_Bottom:
+	case Remove_Bottom:
+	case Move_BottomRight:
+	case Remove_BottomRight:
+		DeltaY = 1;
+		break;
+
+	default:
+		DeltaY = 0;
+		break;
+	}
+	switch(ID)
+	{
+	case Move_TopLeft:
+	case Remove_TopLeft:
+	case Move_Left:
+	case Remove_Left:
+	case Move_BottomLeft:
+	case Remove_BottomLeft:
+		DeltaX = -1;
+		break;
+
+	case Move_TopRight:
+	case Remove_TopRight:
+	case Move_Right:
+	case Remove_Right:
+	case Move_BottomRight:
+	case Remove_BottomRight:
+		DeltaX = 1;
+		break;
+
+	default:
+		DeltaX = 0;
+		break;
+	}
+	switch(ID)
+	{
+	case Remove_TopLeft:
+	case Remove_Top:
+	case Remove_TopRight:
+	case Remove_Left:
+	case Remove_Right:
+	case Remove_BottomLeft:
+	case Remove_Bottom:
+	case Remove_BottomRight:
+		Action = IA_RemovePanel;
+		break;
+
+	default:
+		Action = IA_MoveAgent;
+		break;
+	}
+}
+
+
 position position::operator+=(intention Intention)
 {
 	if(Intention.Action == IA_RemovePanel)
@@ -46,6 +116,7 @@ position position::operator+=(action_id ActionID)
 	return *this;
 }
 
+
 position operator+(position Position, intention Intention)
 {
 	return position(Position) += Intention;
@@ -65,6 +136,7 @@ bool operator!=(position Position1, position Position2)
 {
 	return !(Position1 == Position2);
 }
+
 
 panel::panel()
 {
@@ -276,18 +348,18 @@ void stage::UpdateRegionScore_Set(int x, int y, team_no Team, bool Surrounded, p
 void stage::UpdateRegionScore()
 {
 	panel_check CheckedPanel[NumTeams][MaxY][MaxX] = {};
-	for(int t = 0; t < NumTeams; ++t)
+	for(team_no t = 0; t < NumTeams; ++t)
 	{
-		for(int y = 0; y < NumY; ++y)
+		for(char y = 0; y < NumY; ++y)
 		{
-			for(int x = 0; x < NumX; ++x)
+			for(char x = 0; x < NumX; ++x)
 			{
 				if(CheckedPanel[t][y][x] == 0)
 				{
-					int Ret = UpdateRegionScore_Check(x, y, (team_no)t, CheckedPanel);
+					int Ret = UpdateRegionScore_Check(x, y, t, CheckedPanel);
 					if(Ret == 1)
 					{
-						UpdateRegionScore_Set(x, y, (team_no)t, true, CheckedPanel);
+						UpdateRegionScore_Set(x, y, t, true, CheckedPanel);
 					}
 				}
 			}
@@ -336,22 +408,36 @@ void stage::UpdateScore()
 
 void stage::Action(intention(&Intentions)[NumTeams][NumAgents])
 {
+	for(team_no t = 0; t < NumTeams; ++t)
+	{
+		for(char a = 0; a < NumAgents; ++a)
+		{
 
+		}
+	}
 }
 
 void stage::CanAction(intention(&Intentions)[NumTeams][NumAgents], bool(&Result)[NumTeams][NumAgents])
 {
+	char ResultTmp[NumTeams][NumAgents];
 	position NextPositions[NumTeams][NumAgents];
-	bool Dest[MaxY][MaxX] = {false};
-	for(int i = 0; i < NumTeams; ++i)
+	for(team_no t = 0; t < NumTeams; ++t)
 	{
-		for(int j = 0; j < NumAgents; ++j)
+		for(char a = 0; a < NumAgents; ++a)
 		{
-			NextPositions[i][j] = Agents[i][j].GetPosition() + Intentions[i][j];
-			Result[i][j] = CanActionOne(Agents[i][j].GetPosition(), Intentions[i][j]);
+			ResultTmp[t][a] = CanActionOne(Agents[t][a].GetPosition(), Intentions[t][a]);
+			if(ResultTmp[t][a] != -1)
+			{
+				NextPositions[t][a] = Agents[t][a].GetPosition();
+			}
+			else
+			{
+				NextPositions[t][a] = Agents[t][a].GetPosition() + Intentions[t][a];
+				Result[t][a] = true;
+			}
 		}
 	}
-	//
+	//Ä‹A?
 }
 
 bool stage::CanAction(intention(&Intentions)[NumAgents])
@@ -365,14 +451,29 @@ bool stage::CanAction(intention(&Intentions)[NumAgents])
 
 bool stage::CanAction(intention(&Intentions)[NumTeams * NumAgents])
 {
-	//
+	for(team_no t = 0; t < NumTeams; ++t)
+	{
+		for(char a = 0; a < NumAgents; ++a)
+		{
+			if(CanActionOne(Agents[t][a].GetPosition(), Intentions[(t + 1) * (a + 1) - 1]) == 0)
+			{
+				return false;
+			}
+		}
+	}
+
+	return true;
 }
 
-bool stage::CanActionOne(position Position, intention Intention)
+char stage::CanActionOne(position Position, intention Intention)
 {
+	if(Intention.DeltaX == 0 && Intention.DeltaY == 0)
+	{
+		return 1;
+	}
 	Intention.Action = IA_MoveAgent;
 	Position += Intention;
-	return (0 <= Position.x && Position.x < NumX) && (0 <= Position.y && Position.y < NumY);
+	return (0 <= Position.x && Position.x < NumX) && (0 <= Position.y && Position.y < NumY) ? -1 : 0;
 }
 
 int stage::GetNumX()

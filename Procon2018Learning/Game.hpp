@@ -3,7 +3,11 @@
 #include <random>
 
 
-enum team_no
+typedef char team_no;
+typedef char intention_action;
+typedef char action_id;
+
+enum
 {
 	Neutral = -1,
 	Team_1P,
@@ -11,13 +15,13 @@ enum team_no
 	NumTeams
 };
 
-enum intention_action
+enum
 {
 	IA_MoveAgent,
 	IA_RemovePanel
 };
 
-enum action_id
+enum
 {
 	None = -1,
 	Stay,
@@ -39,18 +43,12 @@ enum action_id
 	Remove_BottomRight
 };
 
-enum panel_check
-{
-	PC_Unchecked,
-	PC_Checked,
-	PC_Set
-};
-
 struct intention
 {
 	int DeltaX;
 	int DeltaY;
 	intention_action Action;
+	intention(action_id);
 };
 
 struct position
@@ -101,6 +99,13 @@ public:
 
 class stage
 {
+	typedef char panel_check;
+	enum
+	{
+		PC_Unchecked,
+		PC_Checked,
+		PC_Set
+	};
 	const static int MaxTurn = 60;
 	const static int MaxX = 12;
 	const static int MaxY = 12;
@@ -132,7 +137,7 @@ public:
 	void CanAction(intention(&Intentions)[NumTeams][NumAgents], bool (&Result)[NumTeams][NumAgents]);
 	bool CanAction(intention(&Intentions)[NumAgents]);
 	bool CanAction(intention(&Intentions)[NumTeams * NumAgents]);
-	bool CanActionOne(position Position, intention Intention);
+	char CanActionOne(position Position, intention Intention);
 	int GetNumX();
 	int GetNumY();
 	int GetCntTurn();
