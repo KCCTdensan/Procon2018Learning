@@ -334,11 +334,13 @@ void stage::UpdateScore()
 	UpdateTileScore();
 }
 
+//[2][2]の配列用Action
 void stage::Action(intention(&Intentions)[NumTeams][NumAgents])
 {
 
 }
 
+//[2][2]の配列用CanAction、両チーム同時判定
 void stage::CanAction(intention(&Intentions)[NumTeams][NumAgents], bool(&Result)[NumTeams][NumAgents])
 {
 	position NextPositions[NumTeams][NumAgents];
@@ -351,9 +353,9 @@ void stage::CanAction(intention(&Intentions)[NumTeams][NumAgents], bool(&Result)
 			Result[i][j] = CanActionOne(Agents[i][j].GetPosition(), Intentions[i][j]);
 		}
 	}
-	//
 }
 
+//[2]の配列用CanAction、味方チームのみ判定
 bool stage::CanAction(intention(&Intentions)[NumAgents])
 {
 	if(!(CanActionOne(Agents[Team_1P][0].GetPosition(), Intentions[0]) && CanActionOne(Agents[Team_1P][1].GetPosition(), Intentions[1])))
@@ -363,11 +365,7 @@ bool stage::CanAction(intention(&Intentions)[NumAgents])
 	return Agents[Team_1P][0].GetPosition() + Intentions[0] != Agents[Team_1P][1].GetPosition() + Intentions[1];
 }
 
-bool stage::CanAction(intention(&Intentions)[NumTeams * NumAgents])
-{
-	//
-}
-
+//[2]の配列用CanAction、味方チームのみ判定???????
 bool stage::CanActionOne(position Position, intention Intention)
 {
 	Intention.Action = IA_MoveAgent;

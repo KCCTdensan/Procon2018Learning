@@ -74,21 +74,23 @@ int node::Rollout(stage Stage, int turn)//ƒ‰ƒ“ƒ_ƒ€‚ÉŽè‚ðÅŒã‚Ü‚Å‘Å‚Á‚ÄŸ”s‚ð•Ô‚·
 {
 	for(int i = turn; i > 0; i--)
 	{
-		intention Intentions[4];
+		intention Intentions[2][2];
+		bool results[2][2];
 		do{
 			for (int i = 0; i < 4; ++i)
 			{
-				Intentions[i].DeltaX = rand() % 3 - 1;
-				Intentions[i].DeltaY = rand() % 3 - 1;
+				Intentions[i / 2][i % 2].DeltaX = rand() % 3 - 1;
+				Intentions[i / 2][i % 2].DeltaY = rand() % 3 - 1;
 				if (rand() % 2)
 				{
-					Intentions[i].Action = IA_MoveAgent;
+					Intentions[i / 2][i % 2].Action = IA_MoveAgent;
 				}else
 				{
-					Intentions[i].Action = IA_RemovePanel;
+					Intentions[i / 2][i % 2].Action = IA_RemovePanel;
 				}
 			}
-		} while (!Stage.CanAction(Intentions));
+			Stage.CanAction(Intentions, results);
+		} while (!(results[0][0]&&results[0][1]&&results[1][0]&&results[1][1]));
 		Stage.Action(Intentions);
 	}
 

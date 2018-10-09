@@ -131,7 +131,6 @@ public:
 	void Action(intention(&Intentions)[NumTeams][NumAgents]);
 	void CanAction(intention(&Intentions)[NumTeams][NumAgents], bool (&Result)[NumTeams][NumAgents]);
 	bool CanAction(intention(&Intentions)[NumAgents]);
-	bool CanAction(intention(&Intentions)[NumTeams * NumAgents]);
 	bool CanActionOne(position Position, intention Intention);
 	int GetNumX();
 	int GetNumY();
