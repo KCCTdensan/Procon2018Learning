@@ -118,7 +118,6 @@ public:
 	void UpdateScore();
 	void Action(intention Intentions[]);
 	bool CanAction(intention Intentions[]);
-	bool OnPanel(intention Intention);
 	int GetNumX();
 	int GetNumY();
 	int GetCntTurn();
