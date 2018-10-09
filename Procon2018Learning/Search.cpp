@@ -20,92 +20,6 @@ node::~node()
 	Child.clear();
 }
 
-void node::Search(stage Stage)
-{
-	for(int i = 0; i < 8; i++)
-	{
-		for(int j = 0; j < 8; j++)
-		{
-			for(int k = 0; k < 4; k++)
-			{
-				intention Intention1;
-				intention Intention2;
-				switch(k)
-				{
-				case 0:
-					Intention1.Action = IA_MoveAgent;
-					Intention2.Action = IA_MoveAgent;
-				case 1:
-					Intention1.Action = IA_MoveAgent;
-					Intention2.Action = IA_RemovePanel;
-				case 2:
-					Intention1.Action = IA_RemovePanel;
-					Intention2.Action = IA_MoveAgent;
-				case 3:
-					Intention1.Action = IA_RemovePanel;
-					Intention2.Action = IA_RemovePanel;
-				}
-				switch(i)
-				{
-				case 0:
-					Intention1.DeltaX = 0;
-					Intention1.DeltaY = 1;
-				case 1:
-					Intention1.DeltaX = 1;
-					Intention1.DeltaY = 1;
-				case 2:
-					Intention1.DeltaX = 1;
-					Intention1.DeltaY = 0;
-				case 3:
-					Intention1.DeltaX = 1;
-					Intention1.DeltaY = -1;
-				case 4:
-					Intention1.DeltaX = 0;
-					Intention1.DeltaY = -1;
-				case 5:
-					Intention1.DeltaX = -1;
-					Intention1.DeltaY = -1;
-				case 6:
-					Intention1.DeltaX = -1;
-					Intention1.DeltaY = 0;
-				case 7:
-					Intention1.DeltaX = -1;
-					Intention1.DeltaY = 1;
-				}
-				switch(j)
-				{
-				case 0:
-					Intention2.DeltaX = 0;
-					Intention2.DeltaY = 1;
-				case 1:
-					Intention2.DeltaX = 1;
-					Intention2.DeltaY = 1;
-				case 2:
-					Intention2.DeltaX = 1;
-					Intention2.DeltaY = 0;
-				case 3:
-					Intention2.DeltaX = 1;
-					Intention2.DeltaY = -1;
-				case 4:
-					Intention2.DeltaX = 0;
-					Intention2.DeltaY = -1;
-				case 5:
-					Intention2.DeltaX = -1;
-					Intention2.DeltaY = -1;
-				case 6:
-					Intention2.DeltaX = -1;
-					Intention2.DeltaY = 0;
-				case 7:
-					Intention2.DeltaX = -1;
-					Intention2.DeltaY = 1;
-				}
-
-			}
-		}
-	}
-	Child.clear();
-}
-
 void node::Selection()
 {
 
@@ -156,16 +70,25 @@ bool node::IsLeafNode()
 	return Child.size() == 0;
 }
 
-int node::Rollout(stage Stage, int turn)
+int node::Rollout(stage Stage, int turn)//ƒ‰ƒ“ƒ_ƒ€‚ÉŽè‚ðÅŒã‚Ü‚Å‘Å‚Á‚ÄŸ”s‚ð•Ô‚·
 {
 	for(int i = turn; i > 0; i--)
 	{
 		intention Intentions[4];
-		for(int i = 0; i < 4; ++i)
-		{
-			Intentions[i].DeltaX = rand() % 3 - 1;
-			Intentions[i].DeltaY = rand() % 3 - 1;
-		}
+		do{
+			for (int i = 0; i < 4; ++i)
+			{
+				Intentions[i].DeltaX = rand() % 3 - 1;
+				Intentions[i].DeltaY = rand() % 3 - 1;
+				if (rand() % 2)
+				{
+					Intentions[i].Action = IA_MoveAgent;
+				}else
+				{
+					Intentions[i].Action = IA_RemovePanel;
+				}
+			}
+		} while (!Stage.CanAction(Intentions));
 		Stage.Action(Intentions);
 	}
 

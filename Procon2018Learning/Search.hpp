@@ -22,8 +22,6 @@ class node
 public:
 	node(node *Parent, stage &Stage);
 	~node();
-	bool CanMove(action_id No, position Position);
-	void Search(stage Stage);
 	void Selection();
 	void Expansion(team_no Team);
 	void Evaluation();
