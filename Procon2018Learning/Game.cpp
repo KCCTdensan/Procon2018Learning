@@ -280,11 +280,6 @@ bool stage::CanAction(intention Intentions[])
 	return false;
 }
 
-bool stage::OnPanel(position Position)
-{
-	return (Panels[position.x][Position.x].GetState() == 0) || (Panels[Position.y][Position.x].GetState() == 1);
-}
-
 int stage::GetNumX()
 {
 	return NumX;
