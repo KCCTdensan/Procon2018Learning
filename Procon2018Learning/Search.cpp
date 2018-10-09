@@ -3,50 +3,6 @@
 #include "Search.hpp"
 
 
-bool node::CanMove(action_id No, position Position)
-{
-	switch(No)
-	{
-	case Stay:
-		return true;
-
-	case Move_TopLeft:
-	case Remove_TopLeft:
-		return Position.x > 0 && Position.y > 0;
-
-	case Move_Top:
-	case Remove_Top:
-		return Position.y > 0;
-
-	case Move_TopRight:
-	case Remove_TopRight:
-		return Position.x < Stage.GetNumX() - 1 && Position.y > 0;
-
-	case Move_Left:
-	case Remove_Left:
-		return Position.x > 0;
-
-	case Move_Right:
-	case Remove_Right:
-		return Position.x < Stage.GetNumX() - 1;
-
-	case Move_BottomLeft:
-	case Remove_BottomLeft:
-		return Position.x > 0 && Position.y < Stage.GetNumY() - 1;
-
-	case Move_Bottom:
-	case Remove_Bottom:
-		return Position.y < Stage.GetNumY() - 1;
-
-	case Move_BottomRight:
-	case Remove_BottomRight:
-		return Position.x < Stage.GetNumX() - 1 && Position.y < Stage.GetNumY() - 1;
-
-	default:
-		return false;
-	}
-}
-
 node::node(node *Parent, stage &Stage)
 {
 	this->Parent = Parent;

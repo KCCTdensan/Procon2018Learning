@@ -35,9 +35,6 @@
     <ClInclude Include="Search.hpp">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="General.hpp">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="BattleField.hpp">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>

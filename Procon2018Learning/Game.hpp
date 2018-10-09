@@ -1,7 +1,6 @@
 #pragma once
 
 #include <random>
-#include "General.hpp"
 
 
 enum team_no
@@ -47,6 +46,26 @@ enum panel_check
 	PC_Set
 };
 
+struct intention
+{
+	int DeltaX;
+	int DeltaY;
+	intention_action Action;
+};
+
+struct position
+{
+	char x;
+	char y;
+	position operator+=(intention);
+	position operator+=(action_id);
+};
+
+position operator+(position, intention);
+position operator+(position, action_id);
+bool operator==(position, position);
+bool operator!=(position, position);
+
 class panel
 {
 	int Point;
@@ -80,13 +99,6 @@ public:
 	position GetPosition();
 };
 
-struct intention
-{
-	int DeltaX;
-	int DeltaY;
-	intention_action Action;
-};
-
 class stage
 {
 	const static int MaxTurn = 60;
@@ -116,9 +128,11 @@ public:
 	~stage();
 
 	void UpdateScore();
-	void Action(intention Intentions[]);
-	bool CanAction(intention Intentions[]);
-	bool OnPanel(intention Intention);
+	void Action(intention(&Intentions)[NumTeams][NumAgents]);
+	void CanAction(intention(&Intentions)[NumTeams][NumAgents], bool (&Result)[NumTeams][NumAgents]);
+	bool CanAction(intention(&Intentions)[NumAgents]);
+	bool CanAction(intention(&Intentions)[NumTeams * NumAgents]);
+	bool CanActionOne(position Position, intention Intention);
 	int GetNumX();
 	int GetNumY();
 	int GetCntTurn();

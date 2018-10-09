@@ -2,6 +2,70 @@
 #include <iostream>
 
 
+position position::operator+=(intention Intention)
+{
+	if(Intention.Action == IA_RemovePanel)
+	{
+		return *this;
+	}
+	x += Intention.DeltaX;
+	y += Intention.DeltaY;
+	return *this;
+}
+
+position position::operator+=(action_id ActionID)
+{
+	switch(ActionID)
+	{
+	case Move_TopLeft:
+	case Move_Top:
+	case Move_TopRight:
+		y--;
+		break;
+
+	case Move_BottomLeft:
+	case Move_Bottom:
+	case Move_BottomRight:
+		y++;
+		break;
+	}
+	switch(ActionID)
+	{
+	case Move_TopLeft:
+	case Move_Left:
+	case Move_BottomLeft:
+		x--;
+		break;
+
+	case Move_TopRight:
+	case Move_Right:
+	case Move_BottomRight:
+		x++;
+		break;
+	}
+	return *this;
+}
+
+position operator+(position Position, intention Intention)
+{
+	return position(Position) += Intention;
+}
+
+position operator+(position Position, action_id ActionID)
+{
+	return position(Position) += ActionID;
+}
+
+bool operator==(position Position1, position Position2)
+{
+	return Position1.x == Position2.x&&Position1.y == Position2.y;
+}
+
+bool operator!=(position Position1, position Position2)
+{
+	return !(Position1 == Position2);
+}
+
 panel::panel()
 {
 
@@ -270,19 +334,45 @@ void stage::UpdateScore()
 	UpdateTileScore();
 }
 
-void stage::Action(intention Intentions[])
+void stage::Action(intention(&Intentions)[NumTeams][NumAgents])
 {
 
 }
 
-bool stage::CanAction(intention Intentions[])
+void stage::CanAction(intention(&Intentions)[NumTeams][NumAgents], bool(&Result)[NumTeams][NumAgents])
 {
-	return false;
+	position NextPositions[NumTeams][NumAgents];
+	bool Dest[MaxY][MaxX] = {false};
+	for(int i = 0; i < NumTeams; ++i)
+	{
+		for(int j = 0; j < NumAgents; ++j)
+		{
+			NextPositions[i][j] = Agents[i][j].GetPosition() + Intentions[i][j];
+			Result[i][j] = CanActionOne(Agents[i][j].GetPosition(), Intentions[i][j]);
+		}
+	}
+	//
 }
 
-bool stage::OnPanel(intention Intention)
+bool stage::CanAction(intention(&Intentions)[NumAgents])
 {
-	return (Panels[Intention.DeltaX][Intention.DeltaY].GetState() == 0) || (Panels[Intention.DeltaX][Intention.DeltaY].GetState() == 0);
+	if(!(CanActionOne(Agents[Team_1P][0].GetPosition(), Intentions[0]) && CanActionOne(Agents[Team_1P][1].GetPosition(), Intentions[1])))
+	{
+		return false;
+	}
+	return Agents[Team_1P][0].GetPosition() + Intentions[0] != Agents[Team_1P][1].GetPosition() + Intentions[1];
+}
+
+bool stage::CanAction(intention(&Intentions)[NumTeams * NumAgents])
+{
+	//
+}
+
+bool stage::CanActionOne(position Position, intention Intention)
+{
+	Intention.Action = IA_MoveAgent;
+	Position += Intention;
+	return (0 <= Position.x && Position.x < NumX) && (0 <= Position.y && Position.y < NumY);
 }
 
 int stage::GetNumX()
