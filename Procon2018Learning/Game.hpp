@@ -1,100 +1,19 @@
 #pragma once
 
 #include <random>
+#include "Intention.hpp"
+#include "Panel.hpp"
+#include "Agent.hpp"
+#include "Position.hpp"
 
 
-typedef char team_no;
-typedef char intention_action;
-typedef char action_id;
-
+typedef unsigned char can_action_flag;
 enum
 {
-	Neutral = -1,
-	Team_1P,
-	Team_2P,
-	NumTeams
-};
-
-enum
-{
-	IA_MoveAgent,
-	IA_RemovePanel
-};
-
-enum
-{
-	None = -1,
-	Stay,
-	Move_TopLeft,
-	Move_Top,
-	Move_TopRight,
-	Move_Left,
-	Move_Right,
-	Move_BottomLeft,
-	Move_Bottom,
-	Move_BottomRight,
-	Remove_TopLeft,
-	Remove_Top,
-	Remove_TopRight,
-	Remove_Left,
-	Remove_Right,
-	Remove_BottomLeft,
-	Remove_Bottom,
-	Remove_BottomRight
-};
-
-struct intention
-{
-	int DeltaX;
-	int DeltaY;
-	intention_action Action;
-	intention(action_id);
-};
-
-struct position
-{
-	char x;
-	char y;
-	position operator+=(intention);
-	position operator+=(action_id);
-};
-
-position operator+(position, intention);
-position operator+(position, action_id);
-bool operator==(position, position);
-bool operator!=(position, position);
-
-class panel
-{
-	int Point;
-	team_no State;
-	bool Surrounded[NumTeams];
-
-public:
-	panel();
-	~panel();
-
-	void Init(int Point);
-	void MakeCard(team_no Team);
-	void RemoveCard();
-	int GetScore();
-	team_no GetState();
-	void SetSurrounded(bool IsSurrounded, team_no Team);
-	bool GetSurrounded(team_no Team);
-};
-
-class agent
-{
-	team_no Team;
-	position Position;
-
-public:
-	agent();
-	~agent();
-
-	void Init(int PositionX, int PositionY, team_no Team);
-	void Move(int DeltaX, int DeltaY);
-	position GetPosition();
+	F_Called = 0x01,
+	F_Decided = 0x02,
+	F_CanAction = 0x04,
+	F_Move = 0x08
 };
 
 class stage
@@ -127,6 +46,7 @@ class stage
 	void UpdateRegionScore_Set(int x, int y, team_no Team, bool Surrounded, panel_check(&CheckedPanel)[NumTeams][MaxY][MaxX]);
 	void UpdateRegionScore();
 	void UpdateTileScore();
+	bool CanAction_Move(team_no Team, char AgentNo, intention(&Intentions)[NumTeams][NumAgents], can_action_flag(&Flags)[NumTeams][NumAgents]);
 
 public:
 	stage();
@@ -136,7 +56,7 @@ public:
 	void Action(intention(&Intentions)[NumTeams][NumAgents]);
 	void CanAction(intention(&Intentions)[NumTeams][NumAgents], bool (&Result)[NumTeams][NumAgents]);
 	bool CanAction(intention(&Intentions)[NumAgents]);
-	bool CanAction(intention(&Intentions)[NumTeams * NumAgents]);
+	bool CanAction(intention(&Intentions)[NumTeams][NumAgents]);
 	char CanActionOne(position Position, intention Intention);
 	int GetNumX();
 	int GetNumY();
