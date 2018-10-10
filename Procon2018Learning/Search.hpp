@@ -22,7 +22,9 @@ class node
 public:
 	node(node *Parent, stage &Stage);
 	~node();
+	void play();
 	void Selection();
+	int cost(int Ns);
 	void Expansion(team_no Team);
 	void Evaluation();
 	int Rollout(stage Stage, int NumTurn);

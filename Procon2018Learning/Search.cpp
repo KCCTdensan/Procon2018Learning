@@ -1,5 +1,6 @@
 #include <iostream>
 #include <random>
+#include<cmath>
 #include "Search.hpp"
 
 
@@ -20,9 +21,31 @@ node::~node()
 	Child.clear();
 }
 
-void node::Selection()
+void node::play() //閾値以上ならノードを展開、閾値以下ならrollout、Q値を更新
 {
+	if ()
+	{
+		
+	}
+}
 
+void node::Selection() //子ノードのコスト関数とQ値に基づいて子ノードを選択する
+{
+	int Q_Cmax = -114514,selected = 0;
+	for (int i = 0; i < Child.size(); i++)
+	{
+		if (Q_Cmax < *Child[i]->Q + *Child[i]->cost(N))
+		{
+			Q_Cmax = *Child[i]->Q + *Child[i]->cost(N);
+			selected = i;
+		}
+	}
+	*Child[selected]->play();
+}
+
+int node::cost(int Ns) //このノードを選ぶのにかかるコストを返す。Alpha参照。
+{
+	return std::sqrt(2 * std::log(Ns)) / N;
 }
 
 void node::Expansion(team_no Team)
