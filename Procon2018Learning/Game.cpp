@@ -191,8 +191,13 @@ bool stage::CanAction_Move(team_no Team, char AgentNo, intention(&Intentions)[Nu
 	//すでに呼び出し済みなら終了
 	if(Flag & F_Called)
 	{
+		if(Flag & F_WantToMove)
+		{
+			return true;
+		}
 		return false;
 	}
+	Flag |= F_Called;
 	switch(CanActionOne(Position, Intention))
 	{
 	case 0://座標外へのアクションの場合
@@ -209,6 +214,7 @@ bool stage::CanAction_Move(team_no Team, char AgentNo, intention(&Intentions)[Nu
 		char y = NextPosition.y;
 		team_no State = Panels[y][x].GetState();
 		team_no EnemyTeam = Team == Team_1P ? Team_2P : Team_1P;
+		Flag |= F_WantToMove;
 		//移動先に敵タイルがあった場合
 		if(State == EnemyTeam)
 		{
@@ -247,7 +253,41 @@ bool stage::CanAction_Move(team_no Team, char AgentNo, intention(&Intentions)[Nu
 	position NextPosition = Position + Intention;
 	char x = NextPosition.x;
 	char y = NextPosition.y;
+	//除去するパネルがなければ
+	if(Panels[y][x].GetState() == None)
+	{
+		Flag |= F_Decided;
+		return false;
+	}
+	for(team_no t = 0; t < NumTeams; ++t)
+	{
+		for(char a = 0; a < NumAgents; ++a)
+		{
+			if(t == Team && a == AgentNo)
+			{
+				continue;
+			}
+			position AgentPosition = Agents[t][a].GetPosition();
+			//除去したいパネルの上に敵エージェントがいたら
+			if(AgentPosition == NextPosition)
+			{
+				bool Ret = CanAction_Move(t, a, Intentions, Flags);
+				Flag |= F_Decided;
+				if(Ret)
+				{
+					Flag |= F_CanAction;
+				}
+				return false;
+			}
+			if(AgentPosition + Intentions[t][a] == NextPosition)
+			{
 
+			}
+		}
+	}
+	Flag |= F_Decided;
+	Flag |= F_CanAction;
+	return false;
 }
 
 stage::stage()
@@ -280,42 +320,6 @@ void stage::Action(intention(&Intentions)[NumTeams][NumAgents])
 void stage::CanAction(intention(&Intentions)[NumTeams][NumAgents], bool(&Result)[NumTeams][NumAgents])
 {
 	can_action_flag Flags[NumTeams][NumAgents] = {};
-	position NextPositions[NumTeams][NumAgents];
-	for(team_no t = 0; t < NumTeams; ++t)
-	{
-		for(char a = 0; a < NumAgents; ++a)
-		{
-			NextPositions[t][a] = Agents[t][a].GetPosition() + Intentions[t][a];
-		}
-	}
-
-	auto CanMove = [&, this](team_no AgentTeam, char AgentNo)
-	{
-		if(Intention.Action == IA_MoveAgent)
-		{
-
-			for(team_no t = 0; t < NumTeams; ++t)
-			{
-				for(char a = 0; a < NumAgents; ++a)
-				{
-					if(t == AgentTeam && a == AgentNo)
-					{
-						continue;
-					}
-					if(NextPositions[t][a] == NextPositions[AgentTeam][AgentNo])
-					{
-						CanMove(t, a);
-					}
-				}
-			}
-		}
-		else
-		{
-			Intention.Action = IA_MoveAgent;
-			position NextPosition = Position + Intention;
-
-		}
-	};
 	for(team_no t = 0; t < NumTeams; ++t)
 	{
 		for(char a = 0; a < NumAgents; ++a)

@@ -13,7 +13,8 @@ enum
 	F_Called = 0x01,
 	F_Decided = 0x02,
 	F_CanAction = 0x04,
-	F_Move = 0x08
+	F_Move = 0x08,
+	F_WantToMove = 0x10
 };
 
 class stage
