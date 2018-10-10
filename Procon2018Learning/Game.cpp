@@ -437,7 +437,13 @@ void stage::CanAction(intention(&Intentions)[NumTeams][NumAgents], bool(&Result)
 			}
 		}
 	}
-	//Ä‹A?
+	auto Overlap = [&](team_no AgentTeam, char AgentNo)
+	{
+		if(ResultTmp[AgentTeam][AgentNo] != -1)
+		{
+			return ResultTmp[AgentTeam][AgentNo];
+		}
+	};
 }
 
 bool stage::CanAction(intention(&Intentions)[NumAgents])
