@@ -10,11 +10,26 @@
 typedef unsigned char can_action_flag;
 enum
 {
-	F_Called = 0x01,
-	F_Decided = 0x02,
-	F_CanAction = 0x04,
-	F_Move = 0x08,
-	F_WantToMove = 0x10
+	F_Decided = 0x01,
+	F_CanAction = 0x02
+};
+
+const static int MaxX = 12;
+const static int MaxY = 12;
+
+class panels
+{
+	panel Panels[MaxY][MaxX];
+
+public:
+	panel* operator[](char y)
+	{
+		return Panels[y];
+	}
+	panel& operator[](position p)
+	{
+		return Panels[p.y][p.x];
+	}
 };
 
 class stage
@@ -27,15 +42,13 @@ class stage
 		PC_Set
 	};
 	const static int MaxTurn = 60;
-	const static int MaxX = 12;
-	const static int MaxY = 12;
 	const static int NumAgents = 2;
 	static std::random_device RandomDev;
 	int NumX;
 	int NumY;
 	int CntTurn;
+	panels Panels;
 	agent Agents[NumTeams][NumAgents];
-	panel Panels[MaxY][MaxX];
 	int TileScore1P;
 	int TileScore2P;
 	int RegionScore1P;
@@ -47,7 +60,6 @@ class stage
 	void UpdateRegionScore_Set(int x, int y, team_no Team, bool Surrounded, panel_check(&CheckedPanel)[NumTeams][MaxY][MaxX]);
 	void UpdateRegionScore();
 	void UpdateTileScore();
-	bool CanAction_Move(team_no Team, char AgentNo, intention(&Intentions)[NumTeams][NumAgents], can_action_flag(&Flags)[NumTeams][NumAgents]);
 
 public:
 	stage();

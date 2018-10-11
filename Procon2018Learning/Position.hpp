@@ -9,9 +9,12 @@ struct position
 	char y;
 	position operator+=(intention);
 	position operator+=(action_id);
+	position operator<<=(intention);
+	//position operator<<(action_id);
 };
 
 position operator+(position, intention);
 position operator+(position, action_id);
+position operator<<(position, intention);
 bool operator==(position, position);
 bool operator!=(position, position);

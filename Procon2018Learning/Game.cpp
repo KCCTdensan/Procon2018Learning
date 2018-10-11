@@ -178,118 +178,6 @@ void stage::UpdateTileScore()
 	}
 }
 
-bool stage::CanAction_Move(team_no Team, char AgentNo, intention(&Intentions)[NumTeams][NumAgents], can_action_flag(&Flags)[NumTeams][NumAgents])
-{
-	can_action_flag &Flag = Flags[Team][AgentNo];
-	intention &Intention = Intentions[Team][AgentNo];
-	position Position = Agents[Team][AgentNo].GetPosition();
-	//すでに移動可能か決まっていれば終了
-	if(Flag & F_Decided)
-	{
-		return (Flag & F_Move) != 0;
-	}
-	//すでに呼び出し済みなら終了
-	if(Flag & F_Called)
-	{
-		if(Flag & F_WantToMove)
-		{
-			return true;
-		}
-		return false;
-	}
-	Flag |= F_Called;
-	switch(CanActionOne(Position, Intention))
-	{
-	case 0://座標外へのアクションの場合
-		Flag |= F_Decided;
-	case 1://留まる場合
-		Flag |= F_CanAction;
-		return false;
-	}
-	//移動の場合
-	if(Intention.Action == IA_MoveAgent)
-	{
-		position NextPosition = Position + Intention;
-		char x = NextPosition.x;
-		char y = NextPosition.y;
-		team_no State = Panels[y][x].GetState();
-		team_no EnemyTeam = Team == Team_1P ? Team_2P : Team_1P;
-		Flag |= F_WantToMove;
-		//移動先に敵タイルがあった場合
-		if(State == EnemyTeam)
-		{
-			Flag |= F_Decided;
-			return false;
-		}
-		char SelectAgentNo = -AgentNo + 1;
-		for(char a = 0; a < NumAgents; ++a)
-		{
-			position NextSelectAgentPosition = Agents[EnemyTeam][a].GetPosition() + Intentions[EnemyTeam][a];
-			//敵エージェントの移動先が被った場合
-			/*if(NextSelectAgentPosition == NextPosition)
-			{
-				bool Ret = CanAction_Move(EnemyTeam, a, Intentions, Flags);
-				//敵が移動できる場合
-				if(Ret)
-				{
-					Flag |= F_CanAction | F_Move;
-				}
-			}*/
-		}
-		/*if(Agents[Team][SelectAgentNo].GetPosition() + Intentions[Team][SelectAgentNo] == NextPosition)
-		{
-			bool Ret = CanAction_Move(Team, SelectAgentNo, Intentions, Flags);
-			Flag |= F_Decided;
-			if(Ret)
-			{
-				Flag |= F_CanAction | F_Move;
-				return true;
-			}
-			return false;
-		}*/
-	}
-	//タイル除去の場合
-	Intention.Action = IA_MoveAgent;
-	position NextPosition = Position + Intention;
-	char x = NextPosition.x;
-	char y = NextPosition.y;
-	//除去するパネルがなければ
-	if(Panels[y][x].GetState() == None)
-	{
-		Flag |= F_Decided;
-		return false;
-	}
-	for(team_no t = 0; t < NumTeams; ++t)
-	{
-		for(char a = 0; a < NumAgents; ++a)
-		{
-			if(t == Team && a == AgentNo)
-			{
-				continue;
-			}
-			position AgentPosition = Agents[t][a].GetPosition();
-			//除去したいパネルの上に敵エージェントがいたら
-			if(AgentPosition == NextPosition)
-			{
-				bool Ret = CanAction_Move(t, a, Intentions, Flags);
-				Flag |= F_Decided;
-				if(Ret)
-				{
-					Flag |= F_CanAction;
-				}
-				return false;
-			}
-			if(AgentPosition + Intentions[t][a] == NextPosition)
-			{
-
-			}
-		}
-	}
-	Flag |= F_Decided;
-	Flag |= F_CanAction;
-	return false;
-}
-
 stage::stage()
 {
 	InitRandomStage();
@@ -308,24 +196,106 @@ void stage::UpdateScore()
 
 void stage::Action(intention(&Intentions)[NumTeams][NumAgents])
 {
+	bool CanActionFlags[NumTeams][NumAgents];
+	CanAction(Intentions, CanActionFlags);
 	for(team_no t = 0; t < NumTeams; ++t)
 	{
 		for(char a = 0; a < NumAgents; ++a)
 		{
-
+			if(!CanActionFlags[t][a])
+			{
+				continue;
+			}
+			intention Intention = Intentions[t][a];
+			if(Intention.Action == IA_MoveAgent)
+			{
+				Agents[t][a].Move(Intention.DeltaX, Intention.DeltaY);
+				position NextPosition = Agents[t][a].GetPosition();
+				Panels[NextPosition].MakeCard(t);
+			}
+			else
+			{
+				Panels[Agents[t][a].GetPosition()].RemoveCard();
+			}
 		}
 	}
 }
 
 void stage::CanAction(intention(&Intentions)[NumTeams][NumAgents], bool(&Result)[NumTeams][NumAgents])
 {
-	can_action_flag Flags[NumTeams][NumAgents] = {};
+	position ExpectedPositions[NumTeams][NumAgents];
+	can_action_flag Flags[NumTeams][NumAgents];
+	//ステージ1・座標外への移動意思、留まる意思に対して決定
 	for(team_no t = 0; t < NumTeams; ++t)
 	{
 		for(char a = 0; a < NumAgents; ++a)
 		{
-			CanAction_Move(t, a, Intentions, Flags);
-			Result[t][a] = (Flags[t][a] & F_CanAction) != 0;
+			position Position = Agents[t][a].GetPosition();
+			intention Intention = Intentions[t][a];
+			ExpectedPositions[t][a] = Position << Intention;
+			Flags[t][a] = 0;
+			switch(CanActionOne(Position, Intention))
+			{
+			case -1:
+				Flags[t][a] = F_Decided;
+				break;
+
+			case 1:
+				Flags[t][a] = F_Decided | F_CanAction;
+				break;
+			}
+		}
+	}
+	//ステージ2・目標の座標の重複,またはエージェントか敵タイルがあるパネルへの移動に対して決定
+	bool Loop;
+	do
+	{
+		Loop = false;
+		for(team_no t = 0; t < NumTeams; ++t)
+		{
+			for(char a = 0; a < NumAgents; ++a)
+			{
+				if(Flags[t][a] & F_Decided)
+				{
+					continue;
+				}
+				for(team_no tt = 0; tt < NumTeams; ++tt)
+				{
+					for(char aa = 0; aa < NumAgents; ++aa)
+					{
+						if(t == tt && a == aa)
+						{
+							continue;
+						}
+						if(ExpectedPositions[t][a] == ExpectedPositions[tt][aa])
+						{
+							Flags[t][a] = F_Decided;
+							Flags[tt][aa] = F_Decided;
+							ExpectedPositions[t][a] = Agents[t][a].GetPosition();
+							ExpectedPositions[tt][aa] = Agents[tt][aa].GetPosition();
+							Loop = true;
+						}
+					}
+				}
+				if(Intentions[t][a].Action == IA_MoveAgent)
+				{
+					team_no EnemyTeam = t == Team_1P ? Team_2P : Team_1P;
+					if(Panels[ExpectedPositions[t][a]].GetState() == EnemyTeam)
+					{
+						Flags[t][a] = F_Decided;
+						ExpectedPositions[t][a] = Agents[t][a].GetPosition();
+						Loop = true;
+					}
+				}
+				Result[t][a] = (Flags[t][a] & F_Decided) != 0;
+			}
+		}
+	} while(Loop);
+	for(team_no t = 0; t = NumTeams; ++t)
+	{
+		for(char a = 0; a < NumAgents; ++a)
+		{
+			Result[t][a] = !(Flags[t][a] & F_Decided) || (Flags[t][a] & F_CanAction);
 		}
 	}
 }
@@ -336,7 +306,7 @@ bool stage::CanAction(intention(&Intentions)[NumAgents])
 	{
 		return false;
 	}
-	return Agents[Team_1P][0].GetPosition() + Intentions[0] != Agents[Team_1P][1].GetPosition() + Intentions[1];
+	return Agents[Team_1P][0].GetPosition() << Intentions[0] != Agents[Team_1P][1].GetPosition() << Intentions[1];
 }
 
 bool stage::CanAction(intention(&Intentions)[NumTeams][NumAgents])
@@ -354,7 +324,7 @@ char stage::CanActionOne(position Position, intention Intention)
 	}
 	Intention.Action = IA_MoveAgent;
 	Position += Intention;
-	return (0 <= Position.x && Position.x < NumX) && (0 <= Position.y && Position.y < NumY) ? -1 : 0;
+	return (0 <= Position.x && Position.x < NumX) && (0 <= Position.y && Position.y < NumY) ? 0 : -1;
 }
 
 int stage::GetNumX()

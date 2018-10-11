@@ -45,6 +45,13 @@ position position::operator+=(action_id ActionID)
 	return *this;
 }
 
+position position::operator<<=(intention Intention)
+{
+	x += Intention.DeltaX;
+	y += Intention.DeltaY;
+	return *this;
+}
+
 
 position operator+(position Position, intention Intention)
 {
@@ -54,6 +61,11 @@ position operator+(position Position, intention Intention)
 position operator+(position Position, action_id ActionID)
 {
 	return position(Position) += ActionID;
+}
+
+position operator<<(position Position, intention Intention)
+{
+	return position(Position) <<= Intention;
 }
 
 bool operator==(position Position1, position Position2)
