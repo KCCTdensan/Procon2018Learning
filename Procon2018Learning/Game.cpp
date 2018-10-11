@@ -337,7 +337,52 @@ void stage::UpdateScore()
 //[2][2]の配列用Action
 void stage::Action(intention(&Intentions)[NumTeams][NumAgents])
 {
+	//引数 PlayerIntentions[[x, y, z], [x, y, z], [x, y, z], [x, y, z]] Player1:前2つ Player2 : 後2つ x, y : 座標 z : 0で移動 1でパネル除去
+	int CurrentPositions[] = { Agents[0][0].Position,Agents[0][1].Position,Agents[1][0].Position,Agents[1][1].Position };
+	int NextPositions[4];
+	for (i = 0; i < 4; i++)
+	{
+			/*for j in range(2) :
+				NextPositions[i].append(CurrentPositions[i][j] + Intentions[i][j])
+				CanMove = [True, True, True, True]
+				Team = [1, 1, 2, 2]
+				Agents = [self._1PAgents[0], self._1PAgents[1], self._2PAgents[0], self._2PAgents[1]]
+				NumY = len(self._Panels)
+				NumX = len(self._Panels[0])
 
+				#アクション可能か判定
+				for i in range(3) :
+					for j in range(i + 1, 4) :
+						tmp = not np.allclose(NextPositions[i], NextPositions[j])
+						CanMove[i] = CanMove[i] and tmp
+						CanMove[j] = CanMove[j] and tmp
+						for i in range(4) :
+							if not CanMove[i] :
+								continue
+								py = NextPositions[i][0]
+								px = NextPositions[i][1]
+								CanMove[i] = (0 <= py) and (py < NumY) and (0 <= px) and (px < NumX)
+
+								#移動またはパネルを返す
+								for i in range(4) :
+									if not CanMove[i] :
+										continue
+										OperatedPanel = self._Panels[NextPositions[i][0]][NextPositions[i][1]]
+										State = OperatedPanel.getState()
+										if Intentions[i][2] == 0 :
+											if (State == 0) or (State == Team[i]) :
+												OperatedPanel.mkcard(Team[i])
+												Agents[i].move([Intentions[i][0], Intentions[i][1]])
+											else :
+												if not State == 0 :
+													OperatedPanel.rmcard()*/
+	}
+}
+
+//[2]の配列用Action、味方(相手)のみ判定
+void stage::Action(intention(&intentinos)[NumAgents])
+{
+	
 }
 
 //[2][2]の配列用CanAction、両チーム同時判定
