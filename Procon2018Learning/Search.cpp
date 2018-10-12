@@ -100,10 +100,10 @@ int node::Evaluation()
 
 int node::Rollout(stage Stage, int turn)//ƒ‰ƒ“ƒ_ƒ€‚ÉŽè‚ðÅŒã‚Ü‚Å‘Å‚Á‚ÄŸ”s‚ð•Ô‚·
 {
-	if(Team == 0)
+	if(Team == Team_1P)
 	{
-		intention Intentions[2];
-		Stage.Action(Intentions, 1);
+		intention Intentions[NumTeams];
+		Stage.Action(Intentions, Team_2P);
 	}
 	for(int i = turn; i > 0; i--)
 	{
