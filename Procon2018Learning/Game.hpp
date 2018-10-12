@@ -65,12 +65,19 @@ public:
 	stage();
 	~stage();
 
-	void UpdateScore();
+	//両チーム用
 	void Action(intention(&Intentions)[NumTeams][NumAgents]);
 	void CanAction(intention(&Intentions)[NumTeams][NumAgents], bool (&Result)[NumTeams][NumAgents]);
-	bool CanAction(intention(&Intentions)[NumAgents]);
 	bool CanAction(intention(&Intentions)[NumTeams][NumAgents]);
+
+	//1チーム用
+	void Action(intention(&Intentions)[NumAgents]);
+	bool CanAction(intention(&Intentions)[NumAgents]);
+
+	//1プレイヤー用
 	char CanActionOne(position Position, intention Intention);
+
+	void UpdateScore();
 	int GetNumX();
 	int GetNumY();
 	int GetCntTurn();

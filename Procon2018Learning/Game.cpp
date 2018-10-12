@@ -188,13 +188,6 @@ stage::~stage()
 
 }
 
-void stage::UpdateScore()
-{
-	UpdateRegionScore();
-	UpdateTileScore();
-}
-
-//[2][2]の配列用Action
 void stage::Action(intention(&Intentions)[NumTeams][NumAgents])
 {
 	bool CanActionFlags[NumTeams][NumAgents];
@@ -222,13 +215,7 @@ void stage::Action(intention(&Intentions)[NumTeams][NumAgents])
 	}
 }
 
-//[2]の配列用Action、味方(相手)のみ判定
-void stage::Action(intention(&intentinos)[NumAgents])
-{
-	
-}
 
-//[2][2]の配列用CanAction、両チーム同時判定
 void stage::CanAction(intention(&Intentions)[NumTeams][NumAgents], bool(&Result)[NumTeams][NumAgents])
 {
 	position ExpectedPositions[NumTeams][NumAgents];
@@ -308,7 +295,18 @@ void stage::CanAction(intention(&Intentions)[NumTeams][NumAgents], bool(&Result)
 	}
 }
 
-//[2]の配列用CanAction、味方チームのみ判定
+bool stage::CanAction(intention(&Intentions)[NumTeams][NumAgents])
+{
+	bool Result[NumTeams][NumAgents];
+	CanAction(Intentions, Result);
+	return (Result[0][0] && Result[0][1]) && (Result[1][0] && Result[1][1]);
+}
+
+void stage::Action(intention(&intentions)[NumAgents])
+{
+
+}
+
 bool stage::CanAction(intention(&Intentions)[NumAgents])
 {
 	if(!(CanActionOne(Agents[Team_1P][0].GetPosition(), Intentions[0]) && CanActionOne(Agents[Team_1P][1].GetPosition(), Intentions[1])))
@@ -316,13 +314,6 @@ bool stage::CanAction(intention(&Intentions)[NumAgents])
 		return false;
 	}
 	return Agents[Team_1P][0].GetPosition() << Intentions[0] != Agents[Team_1P][1].GetPosition() << Intentions[1];
-}
-
-bool stage::CanAction(intention(&Intentions)[NumTeams][NumAgents])
-{
-	bool Result[NumTeams][NumAgents];
-	CanAction(Intentions, Result);
-	return (Result[0][0] && Result[0][1]) && (Result[1][0] && Result[1][1]);
 }
 
 char stage::CanActionOne(position Position, intention Intention)
@@ -334,6 +325,12 @@ char stage::CanActionOne(position Position, intention Intention)
 	Intention.Action = IA_MoveAgent;
 	Position += Intention;
 	return (0 <= Position.x && Position.x < NumX) && (0 <= Position.y && Position.y < NumY) ? 0 : -1;
+}
+
+void stage::UpdateScore()
+{
+	UpdateRegionScore();
+	UpdateTileScore();
 }
 
 int stage::GetNumX()
