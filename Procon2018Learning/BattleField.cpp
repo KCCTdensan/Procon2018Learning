@@ -1,11 +1,12 @@
 #include "BattleField.hpp"
+#include <iostream>
 
 
 void battle_field::DeepenNode(action_id Action1, action_id Action2)
 {
-	node *tmp = CurrentNode->Deepen(Action1, Action2);
+	node *ChildNode = CurrentNode->Deepen(Action1, Action2);
 	delete CurrentNode;
-	CurrentNode = tmp;
+	CurrentNode = ChildNode;
 }
 
 battle_field::battle_field()
@@ -59,5 +60,6 @@ void battle_field::Battle(int NumTurn)
 		DeepenNode(IntentionIDs[Team_1P][0], IntentionIDs[Team_1P][1]);
 
 		Stage.Action(IntentionIDs);
+		std::cout << "Action" << std::endl;
 	}
 }

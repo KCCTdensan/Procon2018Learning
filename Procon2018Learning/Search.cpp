@@ -1,8 +1,6 @@
-#include <iostream>
-#include <random>
-#include<cmath>
 #include "Search.hpp"
-
+#include "Random.hpp"
+#include <iostream>
 
 int node::Play() //閾値以上ならノードを展開、閾値未満ならrollout、Q値を更新
 {
@@ -20,7 +18,7 @@ int node::Play() //閾値以上ならノードを展開、閾値未満ならrollout、Q値を更新
 int node::Selection() //子ノードのコスト関数とQ値に基づいて子ノードを選択する
 {
 	float Q_CMax = -1.0;
-	int Selected_i = 0, Selected_j = 0;
+	int Selected_i = -1, Selected_j = -1;
 	for(action_id i = 0; i < Max_ActionID; ++i)
 	{
 		for(action_id j = 0; j < Max_ActionID; ++j)
@@ -37,6 +35,10 @@ int node::Selection() //子ノードのコスト関数とQ値に基づいて子ノードを選択する
 				Selected_j = j;
 			}
 		}
+	}
+	if(Selected_i == -1)
+	{
+		return 0;
 	}
 	return Child[Selected_i][Selected_j]->Play();
 }
@@ -98,25 +100,23 @@ int node::Evaluation()
 	return Result;
 }
 
-int node::Rollout(stage Stage, int turn)//ランダムに手を最後まで打って勝敗を返す
+int node::Rollout(stage &Stage, int NumTurn)//ランダムに手を最後まで打って勝敗を返す
 {
 	if(Team == Team_1P)
 	{
 		intention Intentions[NumTeams];
 		Stage.Action(Intentions, Team_2P);
 	}
-	for(int i = turn; i > 0; i--)
+	for(int i = 0; i < NumTurn; ++i)
 	{
-		intention Intentions[2][2];
-		bool results[2][2];
+		intention Intentions[NumTeams][stage::NumAgents];
 		do
 		{
-			for(int i = 0; i < 4; ++i)
+			for(int j = 0; j < 4; ++j)
 			{
 				Intentions[i / 2][i % 2] = (action_id)rand() % Max_ActionID;
 			}
-			Stage.CanAction(Intentions, results);
-		} while(!(results[0][0] && results[0][1] && results[1][0] && results[1][1]));
+		} while(!Stage.CanAction(Intentions));
 		Stage.Action(Intentions);
 	}
 
@@ -133,7 +133,7 @@ int node::Rollout(stage Stage, int turn)//ランダムに手を最後まで打って勝敗を返す
 
 float node::Cost(int Ns) //このノードを選ぶのにかかるコストを返す。Alpha参照。
 {
-	return std::sqrtf(2.0 * std::logf(Ns)) / N;
+	return std::sqrtf(2.0f * std::logf((float)Ns)) / (float)N;
 }
 
 bool node::IsLeafNode()
