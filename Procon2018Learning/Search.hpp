@@ -20,11 +20,7 @@ private:
 	float Q;
 	int N;
 	int Record;
-	//int NumWin;
-	//int NumLose;
 	team_no Team;
-	action_id IntentionID1;
-	action_id IntentionID2;
 
 	int Play();
 	int Selection();

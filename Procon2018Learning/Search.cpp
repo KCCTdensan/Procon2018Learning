@@ -113,15 +113,6 @@ int node::Rollout(stage Stage, int turn)//ƒ‰ƒ“ƒ_ƒ€‚Éè‚ğÅŒã‚Ü‚Å‘Å‚Á‚ÄŸ”s‚ğ•Ô‚·
 		{
 			for(int i = 0; i < 4; ++i)
 			{
-				/*Intentions[i / 2][i % 2].DeltaX = rand() % 3 - 1;
-				Intentions[i / 2][i % 2].DeltaY = rand() % 3 - 1;
-				if (rand() % 2)
-				{
-					Intentions[i / 2][i % 2].Action = IA_MoveAgent;
-				}else
-				{
-					Intentions[i / 2][i % 2].Action = IA_RemovePanel;
-				}*/
 				Intentions[i / 2][i % 2] = (action_id)rand() % Max_ActionID;
 			}
 			Stage.CanAction(Intentions, results);
@@ -165,11 +156,7 @@ node::node(node *Parent, stage &Stage, team_no Team)
 	Q = 0.0;
 	N = 0;
 	Record = 0;
-	//NumWin = 0;
-	//NumLose = 0;
 	this->Team = Team;
-	IntentionID1 = None;
-	IntentionID2 = None;
 }
 
 node::~node()
