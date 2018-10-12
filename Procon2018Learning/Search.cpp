@@ -98,6 +98,11 @@ bool node::IsLeafNode()
 
 int node::Rollout(stage Stage, int turn)//ƒ‰ƒ“ƒ_ƒ€‚ÉŽè‚ðÅŒã‚Ü‚Å‘Å‚Á‚ÄŸ”s‚ð•Ô‚·
 {
+	if(Team == 0)
+	{
+		intention Intentions[2];
+		Stage.Action(Intentions, 1);
+	}
 	for(int i = turn; i > 0; i--)
 	{
 		intention Intentions[2][2];
