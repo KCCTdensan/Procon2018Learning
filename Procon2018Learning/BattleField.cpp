@@ -2,7 +2,7 @@
 
 
 battle_field::battle_field()
-	:CurrentNode(nullptr, Stage)
+	:CurrentNode(nullptr, Stage, Neutral)
 {
 
 }
@@ -16,7 +16,7 @@ void battle_field::Battle(int NumTurn)
 {
 	for (int i = 0; i < NumTurn; ++i)
 	{
-		float Result[Max_ActionID * Max_ActionID];
+		int Result[Max_ActionID][Max_ActionID];
 		CurrentNode.Search(node::NumCallPlay, Result);
 	}
 }
