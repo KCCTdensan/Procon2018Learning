@@ -7,9 +7,13 @@
 
 class node
 {
+	const static int NumCallPlay = 10000;
 	stage Stage;
-	int Q;
+	float Q;
+	int NumWin;
+	int NumLose;
 	int N;
+	int Threshold;
 	team_no Team;
 	node *Parent;
 	std::vector<node*> Child;
@@ -17,16 +21,14 @@ class node
 	action_id IntentionID2;
 	std::random_device rand;
 
-	
-
 public:
 	node(node *Parent, stage &Stage);
 	~node();
-	void play();
+	void Search(float(&Result)[Max_ActionID * Max_ActionID]);
+	void Play();
 	void Selection();
-	int cost(int Ns);
-	void Expansion(team_no Team);
-	void Evaluation();
+	float Cost(int Ns);
+	void Expansion();
 	int Rollout(stage Stage, int NumTurn);
 	bool IsLeafNode();
 };

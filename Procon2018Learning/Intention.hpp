@@ -28,7 +28,8 @@ enum
 	Remove_Right,
 	Remove_BottomLeft,
 	Remove_Bottom,
-	Remove_BottomRight
+	Remove_BottomRight,
+	Max_ActionID
 };
 
 struct intention
