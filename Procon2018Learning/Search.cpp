@@ -23,7 +23,7 @@ node::~node()
 
 void node::play() //閾値以上ならノードを展開、閾値以下ならrollout、Q値を更新
 {
-	if ()
+	if (1)
 	{
 		
 	}
@@ -31,16 +31,16 @@ void node::play() //閾値以上ならノードを展開、閾値以下ならrollout、Q値を更新
 
 void node::Selection() //子ノードのコスト関数とQ値に基づいて子ノードを選択する
 {
-	int Q_Cmax = -114514,selected = 0;
-	for (int i = 0; i < Child.size(); i++)
+	int Q_Cmax = -114514, selected = 0;
+	for(int i = 0; i < Child.size(); i++)
 	{
-		if (Q_Cmax < *Child[i]->Q + *Child[i]->cost(N))
+		if(Q_Cmax < Child[i]->Q + Child[i]->cost(N))
 		{
-			Q_Cmax = *Child[i]->Q + *Child[i]->cost(N);
+			Q_Cmax = Child[i]->Q + Child[i]->cost(N);
 			selected = i;
 		}
 	}
-	*Child[selected]->play();
+	Child[selected]->play();
 }
 
 int node::cost(int Ns) //このノードを選ぶのにかかるコストを返す。Alpha参照。
@@ -50,18 +50,17 @@ int node::cost(int Ns) //このノードを選ぶのにかかるコストを返す。Alpha参照。
 
 void node::Expansion(team_no Team)
 {
-	position Agent1Pos = Stage.GetAgent(Team, 0)->GetPosition();
-	position Agent2Pos = Stage.GetAgent(Team, 0)->GetPosition();
-
-	for (int i = 0; i < 17; ++i)
+	for (action_id i = 0; i < 17; ++i)
 	{
-		if (!CanMove((action_id)i, Agent1Pos))
+		intention Intention1 = i;
+		if(!Stage.CanAction(Intention1, Team, 0))
 		{
 			continue;
 		}
-		for (int j = 0; j < 17; ++j)
+		for (action_id j = 0; j < 17; ++j)
 		{
-			if (!CanMove((action_id)j, Agent2Pos))
+			intention Intention2 = j;
+			if(!Stage.CanAction(Intention2, Team, 1))
 			{
 				continue;
 			}
@@ -69,13 +68,13 @@ void node::Expansion(team_no Team)
 			node *NewNode = new node(this, Stage);
 			if (Team == Team_1P)
 			{
-				NewNode->Intention1 = (action_id)i;
-				NewNode->Intention2 = (action_id)j;
+				NewNode->IntentionID1 = i;
+				NewNode->IntentionID2 = j;
 			}
 			else
 			{
-				NewNode->Intention1 = None;
-				NewNode->Intention2 = None;
+				NewNode->IntentionID1 = None;
+				NewNode->IntentionID2 = None;
 			}
 			NewNode->Team = (Team == Team_1P) ? Team_2P : Team_1P;
 			Child.push_back(NewNode);

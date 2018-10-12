@@ -1,6 +1,12 @@
 #include "Intention.hpp"
 
 
+intention::intention()
+{
+	DeltaX = DeltaY = 0;
+	Action = IA_MoveAgent;
+}
+
 intention::intention(action_id ID)
 {
 	switch(ID)

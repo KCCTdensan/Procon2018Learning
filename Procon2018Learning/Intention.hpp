@@ -36,5 +36,7 @@ struct intention
 	int DeltaX;
 	int DeltaY;
 	intention_action Action;
+
+	intention();
 	intention(action_id);
 };

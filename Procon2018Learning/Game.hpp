@@ -75,6 +75,7 @@ public:
 	bool CanAction(intention(&Intentions)[NumAgents]);
 
 	//1プレイヤー用
+	bool CanAction(intention &Intention, team_no Team, char AgentNo);
 	char CanActionOne(position Position, intention Intention);
 
 	void UpdateScore();

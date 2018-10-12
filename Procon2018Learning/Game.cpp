@@ -316,6 +316,11 @@ bool stage::CanAction(intention(&Intentions)[NumAgents])
 	return Agents[Team_1P][0].GetPosition() << Intentions[0] != Agents[Team_1P][1].GetPosition() << Intentions[1];
 }
 
+bool stage::CanAction(intention &Intention, team_no Team, char AgentNo)
+{
+	return CanActionOne(Agents[Team][AgentNo].GetPosition(), Intention) != -1;
+}
+
 char stage::CanActionOne(position Position, intention Intention)
 {
 	if(Intention.DeltaX == 0 && Intention.DeltaY == 0)

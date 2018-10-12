@@ -13,8 +13,8 @@ class node
 	team_no Team;
 	node *Parent;
 	std::vector<node*> Child;
-	action_id Intention1;
-	action_id Intention2;
+	action_id IntentionID1;
+	action_id IntentionID2;
 	std::random_device rand;
 
 	
