@@ -34,6 +34,11 @@ public:
 
 class stage
 {
+public:
+	const static int MaxTurn = 60;
+	const static int NumAgents = 2;
+
+private:
 	typedef char panel_check;
 	enum
 	{
@@ -41,8 +46,6 @@ class stage
 		PC_Checked,
 		PC_Set
 	};
-	const static int MaxTurn = 60;
-	const static int NumAgents = 2;
 	static std::random_device RandomDev;
 	int NumX;
 	int NumY;

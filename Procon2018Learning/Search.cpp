@@ -50,17 +50,19 @@ int node::cost(int Ns) //このノードを選ぶのにかかるコストを返す。Alpha参照。
 
 void node::Expansion(team_no Team)
 {
+	intention Intentions[stage::NumAgents];
+
 	for (action_id i = 0; i < 17; ++i)
 	{
-		intention Intention1 = i;
-		if(!Stage.CanAction(Intention1, Team, 0))
+		Intentions[0] = i;
+		if(!Stage.CanAction(Intentions[0], Team, 0))
 		{
 			continue;
 		}
 		for (action_id j = 0; j < 17; ++j)
 		{
-			intention Intention2 = j;
-			if(!Stage.CanAction(Intention2, Team, 1))
+			Intentions[1] = j;
+			if(!Stage.CanAction(Intentions[1], Team, 1))
 			{
 				continue;
 			}
@@ -70,11 +72,13 @@ void node::Expansion(team_no Team)
 			{
 				NewNode->IntentionID1 = i;
 				NewNode->IntentionID2 = j;
+				NewNode->Stage.Action(Intentions, Team);
 			}
 			else
 			{
 				NewNode->IntentionID1 = None;
 				NewNode->IntentionID2 = None;
+				NewNode->Stage.Action(Intentions, Team);
 			}
 			NewNode->Team = (Team == Team_1P) ? Team_2P : Team_1P;
 			Child.push_back(NewNode);
