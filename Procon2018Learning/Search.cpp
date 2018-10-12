@@ -210,3 +210,20 @@ void node::Search(int NumCallPlay, int(&Result)[Max_ActionID][Max_ActionID])
 		}
 	}
 }
+
+node* node::Deepen(action_id Action1, action_id Action2)
+{
+	for(action_id i = 0; i < Max_ActionID; ++i)
+	{
+		for(action_id j = 0; j < Max_ActionID; ++j)
+		{
+			if(i != Action1 || j != Action2)
+			{
+				delete Child[i][j];
+				Child[i][j] = nullptr;
+			}
+		}
+	}
+	Child[Action1][Action2]->Parent = nullptr;
+	return Child[Action1][Action2];
+}

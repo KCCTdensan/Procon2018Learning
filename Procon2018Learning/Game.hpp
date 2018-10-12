@@ -70,6 +70,7 @@ public:
 
 	//—¼ƒ`[ƒ€—p
 	void Action(intention(&Intentions)[NumTeams][NumAgents]);
+	void Action(action_id(&IntentionIDs)[NumTeams][NumAgents]);
 	void CanAction(intention(&Intentions)[NumTeams][NumAgents], bool (&Result)[NumTeams][NumAgents]);
 	bool CanAction(intention(&Intentions)[NumTeams][NumAgents]);
 

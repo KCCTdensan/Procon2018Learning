@@ -7,7 +7,9 @@
 class battle_field
 {
 	stage Stage;
-	node CurrentNode;
+	node *CurrentNode;
+
+	void DeepenNode(action_id Action1, action_id Action2);
 
 public:
 	battle_field();

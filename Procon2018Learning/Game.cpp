@@ -215,6 +215,19 @@ void stage::Action(intention(&Intentions)[NumTeams][NumAgents])
 	}
 }
 
+void stage::Action(action_id(&IntentionIDs)[NumTeams][NumAgents])
+{
+	intention Intentions[NumTeams][stage::NumAgents];
+	for(team_no t = 0; t < NumTeams; ++t)
+	{
+		for(char a = 0; a < stage::NumAgents; ++a)
+		{
+			Intentions[t][a] = IntentionIDs[t][a];
+		}
+	}
+	Action(Intentions);
+}
+
 void stage::CanAction(intention(&Intentions)[NumTeams][NumAgents], bool(&Result)[NumTeams][NumAgents])
 {
 	position ExpectedPositions[NumTeams][NumAgents];
