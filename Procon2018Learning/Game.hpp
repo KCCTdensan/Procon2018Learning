@@ -71,7 +71,7 @@ public:
 	bool CanAction(intention(&Intentions)[NumTeams][NumAgents]);
 
 	//1チーム用
-	void Action(intention(&Intentions)[NumAgents]);
+	void Action(intention(&Intentions)[NumAgents], team_no Team);
 	bool CanAction(intention(&Intentions)[NumAgents]);
 
 	//1プレイヤー用

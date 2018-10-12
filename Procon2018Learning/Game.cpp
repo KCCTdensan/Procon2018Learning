@@ -200,7 +200,7 @@ void stage::Action(intention(&Intentions)[NumTeams][NumAgents])
 			{
 				continue;
 			}
-			intention Intention = Intentions[t][a];
+			intention &Intention = Intentions[t][a];
 			if(Intention.Action == IA_MoveAgent)
 			{
 				Agents[t][a].Move(Intention.DeltaX, Intention.DeltaY);
@@ -214,7 +214,6 @@ void stage::Action(intention(&Intentions)[NumTeams][NumAgents])
 		}
 	}
 }
-
 
 void stage::CanAction(intention(&Intentions)[NumTeams][NumAgents], bool(&Result)[NumTeams][NumAgents])
 {
@@ -302,9 +301,26 @@ bool stage::CanAction(intention(&Intentions)[NumTeams][NumAgents])
 	return (Result[0][0] && Result[0][1]) && (Result[1][0] && Result[1][1]);
 }
 
-void stage::Action(intention(&intentions)[NumAgents])
+void stage::Action(intention(&Intentions)[NumAgents], team_no Team)
 {
-
+	if(!CanAction(Intentions))
+	{
+		return;
+	}
+	for(char a = 0; a < NumAgents; ++a)
+	{
+		intention &Intention = Intentions[a];
+		if(Intention.Action == IA_MoveAgent)
+		{
+			Agents[Team][a].Move(Intention.DeltaX, Intention.DeltaY);
+			position NextPosition = Agents[Team][a].GetPosition();
+			Panels[NextPosition].MakeCard(Team);
+		}
+		else
+		{
+			Panels[Agents[Team][a].GetPosition()].RemoveCard();
+		}
+	}
 }
 
 bool stage::CanAction(intention(&Intentions)[NumAgents])
