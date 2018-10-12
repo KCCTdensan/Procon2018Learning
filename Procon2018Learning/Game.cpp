@@ -1,27 +1,28 @@
 #include "Game.hpp"
+#include "Random.hpp"
 #include <iostream>
 
 
 int stage::PanelPointRandom()
 {
-	int abs = rand() % 17;
-	int Negative = rand() % 10;
+	int abs = random::Mod(17);
+	int Negative = random::Mod(10);
 	return (Negative == 0) ? -abs : abs;
 }
 
 void stage::InitRandomStage()
 {
-	NumX = rand() % 10 + 3;
-	NumY = rand() % 10 + 3;
+	NumX = random::Mod(10) + 3;
+	NumY = random::Mod(10) + 3;
 	CntTurn = 0;
 	TileScore1P = 0;
 	TileScore2P = 0;
 	RegionScore1P = 0;
 	RegionScore2P = 0;
 
-	int CopyType = rand() % 2;
-	int AgentX = rand() % (NumX / 2);
-	int AgentY = rand() % (NumY / 2);
+	int CopyType = random::Mod(2);
+	int AgentX = random::Mod(NumX / 2);
+	int AgentY = random::Mod(NumY / 2);
 
 	if(CopyType == 0)
 	{
@@ -298,7 +299,7 @@ void stage::CanAction(intention(&Intentions)[NumTeams][NumAgents], bool(&Result)
 			}
 		}
 	} while(Loop);
-	for(team_no t = 0; t = NumTeams; ++t)
+	for(team_no t = 0; t < NumTeams; ++t)
 	{
 		for(char a = 0; a < NumAgents; ++a)
 		{

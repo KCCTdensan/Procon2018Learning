@@ -1,18 +1,15 @@
 #pragma once
 
 #include "Game.hpp"
-#include <vector>
-#include <random>
 
 
 class node
 {
 public:
-	const static int NumCallPlay = 100000;
-	const static int Threshold = 100;
+	const static int NumCallPlay = 1000;
+	const static int Threshold = 10;
 
 private:
-	static std::random_device rand;
 	node *Parent;
 	unsigned short NumChildren;
 	node *Child[Max_ActionID][Max_ActionID];
@@ -30,7 +27,7 @@ private:
 	int Selection();
 	void Expansion();
 	int Evaluation();
-	int Rollout(stage Stage, int NumTurn);
+	int Rollout(stage &Stage, int NumTurn);
 	float Cost(int Ns);
 	bool IsLeafNode();
 

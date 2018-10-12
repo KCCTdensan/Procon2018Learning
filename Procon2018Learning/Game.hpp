@@ -1,6 +1,5 @@
 #pragma once
 
-#include <random>
 #include "Intention.hpp"
 #include "Panel.hpp"
 #include "Agent.hpp"
@@ -46,12 +45,11 @@ private:
 		PC_Checked,
 		PC_Set
 	};
-	static std::random_device RandomDev;
+	panels Panels;
+	agent Agents[NumTeams][NumAgents];
 	int NumX;
 	int NumY;
 	int CntTurn;
-	panels Panels;
-	agent Agents[NumTeams][NumAgents];
 	int TileScore1P;
 	int TileScore2P;
 	int RegionScore1P;
