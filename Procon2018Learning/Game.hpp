@@ -1,116 +1,54 @@
 #pragma once
 
 #include <random>
+#include "Intention.hpp"
+#include "Panel.hpp"
+#include "Agent.hpp"
+#include "Position.hpp"
 
 
-enum team_no
+typedef unsigned char can_action_flag;
+enum
 {
-	Neutral = -1,
-	Team_1P,
-	Team_2P,
-	NumTeams
+	F_Decided = 0x01,
+	F_CanAction = 0x02
 };
 
-enum intention_action
-{
-	IA_MoveAgent,
-	IA_RemovePanel
-};
+const static int MaxX = 12;
+const static int MaxY = 12;
 
-enum action_id
+class panels
 {
-	None = -1,
-	Stay,
-	Move_TopLeft,
-	Move_Top,
-	Move_TopRight,
-	Move_Left,
-	Move_Right,
-	Move_BottomLeft,
-	Move_Bottom,
-	Move_BottomRight,
-	Remove_TopLeft,
-	Remove_Top,
-	Remove_TopRight,
-	Remove_Left,
-	Remove_Right,
-	Remove_BottomLeft,
-	Remove_Bottom,
-	Remove_BottomRight
-};
-
-enum panel_check
-{
-	PC_Unchecked,
-	PC_Checked,
-	PC_Set
-};
-
-struct intention
-{
-	int DeltaX;
-	int DeltaY;
-	intention_action Action;
-};
-
-struct position
-{
-	char x;
-	char y;
-	position operator+=(intention);
-	position operator+=(action_id);
-};
-
-position operator+(position, intention);
-position operator+(position, action_id);
-bool operator==(position, position);
-bool operator!=(position, position);
-
-class panel
-{
-	int Point;
-	team_no State;
-	bool Surrounded[NumTeams];
+	panel Panels[MaxY][MaxX];
 
 public:
-	panel();
-	~panel();
-
-	void Init(int Point);
-	void MakeCard(team_no Team);
-	void RemoveCard();
-	int GetScore();
-	team_no GetState();
-	void SetSurrounded(bool IsSurrounded, team_no Team);
-	bool GetSurrounded(team_no Team);
-};
-
-class agent
-{
-	team_no Team;
-	position Position;
-
-public:
-	agent();
-	~agent();
-
-	void Init(int PositionX, int PositionY, team_no Team);
-	void Move(int DeltaX, int DeltaY);
-	position GetPosition();
+	panel* operator[](char y)
+	{
+		return Panels[y];
+	}
+	panel& operator[](position p)
+	{
+		return Panels[p.y][p.x];
+	}
 };
 
 class stage
 {
+	typedef char panel_check;
+	enum
+	{
+		PC_Unchecked,
+		PC_Checked,
+		PC_Set
+	};
 	const static int MaxTurn = 60;
-	const static int MaxX = 12;
-	const static int MaxY = 12;
 	const static int NumAgents = 2;
 	static std::random_device RandomDev;
 	int NumX;
 	int NumY;
 	int CntTurn;
+	panels Panels;
 	agent Agents[NumTeams][NumAgents];
-	panel Panels[MaxY][MaxX];
 	int TileScore1P;
 	int TileScore2P;
 	int RegionScore1P;
@@ -131,7 +69,8 @@ public:
 	void Action(intention(&Intentions)[NumTeams][NumAgents]);
 	void CanAction(intention(&Intentions)[NumTeams][NumAgents], bool (&Result)[NumTeams][NumAgents]);
 	bool CanAction(intention(&Intentions)[NumAgents]);
-	bool CanActionOne(position Position, intention Intention);
+	bool CanAction(intention(&Intentions)[NumTeams][NumAgents]);
+	char CanActionOne(position Position, intention Intention);
 	int GetNumX();
 	int GetNumY();
 	int GetCntTurn();

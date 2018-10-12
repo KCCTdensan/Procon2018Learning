@@ -2,146 +2,6 @@
 #include <iostream>
 
 
-position position::operator+=(intention Intention)
-{
-	if(Intention.Action == IA_RemovePanel)
-	{
-		return *this;
-	}
-	x += Intention.DeltaX;
-	y += Intention.DeltaY;
-	return *this;
-}
-
-position position::operator+=(action_id ActionID)
-{
-	switch(ActionID)
-	{
-	case Move_TopLeft:
-	case Move_Top:
-	case Move_TopRight:
-		y--;
-		break;
-
-	case Move_BottomLeft:
-	case Move_Bottom:
-	case Move_BottomRight:
-		y++;
-		break;
-	}
-	switch(ActionID)
-	{
-	case Move_TopLeft:
-	case Move_Left:
-	case Move_BottomLeft:
-		x--;
-		break;
-
-	case Move_TopRight:
-	case Move_Right:
-	case Move_BottomRight:
-		x++;
-		break;
-	}
-	return *this;
-}
-
-position operator+(position Position, intention Intention)
-{
-	return position(Position) += Intention;
-}
-
-position operator+(position Position, action_id ActionID)
-{
-	return position(Position) += ActionID;
-}
-
-bool operator==(position Position1, position Position2)
-{
-	return Position1.x == Position2.x&&Position1.y == Position2.y;
-}
-
-bool operator!=(position Position1, position Position2)
-{
-	return !(Position1 == Position2);
-}
-
-panel::panel()
-{
-
-}
-
-panel::~panel()
-{
-
-}
-
-void panel::Init(int Point)
-{
-	this->Point = Point;
-	State = Neutral;
-}
-
-void panel::MakeCard(team_no Team)
-{
-	State = Team;
-}
-
-void panel::RemoveCard()
-{
-	State = Neutral;
-}
-
-int panel::GetScore()
-{
-	return Point;
-}
-
-team_no panel::GetState()
-{
-	return State;
-}
-
-void panel::SetSurrounded(bool IsSurrounded, team_no Team)
-{
-	Surrounded[Team] = IsSurrounded;
-}
-
-bool panel::GetSurrounded(team_no Team)
-{
-	return Surrounded[Team];
-}
-
-
-agent::agent()
-{
-
-}
-
-agent::~agent()
-{
-
-}
-
-void agent::Init(int PositionX, int PositionY, team_no Team)
-{
-	Position.x = PositionX;
-	Position.y = PositionY;
-	this->Team = Team;
-}
-
-void agent::Move(int DeltaX, int DeltaY)
-{
-	Position.x += DeltaX;
-	Position.y += DeltaY;
-}
-
-position agent::GetPosition()
-{
-	return Position;
-}
-
-
 int stage::PanelPointRandom()
 {
 	int abs = rand() % 17;
@@ -276,18 +136,18 @@ void stage::UpdateRegionScore_Set(int x, int y, team_no Team, bool Surrounded, p
 void stage::UpdateRegionScore()
 {
 	panel_check CheckedPanel[NumTeams][MaxY][MaxX] = {};
-	for(int t = 0; t < NumTeams; ++t)
+	for(team_no t = 0; t < NumTeams; ++t)
 	{
-		for(int y = 0; y < NumY; ++y)
+		for(char y = 0; y < NumY; ++y)
 		{
-			for(int x = 0; x < NumX; ++x)
+			for(char x = 0; x < NumX; ++x)
 			{
 				if(CheckedPanel[t][y][x] == 0)
 				{
-					int Ret = UpdateRegionScore_Check(x, y, (team_no)t, CheckedPanel);
+					int Ret = UpdateRegionScore_Check(x, y, t, CheckedPanel);
 					if(Ret == 1)
 					{
-						UpdateRegionScore_Set(x, y, (team_no)t, true, CheckedPanel);
+						UpdateRegionScore_Set(x, y, t, true, CheckedPanel);
 					}
 				}
 			}
@@ -337,45 +197,28 @@ void stage::UpdateScore()
 //[2][2]の配列用Action
 void stage::Action(intention(&Intentions)[NumTeams][NumAgents])
 {
-	//引数 PlayerIntentions[[x, y, z], [x, y, z], [x, y, z], [x, y, z]] Player1:前2つ Player2 : 後2つ x, y : 座標 z : 0で移動 1でパネル除去
-	int CurrentPositions[] = { Agents[0][0].Position,Agents[0][1].Position,Agents[1][0].Position,Agents[1][1].Position };
-	int NextPositions[4];
-	for (i = 0; i < 4; i++)
+	bool CanActionFlags[NumTeams][NumAgents];
+	CanAction(Intentions, CanActionFlags);
+	for(team_no t = 0; t < NumTeams; ++t)
 	{
-			/*for j in range(2) :
-				NextPositions[i].append(CurrentPositions[i][j] + Intentions[i][j])
-				CanMove = [True, True, True, True]
-				Team = [1, 1, 2, 2]
-				Agents = [self._1PAgents[0], self._1PAgents[1], self._2PAgents[0], self._2PAgents[1]]
-				NumY = len(self._Panels)
-				NumX = len(self._Panels[0])
-
-				#アクション可能か判定
-				for i in range(3) :
-					for j in range(i + 1, 4) :
-						tmp = not np.allclose(NextPositions[i], NextPositions[j])
-						CanMove[i] = CanMove[i] and tmp
-						CanMove[j] = CanMove[j] and tmp
-						for i in range(4) :
-							if not CanMove[i] :
-								continue
-								py = NextPositions[i][0]
-								px = NextPositions[i][1]
-								CanMove[i] = (0 <= py) and (py < NumY) and (0 <= px) and (px < NumX)
-
-								#移動またはパネルを返す
-								for i in range(4) :
-									if not CanMove[i] :
-										continue
-										OperatedPanel = self._Panels[NextPositions[i][0]][NextPositions[i][1]]
-										State = OperatedPanel.getState()
-										if Intentions[i][2] == 0 :
-											if (State == 0) or (State == Team[i]) :
-												OperatedPanel.mkcard(Team[i])
-												Agents[i].move([Intentions[i][0], Intentions[i][1]])
-											else :
-												if not State == 0 :
-													OperatedPanel.rmcard()*/
+		for(char a = 0; a < NumAgents; ++a)
+		{
+			if(!CanActionFlags[t][a])
+			{
+				continue;
+			}
+			intention Intention = Intentions[t][a];
+			if(Intention.Action == IA_MoveAgent)
+			{
+				Agents[t][a].Move(Intention.DeltaX, Intention.DeltaY);
+				position NextPosition = Agents[t][a].GetPosition();
+				Panels[NextPosition].MakeCard(t);
+			}
+			else
+			{
+				Panels[Agents[t][a].GetPosition()].RemoveCard();
+			}
+		}
 	}
 }
 
@@ -388,14 +231,79 @@ void stage::Action(intention(&intentinos)[NumAgents])
 //[2][2]の配列用CanAction、両チーム同時判定
 void stage::CanAction(intention(&Intentions)[NumTeams][NumAgents], bool(&Result)[NumTeams][NumAgents])
 {
-	position NextPositions[NumTeams][NumAgents];
-	bool Dest[MaxY][MaxX] = {false};
-	for(int i = 0; i < NumTeams; ++i)
+	position ExpectedPositions[NumTeams][NumAgents];
+	can_action_flag Flags[NumTeams][NumAgents];
+	//ステージ1・座標外への移動意思、留まる意思に対して決定
+	for(team_no t = 0; t < NumTeams; ++t)
 	{
-		for(int j = 0; j < NumAgents; ++j)
+		for(char a = 0; a < NumAgents; ++a)
 		{
-			NextPositions[i][j] = Agents[i][j].GetPosition() + Intentions[i][j];
-			Result[i][j] = CanActionOne(Agents[i][j].GetPosition(), Intentions[i][j]);
+			position Position = Agents[t][a].GetPosition();
+			intention Intention = Intentions[t][a];
+			ExpectedPositions[t][a] = Position << Intention;
+			Flags[t][a] = 0;
+			switch(CanActionOne(Position, Intention))
+			{
+			case -1:
+				Flags[t][a] = F_Decided;
+				break;
+
+			case 1:
+				Flags[t][a] = F_Decided | F_CanAction;
+				break;
+			}
+		}
+	}
+	//ステージ2・目標の座標の重複,またはエージェントか敵タイルがあるパネルへの移動に対して決定
+	bool Loop;
+	do
+	{
+		Loop = false;
+		for(team_no t = 0; t < NumTeams; ++t)
+		{
+			for(char a = 0; a < NumAgents; ++a)
+			{
+				if(Flags[t][a] & F_Decided)
+				{
+					continue;
+				}
+				for(team_no tt = 0; tt < NumTeams; ++tt)
+				{
+					for(char aa = 0; aa < NumAgents; ++aa)
+					{
+						if(t == tt && a == aa)
+						{
+							continue;
+						}
+						if(ExpectedPositions[t][a] == ExpectedPositions[tt][aa])
+						{
+							Flags[t][a] = F_Decided;
+							Flags[tt][aa] = F_Decided;
+							ExpectedPositions[t][a] = Agents[t][a].GetPosition();
+							ExpectedPositions[tt][aa] = Agents[tt][aa].GetPosition();
+							Loop = true;
+						}
+					}
+				}
+				if(Intentions[t][a].Action == IA_MoveAgent)
+				{
+					team_no EnemyTeam = t == Team_1P ? Team_2P : Team_1P;
+					if(Panels[ExpectedPositions[t][a]].GetState() == EnemyTeam)
+					{
+						Flags[t][a] = F_Decided;
+						ExpectedPositions[t][a] = Agents[t][a].GetPosition();
+						Loop = true;
+					}
+				}
+				Result[t][a] = (Flags[t][a] & F_Decided) != 0;
+			}
+		}
+	} while(Loop);
+	for(team_no t = 0; t = NumTeams; ++t)
+	{
+		for(char a = 0; a < NumAgents; ++a)
+		{
+			Result[t][a] = !(Flags[t][a] & F_Decided) || (Flags[t][a] & F_CanAction);
 		}
 	}
 }
@@ -407,15 +315,25 @@ bool stage::CanAction(intention(&Intentions)[NumAgents])
 	{
 		return false;
 	}
-	return Agents[Team_1P][0].GetPosition() + Intentions[0] != Agents[Team_1P][1].GetPosition() + Intentions[1];
+	return Agents[Team_1P][0].GetPosition() << Intentions[0] != Agents[Team_1P][1].GetPosition() << Intentions[1];
 }
 
-//[2]の配列用CanAction、味方チームのみ判定???????
-bool stage::CanActionOne(position Position, intention Intention)
+bool stage::CanAction(intention(&Intentions)[NumTeams][NumAgents])
 {
+	bool Result[NumTeams][NumAgents];
+	CanAction(Intentions, Result);
+	return (Result[0][0] && Result[0][1]) && (Result[1][0] && Result[1][1]);
+}
+
+char stage::CanActionOne(position Position, intention Intention)
+{
+	if(Intention.DeltaX == 0 && Intention.DeltaY == 0)
+	{
+		return 1;
+	}
 	Intention.Action = IA_MoveAgent;
 	Position += Intention;
-	return (0 <= Position.x && Position.x < NumX) && (0 <= Position.y && Position.y < NumY);
+	return (0 <= Position.x && Position.x < NumX) && (0 <= Position.y && Position.y < NumY) ? 0 : -1;
 }
 
 int stage::GetNumX()
