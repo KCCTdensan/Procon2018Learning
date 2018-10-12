@@ -21,8 +21,12 @@ node::~node()
 	Child.clear();
 }
 
-void node::Search(float(&Result)[Max_ActionID * Max_ActionID])
+void node::Search(int NumCallPlay, float(&Result)[Max_ActionID * Max_ActionID])
 {
+	for(int i = 0; i < NumCallPlay; ++i)
+	{
+		Play();
+	}
 }
 
 void node::Play() //閾値以上ならノードを展開、閾値未満ならrollout、Q値を更新
@@ -127,7 +131,7 @@ int node::Rollout(stage Stage, int turn)//ランダムに手を最後まで打って勝敗を返す
 		do{
 			for (int i = 0; i < 4; ++i)
 			{
-				Intentions[i / 2][i % 2].DeltaX = rand() % 3 - 1;
+				/*Intentions[i / 2][i % 2].DeltaX = rand() % 3 - 1;
 				Intentions[i / 2][i % 2].DeltaY = rand() % 3 - 1;
 				if (rand() % 2)
 				{
@@ -135,7 +139,7 @@ int node::Rollout(stage Stage, int turn)//ランダムに手を最後まで打って勝敗を返す
 				}else
 				{
 					Intentions[i / 2][i % 2].Action = IA_RemovePanel;
-				}
+				}*/
 				Intentions[i / 2][i % 2] = (action_id)rand() % Max_ActionID;
 			}
 			Stage.CanAction(Intentions, results);

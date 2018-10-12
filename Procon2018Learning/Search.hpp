@@ -7,7 +7,10 @@
 
 class node
 {
+public:
 	const static int NumCallPlay = 10000;
+
+private:
 	stage Stage;
 	float Q;
 	int NumWin;
@@ -24,7 +27,7 @@ class node
 public:
 	node(node *Parent, stage &Stage);
 	~node();
-	void Search(float(&Result)[Max_ActionID * Max_ActionID]);
+	void Search(int NumCallPlay, float(&Result)[Max_ActionID * Max_ActionID]);
 	void Play();
 	void Selection();
 	float Cost(int Ns);
