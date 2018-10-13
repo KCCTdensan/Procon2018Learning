@@ -20,6 +20,7 @@ int node::Play() //閾値以上ならノードを展開、閾値未満ならrollout、Q値を更新
 	N++;
 	Record += Ret;
 	Q = (float)Record / N;
+	return Ret;
 }
 
 int node::Selection() //子ノードのコスト関数とQ値に基づいて子ノードを選択する
@@ -27,7 +28,7 @@ int node::Selection() //子ノードのコスト関数とQ値に基づいて子ノードを選択する
 	float Q_CMax;
 	//相手のターンの場合は次は味方のターンなので、最もQ値(自分側の勝率)の高いノードを選択する。
 	//味方のターンの場合は次は相手のターンなので、最もQ値(自分側の勝率)の低いノードを選択する。
-	Q_CMax = (Team == Team_2P) ? -1.0 : 10.0;
+	Q_CMax = (Team == Team_2P) ? -1.0f : 10.0f;
 	int Selected_i = -1, Selected_j = -1;
 	for(action_id i = 0; i < Max_ActionID; ++i)
 	{
