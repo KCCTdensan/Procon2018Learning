@@ -2,7 +2,7 @@
 #include "Random.hpp"
 #include <iostream>
 
-int node::Play() //臒l�ȏ�Ȃ�m�[�h��W�J�A臒l�����Ȃ�rollout�AQ�l���X�V
+int node::Play() //閾値以上ならノードを展開、閾値未満ならrollout、Q値を更新
 {
 	int Ret;
 	if(N >= Threshold)
@@ -23,11 +23,11 @@ int node::Play() //臒l�ȏ�Ȃ�m�[�h��W�J�A臒l�����Ȃ�rollout�AQ�l���X�V
 	return Ret;
 }
 
-int node::Selection() //�q�m�[�h�̃R�X�g�֐���Q�l�Ɋ�Â��Ďq�m�[�h��I������
+int node::Selection() //子ノードのコスト関数とQ値に基づいて子ノードを選択する
 {
 	float Q_CMax;
-	//����̃^�[���̏ꍇ�͎��͖����̃^�[���Ȃ̂ŁA�ł�Q�l(�������̏���)�̍����m�[�h��I������B
-	//�����̃^�[���̏ꍇ�͎��͑���̃^�[���Ȃ̂ŁA�ł�Q�l(�������̏���)�̒Ⴂ�m�[�h��I������B
+	//相手のターンの場合は次は味方のターンなので、最もQ値(自分側の勝率)の高いノードを選択する。
+	//味方のターンの場合は次は相手のターンなので、最もQ値(自分側の勝率)の低いノードを選択する。
 	Q_CMax = (Team == Team_1P) ? -10.0f : 10.0f;
 	action_id Selected_i = None, Selected_j = None;
 	for(action_id i = 0; i < Max_ActionID; ++i)
@@ -100,7 +100,7 @@ int node::Evaluation()
 	return Rollout(Stage, stage::MaxTurn - Stage.GetCntTurn());
 }
 
-int node::Rollout(stage &Stage, int NumTurn)//�����_���Ɏ���Ō�܂őł��ď��s��Ԃ�
+int node::Rollout(stage &Stage, int NumTurn)//ランダムに手を最後まで打って勝敗を返す
 {
 	if(Team == Team_1P)
 	{
@@ -131,9 +131,9 @@ int node::Rollout(stage &Stage, int NumTurn)//�����_���Ɏ���Ō�܂őł��ď��s��
 	return -1;
 }
 
-float node::Cost(int Ns) //���̃m�[�h��I�Ԃ̂ɂ�����R�X�g��Ԃ��BAlpha�Q�ƁB
+float node::Cost(int Ns) //このノードを選ぶのにかかるコストを返す。Alpha参照。
 {
-	return std::sqrtf(2.0f * std::logf((float)Ns)) / (float)N;
+	return (N == 0)?: 0 :std::sqrtf(2.0f * std::logf((float)Ns)) / (float)N;
 }
 
 bool node::IsLeafNode()
