@@ -133,7 +133,7 @@ int node::Rollout(stage &Stage, int NumTurn)//ランダムに手を最後まで�
 
 float node::Cost(int Ns) //このノードを選ぶのにかかるコストを返す。Alpha参照。
 {
-	return (N == 0)?: 0 :std::sqrtf(2.0f * std::logf((float)Ns)) / (float)N;
+	return (N == 0 || Ns == 0)?: 0 :std::sqrtf(2.0f * std::logf((float)Ns)) / (float)N;
 }
 
 bool node::IsLeafNode()
