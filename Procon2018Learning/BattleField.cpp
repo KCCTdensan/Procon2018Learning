@@ -5,6 +5,7 @@
 void battle_field::DeepenNode(action_id Action1, action_id Action2)
 {
 	node *ChildNode = CurrentNode->Deepen(Action1, Action2);
+
 	delete CurrentNode;
 	CurrentNode = ChildNode;
 }

@@ -403,7 +403,24 @@ void stage::PrintStage()
 	using namespace std;
 	for(int y = 0; y < NumY; y++)
 	{
-		for(int x = 0; x < NumX; x++)cout << Panels[y][x].GetScore() << " ";
+		for(int x = 0; x < NumX; x++)
+		{
+			switch(Panels[y][x].GetState())
+			{
+			case None:
+				printf("%3d ", Panels[y][x].GetScore());
+				break;
+
+			case Team_1P:
+				printf("%+3d ", Panels[y][x].GetScore());
+				break;
+
+			case Team_2P:
+				printf("%-3d ", Panels[y][x].GetScore());
+				break;
+			}
+		}
 		cout << endl;
 	}
+	cout << endl;
 }

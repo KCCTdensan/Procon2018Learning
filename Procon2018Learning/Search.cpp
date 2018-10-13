@@ -39,6 +39,10 @@ int node::Selection() //子ノードのコスト関数とQ値に基づいて子ノードを選択する
 				continue;
 			}
 			float Q_C = Child[i][j]->Q + Child[i][j]->Cost(N);
+			if(Q_C == INFINITY)
+			{
+				return Child[i][j]->Play();
+			}
 			if(Q_CMax < Q_C && Team == Team_1P)
 			{
 				Q_CMax = Q_C;
@@ -112,9 +116,12 @@ int node::Rollout(stage &Stage, int NumTurn)//ランダムに手を最後まで打って勝敗を
 		intention Intentions[NumTeams][stage::NumAgents];
 		do
 		{
-			for(int j = 0; j < 4; ++j)
+			for(team_no t = 0; t < NumTeams; ++t)
 			{
-				Intentions[i / 2][i % 2] = (action_id)rand() % Max_ActionID;
+				for(char a = 0; a < stage::NumAgents; ++a)
+				{
+					Intentions[t][a] = (action_id)rand() % Max_ActionID;
+				}
 			}
 		} while(!Stage.CanAction(Intentions));
 		Stage.Action(Intentions);
@@ -133,7 +140,12 @@ int node::Rollout(stage &Stage, int NumTurn)//ランダムに手を最後まで打って勝敗を
 
 float node::Cost(int Ns) //このノードを選ぶのにかかるコストを返す。Alpha参照。
 {
-	return std::sqrtf(2.0f * std::logf((float)Ns)) / (float)N;
+	const static float Cp = 1.0f;
+	if(N == 0)
+	{
+		return INFINITY;
+	}
+	return Cp * std::sqrtf(2.0f * std::logf((float)Ns)) / (float)N;
 }
 
 bool node::IsLeafNode()
@@ -161,17 +173,7 @@ node::node(node *Parent, stage &Stage, team_no Team)
 
 node::~node()
 {
-	for(action_id i = 0; i < Max_ActionID; ++i)
-	{
-		for(action_id j = 0; j < Max_ActionID; ++j)
-		{
-			if(Child[i][j] != nullptr)
-			{
-				delete Child[i][j];
-				Child[i][j] = nullptr;
-			}
-		}
-	}
+
 }
 
 void node::Search(int NumCallPlay, int(&Result)[Max_ActionID][Max_ActionID])
@@ -204,6 +206,10 @@ node* node::Deepen(action_id Action1, action_id Action2)
 	{
 		for(action_id j = 0; j < Max_ActionID; ++j)
 		{
+			if(Child[i][j] == nullptr)
+			{
+				continue;
+			}
 			if(i != Action1 || j != Action2)
 			{
 				delete Child[i][j];
