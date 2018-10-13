@@ -63,6 +63,6 @@ void battle_field::Battle(int NumTurn)
 		DeepenNode(IntentionIDs[Team_1P][0], IntentionIDs[Team_1P][1]);
 
 		Stage.Action(IntentionIDs);
-		std::cout << "Action" << std::endl;
+		std::cout << "Action" << i << std::endl;
 	}
 }
