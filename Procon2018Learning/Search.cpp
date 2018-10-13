@@ -4,15 +4,22 @@
 
 int node::Play() //閾値以上ならノードを展開、閾値未満ならrollout、Q値を更新
 {
+	int Ret;
 	if(N >= Threshold)
 	{
 		if(IsLeafNode())
 		{
 			Expansion();
 		}
-		return Selection();
+		Ret = Selection();
 	}
-	return Evaluation();
+	else
+	{
+		Ret = Evaluation();
+	}
+	N++;
+	Record += Ret;
+	Q = (float)Record / N;
 }
 
 int node::Selection() //子ノードのコスト関数とQ値に基づいて子ノードを選択する
@@ -20,7 +27,7 @@ int node::Selection() //子ノードのコスト関数とQ値に基づいて子ノードを選択する
 	float Q_CMax;
 	//相手のターンの場合は次は味方のターンなので、最もQ値(自分側の勝率)の高いノードを選択する。
 	//味方のターンの場合は次は相手のターンなので、最もQ値(自分側の勝率)の低いノードを選択する。
-	Q_CMax = (team_no == Team_2P) ? : -1.0 : 10.0;
+	Q_CMax = (Team == Team_2P) ? -1.0 : 10.0;
 	int Selected_i = -1, Selected_j = -1;
 	for(action_id i = 0; i < Max_ActionID; ++i)
 	{
@@ -31,19 +38,19 @@ int node::Selection() //子ノードのコスト関数とQ値に基づいて子ノードを選択する
 				continue;
 			}
 			float Q_C = Child[i][j]->Q + Child[i][j]->Cost(N);
-			if(Q_CMax < Q_C　&& team_no == Team_2P)
+			if(Q_CMax < Q_C&& Team == Team_2P)
 			{
 				Q_CMax = Q_C;
 				Selected_i = i;
 				Selected_j = j;
 			}
-			else if (Q_CMax > Q_C　&& team_no == Team_1P)
+			else if(Q_CMax > Q_C&& Team == Team_1P)
 			{
 				Q_CMax = Q_C;
 				Selected_i = i;
 				Selected_j = j;
 			}
-			
+
 		}
 	}
 	if(Selected_i == -1)
@@ -75,14 +82,10 @@ void node::Expansion()
 			node *NewNode = new node(this, Stage, (Team == Team_1P) ? Team_2P : Team_1P);
 			if(Team == Team_1P)
 			{
-				NewNode->IntentionID1 = i;
-				NewNode->IntentionID2 = j;
 				NewNode->Stage.Action(Intentions, Team);
 			}
 			else
 			{
-				NewNode->IntentionID1 = None;
-				NewNode->IntentionID2 = None;
 				NewNode->Stage.Action(Intentions, Team);
 			}
 			Child[i][j] = NewNode;
@@ -93,21 +96,7 @@ void node::Expansion()
 
 int node::Evaluation()
 {
-	int Result = Rollout(Stage, stage::MaxTurn - Stage.GetCntTurn());
-	/*switch(Result)
-	{
-	case -1:
-		NumLose++;
-		break;
-
-	case 1:
-		NumWin++;
-		break;
-	}*/
-	N++;
-	Record += Result;
-	Q = (float)Record / N;
-	return Result;
+	return Rollout(Stage, stage::MaxTurn - Stage.GetCntTurn());
 }
 
 int node::Rollout(stage &Stage, int NumTurn)//ランダムに手を最後まで打って勝敗を返す
