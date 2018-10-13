@@ -138,12 +138,8 @@ int node::Rollout(stage &Stage, int NumTurn)//ランダムに手を最後まで�
 	return -1;
 }
 
-float node::Cost(int Ns) //こ�Eノ�Eドを選ぶのにかかるコストを返す、Elpha参�E、E
+float node::Cost(int Ns)
 {
-<<<<<<< HEAD
-	
-=======
->>>>>>> 28d5b518db6c07bba21aae2d5cf612ced1b4cb8d
 	return (N == 0)?: 0 :std::sqrtf(2.0f * std::logf((float)Ns)) / (float)N;
 }
 
