@@ -1,8 +1,8 @@
-#include "Search.hpp"
+﻿#include "Search.hpp"
 #include "Random.hpp"
 #include <iostream>
 
-int node::Play() //髢ｾ蛟､莉･荳翫↑繧峨ヮ繝ｼ繝峨ｒ螻暮幕縲・明蛟､譛ｪ貅縺ｪ繧詠ollout縲＿蛟､繧呈峩譁ｰ
+int node::Play() //閾値以上ならノードを展開、閾値未満ならrollout、Q値を更新
 {
 	int Ret;
 	if(N >= Threshold)
@@ -23,10 +23,10 @@ int node::Play() //髢ｾ蛟､莉･荳翫↑繧峨ヮ繝ｼ繝峨ｒ螻暮幕�
 	return Ret;
 }
 
-int node::Selection() //蟄舌ヮ繝ｼ繝峨・繧ｳ繧ｹ繝磯未謨ｰ縺ｨQ蛟､縺ｫ蝓ｺ縺･縺・※蟄舌ヮ繝ｼ繝峨ｒ驕ｸ謚槭☆繧・
+int node::Selection() //子ノードのコスト関数とQ値に基づいて子ノードを選択する
 {
 	float Q_CMax;
-<<<<<<< HEAD
+	//
 	//相手のターンの場合は次は味方のターンなので、最もQ値(自分側の勝率)の高いノードを選択する。
 	//味方のターンの場合は次は相手のターンなので、最もQ値(自分側の勝率)の低いノードを選択する。
 	Q_CMax = (Team == Team_1P) ? -10.0f : 10.0f;
@@ -40,10 +40,6 @@ int node::Selection() //蟄舌ヮ繝ｼ繝峨・繧ｳ繧ｹ繝磯未謨ｰ縺�
 				continue;
 			}
 			float Q_C = Child[i][j]->Q + Child[i][j]->Cost(N);
-			if(Q_C == INFINITY)
-			{
-				return Child[i][j]->Play();
-			}
 			if(Q_CMax < Q_C && Team == Team_1P)
 			{
 				Q_CMax = Q_C;
@@ -105,7 +101,7 @@ int node::Evaluation()
 	return Rollout(Stage, stage::MaxTurn - Stage.GetCntTurn());
 }
 
-int node::Rollout(stage &Stage, int NumTurn)//繝ｩ繝ｳ繝繝縺ｫ謇九ｒ譛蠕後∪縺ｧ謇薙▲縺ｦ蜍晄風繧定ｿ斐☆
+int node::Rollout(stage &Stage, int NumTurn)//ランダムに手を最後まで打って勝敗を返す
 {
 	if(Team == Team_1P)
 	{
@@ -117,12 +113,9 @@ int node::Rollout(stage &Stage, int NumTurn)//繝ｩ繝ｳ繝繝縺ｫ謇�
 		intention Intentions[NumTeams][stage::NumAgents];
 		do
 		{
-			for(team_no t = 0; t < NumTeams; ++t)
+			for(int j = 0; j < 4; ++j)
 			{
-				for(char a = 0; a < stage::NumAgents; ++a)
-				{
-					Intentions[t][a] = (action_id)rand() % Max_ActionID;
-				}
+				Intentions[i / 2][i % 2] = (action_id)rand() % Max_ActionID;
 			}
 		} while(!Stage.CanAction(Intentions));
 		Stage.Action(Intentions);
@@ -139,14 +132,9 @@ int node::Rollout(stage &Stage, int NumTurn)//繝ｩ繝ｳ繝繝縺ｫ謇�
 	return -1;
 }
 
-float node::Cost(int Ns)
+float node::Cost(int Ns) //このノードを選ぶのにかかるコストを返す。Alpha参照。
 {
-	const static float Cp = 1.0f;
-	if(N == 0)
-	{
-		return INFINITY;
-	}
-	return Cp * std::sqrtf(2.0f * std::logf((float)Ns)) / (float)N;
+	return (N == 0 || Ns == 0)? 0 :std::sqrtf(2.0f * std::logf((float)Ns)) / (float)N;
 }
 
 bool node::IsLeafNode()
@@ -174,7 +162,17 @@ node::node(node *Parent, stage &Stage, team_no Team)
 
 node::~node()
 {
-
+	for(action_id i = 0; i < Max_ActionID; ++i)
+	{
+		for(action_id j = 0; j < Max_ActionID; ++j)
+		{
+			if(Child[i][j] != nullptr)
+			{
+				delete Child[i][j];
+				Child[i][j] = nullptr;
+			}
+		}
+	}
 }
 
 void node::Search(int NumCallPlay, int(&Result)[Max_ActionID][Max_ActionID])
@@ -207,10 +205,6 @@ node* node::Deepen(action_id Action1, action_id Action2)
 	{
 		for(action_id j = 0; j < Max_ActionID; ++j)
 		{
-			if(Child[i][j] == nullptr)
-			{
-				continue;
-			}
 			if(i != Action1 || j != Action2)
 			{
 				delete Child[i][j];
