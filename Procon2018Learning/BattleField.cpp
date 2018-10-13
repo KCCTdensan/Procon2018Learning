@@ -11,7 +11,7 @@ void battle_field::DeepenNode(action_id Action1, action_id Action2)
 
 battle_field::battle_field()
 {
-	CurrentNode = new node(nullptr, Stage, Neutral);
+	CurrentNode = new node(nullptr, Stage, Team_1P);
 }
 
 battle_field::~battle_field()
@@ -28,7 +28,9 @@ void battle_field::Battle(int NumTurn)
 		CurrentNode->Search(node::NumCallPlay, Result);
 
 		int Max = 0;
-		action_id IntentionIDs[NumTeams][stage::NumAgents];
+		action_id IntentionIDs[NumTeams][stage::NumAgents] = {
+			{-1,-1},{-1,-1}
+		};
 		for(action_id i = 0; i < Max_ActionID; ++i)
 		{
 			for(action_id j = 0; j < Max_ActionID; ++j)
