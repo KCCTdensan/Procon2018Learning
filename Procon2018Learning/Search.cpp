@@ -2,7 +2,7 @@
 #include "Random.hpp"
 #include <iostream>
 
-int node::Play() //閾値以上ならノードを展開、閾値未満ならrollout、Q値を更新
+int node::Play() //髢ｾ蛟､莉･荳翫↑繧峨ヮ繝ｼ繝峨ｒ螻暮幕縲・明蛟､譛ｪ貅縺ｪ繧詠ollout縲＿蛟､繧呈峩譁ｰ
 {
 	int Ret;
 	if(N >= Threshold)
@@ -23,13 +23,20 @@ int node::Play() //閾値以上ならノードを展開、閾値未満ならrollout、Q値を更新
 	return Ret;
 }
 
-int node::Selection() //子ノードのコスト関数とQ値に基づいて子ノードを選択する
+int node::Selection() //蟄舌ヮ繝ｼ繝峨・繧ｳ繧ｹ繝磯未謨ｰ縺ｨQ蛟､縺ｫ蝓ｺ縺･縺・※蟄舌ヮ繝ｼ繝峨ｒ驕ｸ謚槭☆繧・
 {
 	float Q_CMax;
+<<<<<<< HEAD
 	//相手のターンの場合は次は味方のターンなので、最もQ値(自分側の勝率)の高いノードを選択する。
 	//味方のターンの場合は次は相手のターンなので、最もQ値(自分側の勝率)の低いノードを選択する。
 	Q_CMax = (Team == Team_2P) ?  10.0f : -1.0f ;
 	int Selected_i = -1, Selected_j = -1;
+=======
+	//逶ｸ謇九・繧ｿ繝ｼ繝ｳ縺ｮ蝣ｴ蜷医・谺｡縺ｯ蜻ｳ譁ｹ縺ｮ繧ｿ繝ｼ繝ｳ縺ｪ縺ｮ縺ｧ縲∵怙繧２蛟､(閾ｪ蛻・・縺ｮ蜍晉紫)縺ｮ鬮倥＞繝弱・繝峨ｒ驕ｸ謚槭☆繧九・
+	//蜻ｳ譁ｹ縺ｮ繧ｿ繝ｼ繝ｳ縺ｮ蝣ｴ蜷医・谺｡縺ｯ逶ｸ謇九・繧ｿ繝ｼ繝ｳ縺ｪ縺ｮ縺ｧ縲∵怙繧２蛟､(閾ｪ蛻・・縺ｮ蜍晉紫)縺ｮ菴弱＞繝弱・繝峨ｒ驕ｸ謚槭☆繧九・
+	Q_CMax = (Team == Team_1P) ? -10.0f : 10.0f;
+	action_id Selected_i = None, Selected_j = None;
+>>>>>>> 28d5b518db6c07bba21aae2d5cf612ced1b4cb8d
 	for(action_id i = 0; i < Max_ActionID; ++i)
 	{
 		for(action_id j = 0; j < Max_ActionID; ++j)
@@ -39,13 +46,13 @@ int node::Selection() //子ノードのコスト関数とQ値に基づいて子ノードを選択する
 				continue;
 			}
 			float Q_C = Child[i][j]->Q + Child[i][j]->Cost(N);
-			if(Q_CMax < Q_C&& Team == Team_2P)
+			if(Q_CMax < Q_C && Team == Team_1P)
 			{
 				Q_CMax = Q_C;
 				Selected_i = i;
 				Selected_j = j;
 			}
-			else if(Q_CMax > Q_C&& Team == Team_1P)
+			else if(Q_CMax > Q_C && Team == Team_2P)
 			{
 				Q_CMax = Q_C;
 				Selected_i = i;
@@ -100,7 +107,7 @@ int node::Evaluation()
 	return Rollout(Stage, stage::MaxTurn - Stage.GetCntTurn());
 }
 
-int node::Rollout(stage &Stage, int NumTurn)//ランダムに手を最後まで打って勝敗を返す
+int node::Rollout(stage &Stage, int NumTurn)//繝ｩ繝ｳ繝繝縺ｫ謇九ｒ譛蠕後∪縺ｧ謇薙▲縺ｦ蜍晄風繧定ｿ斐☆
 {
 	if(Team == Team_1P)
 	{
@@ -131,9 +138,12 @@ int node::Rollout(stage &Stage, int NumTurn)//ランダムに手を最後まで打って勝敗を
 	return -1;
 }
 
-float node::Cost(int Ns) //このノードを選ぶのにかかるコストを返す。Alpha参照。
+float node::Cost(int Ns) //縺薙・繝弱・繝峨ｒ驕ｸ縺ｶ縺ｮ縺ｫ縺九°繧九さ繧ｹ繝医ｒ霑斐☆縲・lpha蜿ら・縲・
 {
+<<<<<<< HEAD
 	
+=======
+>>>>>>> 28d5b518db6c07bba21aae2d5cf612ced1b4cb8d
 	return (N == 0)?: 0 :std::sqrtf(2.0f * std::logf((float)Ns)) / (float)N;
 }
 
