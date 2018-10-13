@@ -28,8 +28,8 @@ int node::Selection() //子ノードのコスト関数とQ値に基づいて子ノードを選択する
 	float Q_CMax;
 	//相手のターンの場合は次は味方のターンなので、最もQ値(自分側の勝率)の高いノードを選択する。
 	//味方のターンの場合は次は相手のターンなので、最もQ値(自分側の勝率)の低いノードを選択する。
-	Q_CMax = (Team == Team_2P) ? 10.0f : -1.0f;
-	int Selected_i = -1, Selected_j = -1;
+	Q_CMax = (Team == Team_1P) ? -10.0f : 10.0f;
+	action_id Selected_i = None, Selected_j = None;
 	for(action_id i = 0; i < Max_ActionID; ++i)
 	{
 		for(action_id j = 0; j < Max_ActionID; ++j)
@@ -39,13 +39,13 @@ int node::Selection() //子ノードのコスト関数とQ値に基づいて子ノードを選択する
 				continue;
 			}
 			float Q_C = Child[i][j]->Q + Child[i][j]->Cost(N);
-			if(Q_CMax < Q_C&& Team == Team_2P)
+			if(Q_CMax < Q_C && Team == Team_1P)
 			{
 				Q_CMax = Q_C;
 				Selected_i = i;
 				Selected_j = j;
 			}
-			else if(Q_CMax > Q_C&& Team == Team_1P)
+			else if(Q_CMax > Q_C && Team == Team_2P)
 			{
 				Q_CMax = Q_C;
 				Selected_i = i;

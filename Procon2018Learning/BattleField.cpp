@@ -11,7 +11,7 @@ void battle_field::DeepenNode(action_id Action1, action_id Action2)
 
 battle_field::battle_field()
 {
-	CurrentNode = new node(nullptr, Stage, Neutral);
+	CurrentNode = new node(nullptr, Stage, Team_1P);
 }
 
 battle_field::~battle_field()
