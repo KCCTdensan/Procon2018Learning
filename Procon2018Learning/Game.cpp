@@ -215,6 +215,7 @@ void stage::Action(intention(&Intentions)[NumTeams][NumAgents])
 			}
 		}
 	}
+	UpdateTileScore();
 }
 
 void stage::Action(action_id(&IntentionIDs)[NumTeams][NumAgents])
@@ -336,6 +337,7 @@ void stage::Action(intention(&Intentions)[NumAgents], team_no Team)
 			Panels[Agents[Team][a].GetPosition()].RemoveCard();
 		}
 	}
+	UpdateTileScore();
 }
 
 bool stage::CanAction(intention(&Intentions)[NumAgents])
