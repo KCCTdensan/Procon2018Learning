@@ -1,6 +1,7 @@
 #include "Search.hpp"
 #include "Random.hpp"
 #include <iostream>
+#include <iomanip>
 
 
 int node::Play() //閾値以上ならノードを展開、閾値未満ならrollout、Q値を更新
@@ -13,14 +14,17 @@ int node::Play() //閾値以上ならノードを展開、閾値未満ならroll
 			Expansion();
 		}
 		Ret = Selection();
+		std::cout << "Sel=" << Ret << std::endl;
 	}
 	else
 	{
 		Ret = Evaluation();
+		std::cout << "Ev=" << Ret << std::endl;
 	}
 	N++;
 	Record += Ret;
 	Q = (float)Record / N;
+	//std::cout << "Q=" << Q << "Record=" << Record << "N=" << N <<std::endl;
 	return Ret;
 }
 
@@ -63,6 +67,7 @@ int node::Selection() //子ノードのコスト関数とQ値に基づいて子�
 	{
 		return 0;
 	}
+	std::cout << std::setw(4) << (int)Selected_i << "," << std::setw(4) << (int)Selected_j << ":" << Child[Selected_i][Selected_j]->Q << std::endl;
 	return Child[Selected_i][Selected_j]->Play();
 }
 
@@ -130,19 +135,22 @@ int node::Rollout(stage &Stage, int NumTurn)//ランダムに手を最後まで�
 
 	if(Stage.GetScore1P() > Stage.GetScore2P())
 	{
+		std::cout << "win" << std::endl;
 		return 1;
 	}
 	if(Stage.GetScore1P() == Stage.GetScore2P())
 	{
+		std::cout << "draw" << std::endl;
 		return 0;
 	}
+	std::cout << "lose" << std::endl;
 	return -1;
 }
 
 float node::Cost(int Ns) //このノードを選ぶのにかかるコストを返す。Alpha参照。
 {
 	const static float Cp = 1.0f;
-	if(N == 0)
+	if(N == 0 || Ns == 0)
 	{
 		return INFINITY;
 	}

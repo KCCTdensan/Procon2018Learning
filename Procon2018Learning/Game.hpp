@@ -87,5 +87,6 @@ public:
 	int GetScore1P();
 	int GetScore2P();
 	agent* GetAgent(team_no Team, int AgentNo);
+	void color(int, int, int, int);
 	void PrintStage();
 };

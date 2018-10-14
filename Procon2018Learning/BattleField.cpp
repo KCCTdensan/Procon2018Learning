@@ -44,6 +44,7 @@ void battle_field::Battle(int NumTurn)
 				}
 			}
 		}
+		//std::cout << (int)IntentionIDs[0][0] << (int)IntentionIDs[0][1] << (int)IntentionIDs[1][0] << (int)IntentionIDs[1][1] << std::endl;
 		DeepenNode(IntentionIDs[Team_1P][0], IntentionIDs[Team_1P][1]);
 
 		CurrentNode->Search(node::NumCallPlay, Result);
@@ -63,6 +64,7 @@ void battle_field::Battle(int NumTurn)
 		DeepenNode(IntentionIDs[Team_1P][0], IntentionIDs[Team_1P][1]);
 
 		Stage.Action(IntentionIDs);
+		//std::cout << IntentionIDs[0][0] << IntentionIDs[0][1] << IntentionIDs[1][0] << IntentionIDs[1][1] << std::endl;
 		std::cout << "Action" << i << std::endl;
 	}
 }

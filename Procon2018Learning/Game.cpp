@@ -1,6 +1,7 @@
 #include "Game.hpp"
 #include "Random.hpp"
 #include <iostream>
+#include <windows.h>
 
 
 int stage::PanelPointRandom()
@@ -385,6 +386,7 @@ int stage::GetCntTurn()
 
 int stage::GetScore1P()
 {
+	//std::cout << "Tile:" << TileScore1P << "Region" << RegionScore1P << std::endl;
 	return TileScore1P + RegionScore1P;
 }
 
@@ -401,6 +403,7 @@ agent* stage::GetAgent(team_no Team, int AgentNo)
 void stage::PrintStage()
 {
 	using namespace std;
+
 	for(int y = 0; y < NumY; y++)
 	{
 		for(int x = 0; x < NumX; x++)
@@ -408,14 +411,17 @@ void stage::PrintStage()
 			switch(Panels[y][x].GetState())
 			{
 			case None:
+				//color(0xffff, 0x0000, 0x0000, 0x0000);
 				printf("%3d ", Panels[y][x].GetScore());
 				break;
 
 			case Team_1P:
+				//color(0xffff,0x0000,0x0001,0x0000);
 				printf("%+3d ", Panels[y][x].GetScore());
 				break;
 
 			case Team_2P:
+				//color(0xffff, 0x0000, 0x0040, 0x0000);
 				printf("%-3d ", Panels[y][x].GetScore());
 				break;
 			}
@@ -423,4 +429,24 @@ void stage::PrintStage()
 		cout << endl;
 	}
 	cout << endl;
+}
+
+void stage:: color(int a, int b, int c, int d)
+{
+	HANDLE hStdout;
+	WORD wAttributes;
+	char txt;
+
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+	hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+	GetConsoleScreenBufferInfo(hStdout, &csbi);
+
+	txt = a; //タイトルの文字色
+
+	wAttributes = txt;
+	wAttributes = wAttributes | b; // 文字強調 
+	wAttributes = wAttributes | c; // タイトルの背景色 
+	wAttributes = wAttributes | d; // 背景色強調
+	SetConsoleTextAttribute(hStdout, wAttributes); // SET
+	return;
 }
