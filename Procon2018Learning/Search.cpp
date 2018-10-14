@@ -14,12 +14,12 @@ int node::Play() //閾値以上ならノードを展開、閾値未満ならroll
 			Expansion();
 		}
 		Ret = Selection();
-		std::cout << "Sel=" << Ret << std::endl;
+		//std::cout << "Sel=" << Ret << std::endl;
 	}
 	else
 	{
 		Ret = Evaluation();
-		std::cout << "Ev=" << Ret << std::endl;
+		//std::cout << "Ev=" << Ret << std::endl;
 	}
 	N++;
 	Record += Ret;
@@ -67,7 +67,7 @@ int node::Selection() //子ノードのコスト関数とQ値に基づいて子�
 	{
 		return 0;
 	}
-	std::cout << std::setw(4) << (int)Selected_i << "," << std::setw(4) << (int)Selected_j << ":" << Child[Selected_i][Selected_j]->Q << std::endl;
+	//std::cout << std::setw(4) << (int)Selected_i << "," << std::setw(4) << (int)Selected_j << ":" << Child[Selected_i][Selected_j]->Q << std::endl;
 	return Child[Selected_i][Selected_j]->Play();
 }
 
@@ -135,15 +135,15 @@ int node::Rollout(stage &Stage, int NumTurn)//ランダムに手を最後まで�
 
 	if(Stage.GetScore1P() > Stage.GetScore2P())
 	{
-		std::cout << "win" << std::endl;
+		//std::cout << "win" << std::endl;
 		return 1;
 	}
 	if(Stage.GetScore1P() == Stage.GetScore2P())
 	{
-		std::cout << "draw" << std::endl;
+		//std::cout << "draw" << std::endl;
 		return 0;
 	}
-	std::cout << "lose" << std::endl;
+	//std::cout << "lose" << std::endl;
 	return -1;
 }
 

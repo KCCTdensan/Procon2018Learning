@@ -413,18 +413,47 @@ void stage::PrintStage()
 			switch(Panels[y][x].GetState())
 			{
 			case None:
-				//color(0xffff, 0x0000, 0x0000, 0x0000);
+				color(0xffff, 0x0000, 0x0000, 0x0000);
 				printf("%3d ", Panels[y][x].GetScore());
 				break;
 
 			case Team_1P:
-				//color(0xffff,0x0000,0x0001,0x0000);
+				color(0xffff, 0x0000, 0x0040, 0x0000);
 				printf("%+3d ", Panels[y][x].GetScore());
+				color(0xffff, 0x0000, 0x0000, 0x0000);
 				break;
 
 			case Team_2P:
-				//color(0xffff, 0x0000, 0x0040, 0x0000);
+				color(0xffff, 0x0000, 0x0040, 0x0000);
 				printf("%-3d ", Panels[y][x].GetScore());
+				color(0xffff, 0x0000, 0x0000, 0x0000);
+				break;
+			}
+		}
+		cout << endl;
+	}
+	cout << endl;
+	for (int y = 0; y < NumY; y++)
+	{
+		for (int x = 0; x < NumX; x++)
+		{
+			if (Agents[0][0].GetPosition().x == x && Agents[0][0].GetPosition().y == y) { cout << "Z"; continue; }
+			if (Agents[0][1].GetPosition().x == x && Agents[0][1].GetPosition().y == y) { cout << ""; continue; }
+			if (Agents[1][0].GetPosition().x == x && Agents[1][0].GetPosition().y == y) { cout << "œ"; continue; }
+			if (Agents[1][1].GetPosition().x == x && Agents[1][1].GetPosition().y == y) { cout << "£"; continue; }
+
+			switch (Panels[y][x].GetState())
+			{
+			case None:
+				cout << " ";
+				break;
+
+			case Team_1P:
+				cout << "Ÿ";
+				break;
+
+			case Team_2P:
+				cout << "¡";
 				break;
 			}
 		}
