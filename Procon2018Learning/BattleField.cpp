@@ -10,8 +10,9 @@ void battle_field::DeepenNode(action_id Action1, action_id Action2)
 	CurrentNode = ChildNode;
 }
 
-battle_field::battle_field()
+battle_field::battle_field(stage stg)
 {
+	Stage = stg;
 	CurrentNode = new node(nullptr, Stage, Team_1P);
 }
 

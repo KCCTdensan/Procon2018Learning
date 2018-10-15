@@ -59,6 +59,9 @@ void stage::InitRandomStage()
 		Agents[1][0].Init(NumX - AgentX - 1, AgentY, Team_2P);
 		Agents[1][1].Init(NumX - AgentX - 1, NumY - AgentY - 1, Team_2P);
 	}
+	std::cout << "<===========================================>" << std::endl;
+	PrintStage();
+	std::cout << "<===========================================>" << std::endl;
 }
 
 int stage::UpdateRegionScore_Check(int x, int y, team_no Team, panel_check(&CheckedPanel)[NumTeams][MaxY][MaxX])
@@ -182,7 +185,7 @@ void stage::UpdateTileScore()
 
 stage::stage()
 {
-	InitRandomStage();
+	//InitRandomStage();
 }
 
 stage::~stage()

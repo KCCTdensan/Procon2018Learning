@@ -110,10 +110,12 @@ int node::Rollout(stage &Stage, int NumTurn)//ランダムに手を最後まで�
 				}
 			}
 		} while(!Stage.CanAction(Intentions));
-		Stage.PrintStage();
+		//Stage.PrintStage();
 		Stage.Action(Intentions);
+
+		//std::cout << "turn:" << i << std::endl;
 	}
-	std::cout << "End" << std::endl;
+	//std::cout << "End" << std::endl;
 
 	if(Stage.GetScore1P() > Stage.GetScore2P())
 	{
