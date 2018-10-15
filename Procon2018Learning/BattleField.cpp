@@ -25,8 +25,12 @@ void battle_field::Battle(int NumTurn)
 {
 	for (int i = 0; i < NumTurn; ++i)
 	{
-		std::cout << "================================================" << std::endl;
-		std::cout << "Action" << i << std::endl;
+		//DEBUG=====================================================================================================
+		using namespace std;
+		cout << "================================================" << endl;
+		cout << "Action" << i << endl;
+		//==========================================================================================================
+
 		int Result[Max_ActionID][Max_ActionID];
 		CurrentNode->Search(node::NumCallPlay, Result);
 
@@ -46,8 +50,16 @@ void battle_field::Battle(int NumTurn)
 				}
 			}
 		}
-		std::cout << "1P : " << (int)IntentionIDs[Team_1P][0] << ", " << (int)IntentionIDs[Team_1P][1] << std::endl;
 		DeepenNode(IntentionIDs[Team_1P][0], IntentionIDs[Team_1P][1]);
+
+		//DEBUG=====================================================================================================
+		{
+			intention Intention1P_1 = IntentionIDs[Team_1P][0];
+			intention Intention1P_2 = IntentionIDs[Team_1P][1];
+			cout << "1P-1 : [x : " << Intention1P_1.DeltaX << " y : " << Intention1P_1.DeltaY << " a : " << (int)Intention1P_1.Action << "]" << endl;
+			cout << "1P-2 : [x : " << Intention1P_2.DeltaX << " y : " << Intention1P_2.DeltaY << " a : " << (int)Intention1P_2.Action << "]" << endl;
+		}
+		//==========================================================================================================
 
 		CurrentNode->Search(node::NumCallPlay, Result);
 		Max = 0;
@@ -66,7 +78,15 @@ void battle_field::Battle(int NumTurn)
 		DeepenNode(IntentionIDs[Team_2P][0], IntentionIDs[Team_2P][1]);
 
 		Stage.Action(IntentionIDs);
-		std::cout << "2P : " << (int)IntentionIDs[Team_2P][0] << ", " << (int)IntentionIDs[Team_2P][1] << std::endl;
+
+		//DEBUG=====================================================================================================
+		{
+			intention Intention2P_1 = IntentionIDs[Team_2P][0];
+			intention Intention2P_2 = IntentionIDs[Team_2P][1];
+			cout << "2P-1 : [x : " << Intention2P_1.DeltaX << " y : " << Intention2P_1.DeltaY << " a : " << (int)Intention2P_1.Action << "]" << endl;
+			cout << "2P-2 : [x : " << Intention2P_2.DeltaX << " y : " << Intention2P_2.DeltaY << " a : " << (int)Intention2P_2.Action << "]" << endl;
+		}
 		Stage.PrintStage();
+		//==========================================================================================================
 	}
 }

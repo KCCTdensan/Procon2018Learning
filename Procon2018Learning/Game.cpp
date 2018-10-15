@@ -13,8 +13,8 @@ int stage::PanelPointRandom()
 
 void stage::InitRandomStage()
 {
-	NumX = random::Mod(10) + 3;
-	NumY = random::Mod(10) + 3;
+	NumX = 11;//random::Mod(10) + 3;
+	NumY = 12;//random::Mod(10) + 3;
 	CntTurn = 0;
 	TileScore1P = 0;
 	TileScore2P = 0;
@@ -410,25 +410,7 @@ void stage::PrintStage()
 	{
 		for(int x = 0; x < NumX; x++)
 		{
-			switch(Panels[y][x].GetState())
-			{
-			case None:
-				color(0xffff, 0x0000, 0x0000, 0x0000);
-				printf("%3d ", Panels[y][x].GetScore());
-				break;
-
-			case Team_1P:
-				color(0xffff, 0x0000, 0x0040, 0x0000);
-				printf("%+3d ", Panels[y][x].GetScore());
-				color(0xffff, 0x0000, 0x0000, 0x0000);
-				break;
-
-			case Team_2P:
-				color(0xffff, 0x0000, 0x0040, 0x0000);
-				printf("%-3d ", Panels[y][x].GetScore());
-				color(0xffff, 0x0000, 0x0000, 0x0000);
-				break;
-			}
+			printf("%3d ", Panels[y][x].GetScore());
 		}
 		cout << endl;
 	}

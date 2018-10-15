@@ -110,8 +110,10 @@ int node::Rollout(stage &Stage, int NumTurn)//ランダムに手を最後まで�
 				}
 			}
 		} while(!Stage.CanAction(Intentions));
+		Stage.PrintStage();
 		Stage.Action(Intentions);
 	}
+	std::cout << "End" << std::endl;
 
 	if(Stage.GetScore1P() > Stage.GetScore2P())
 	{
@@ -207,10 +209,9 @@ void node::Search(int NumCallPlay, int(&Result)[Max_ActionID][Max_ActionID])
 			}
 			Result[i][j] = Child[i][j]->N;
 		}
-		std::cout << std::endl;
 	}
 
-	using namespace std;
+	/*using namespace std;
 	cout << "Ns : " << N << endl;
 	for(action_id i = 0; i < Max_ActionID; ++i)
 	{
@@ -234,7 +235,7 @@ void node::Search(int NumCallPlay, int(&Result)[Max_ActionID][Max_ActionID])
 			printf("[R:%6d] ", Child[i][j]->Record);
 		}
 		cout << endl << endl;
-	}
+	}*/
 }
 
 node* node::Deepen(action_id Action1, action_id Action2)
