@@ -56,7 +56,7 @@ private:
 	unsigned short RegionScore2P;
 
 	int PanelPointRandom();
-	void InitRandomStage();
+	
 	int UpdateRegionScore_Check(int x, int y, team_no Team, panel_check(&CheckedPanel)[NumTeams][MaxY][MaxX]);
 	void UpdateRegionScore_Set(int x, int y, team_no Team, bool Surrounded, panel_check(&CheckedPanel)[NumTeams][MaxY][MaxX]);
 	void UpdateRegionScore();
@@ -66,6 +66,7 @@ public:
 	stage();
 	~stage();
 
+	void InitRandomStage();
 	//óºÉ`Å[ÉÄóp
 	void Action(intention(&Intentions)[NumTeams][NumAgents]);
 	void Action(action_id(&IntentionIDs)[NumTeams][NumAgents]);

@@ -7,11 +7,12 @@ int main()
 {
 	
 	//ステージ作成単体テスト
-	/*stage s = stage();
-	s.PrintStage();*/
+	stage s;
+	s.InitRandomStage();
+	s.PrintStage();
 	
 	//探索テスト
-	battle_field BattleField;
+	battle_field BattleField(s);
 	BattleField.Battle(60);
 
 	return 0;
