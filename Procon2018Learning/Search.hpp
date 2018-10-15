@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Game.hpp"
 
@@ -6,7 +6,7 @@
 class node
 {
 public:
-	const static int NumCallPlay = 10000;
+	const static int NumCallPlay = 100000;
 	const static int Threshold = 100;
 
 private:
@@ -24,7 +24,7 @@ private:
 	void Expansion();
 	int Evaluation();
 	int Rollout(stage &Stage, int NumTurn);
-	float Cost(int Ns);
+	float UCB1(float Q, int NChild);
 	bool IsLeafNode();
 	void ClearChildNode();
 

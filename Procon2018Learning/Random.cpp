@@ -1,10 +1,10 @@
-#include "Random.hpp"
+﻿#include "Random.hpp"
 
 
 namespace random
 {
 	std::random_device RandomDev;
-	std::mt19937 RandomMT;
+	std::mt19937 RandomMT(RandomDev());
 
 	int ZeroToMax(int MaxValue)
 	{

@@ -1,4 +1,4 @@
-#include "Search.hpp"
+﻿#include "Search.hpp"
 #include "Random.hpp"
 #include <iostream>
 //#include <iomanip>
@@ -43,7 +43,7 @@ int node::Selection() //子ノードのコスト関数とQ値に基づいて子�
 			{
 				continue;
 			}
-			float Q_C = Child[i][j]->Q + Child[i][j]->Cost(N);
+			float Q_C = UCB1(Child[i][j]->Q, Child[i][j]->N);
 			if(Q_C == INFINITY)
 			{
 				return Child[i][j]->Play();
@@ -147,14 +147,18 @@ int node::Rollout(stage &Stage, int NumTurn)//ランダムに手を最後まで�
 	return -1;
 }
 
-float node::Cost(int Ns) //このノードを選ぶのにかかるコストを返す。Alpha参照。
+float node::UCB1(float Q, int NChild)
 {
 	const static float Cp = 1.0f;
-	if(N == 0 || Ns == 0)
+	if(NChild == 0)
 	{
 		return INFINITY;
 	}
-	return Cp * std::sqrtf(2.0f * std::logf((float)Ns)) / (float)N;
+	if(Team == Team_2P)
+	{
+		Q = -Q;
+	}
+	return Q + Cp * std::sqrtf(2.0f * std::logf((float)N) / (float)NChild);
 }
 
 bool node::IsLeafNode()
@@ -210,6 +214,7 @@ void node::Search(int NumCallPlay, int(&Result)[Max_ActionID][Max_ActionID])
 	for(int i = 0; i < NumCallPlay; ++i)
 	{
 		Selection();
+		N++;
 	}
 	for(action_id i = 0; i < Max_ActionID; ++i)
 	{
@@ -218,13 +223,37 @@ void node::Search(int NumCallPlay, int(&Result)[Max_ActionID][Max_ActionID])
 			if(Child[i][j] == nullptr)
 			{
 				Result[i][j] = 0;
-				std::cout << " null ";
 				continue;
 			}
 			Result[i][j] = Child[i][j]->N;
-			printf("%.3f ", Child[i][j]->N);
 		}
 		std::cout << std::endl;
+	}
+
+	using namespace std;
+	cout << "Ns : " << N << endl;
+	for(action_id i = 0; i < Max_ActionID; ++i)
+	{
+		for(action_id j = 0; j < Max_ActionID; ++j)
+		{
+			if(Child[i][j] == nullptr)
+			{
+				cout << " ********  ";
+				continue;
+			}
+			printf("[N:%6d] ", Child[i][j]->N);
+		}
+		cout << endl;
+		for(action_id j = 0; j < Max_ActionID; ++j)
+		{
+			if(Child[i][j] == nullptr)
+			{
+				cout << " ********  ";
+				continue;
+			}
+			printf("[R:%6d] ", Child[i][j]->Record);
+		}
+		cout << endl << endl;
 	}
 }
 
