@@ -1,7 +1,7 @@
 #include "Search.hpp"
 #include "Random.hpp"
 #include <iostream>
-#include <iomanip>
+//#include <iomanip>
 
 
 int node::Play() //閾値以上ならノードを展開、閾値未満ならrollout、Q値を更新
@@ -218,10 +218,13 @@ void node::Search(int NumCallPlay, int(&Result)[Max_ActionID][Max_ActionID])
 			if(Child[i][j] == nullptr)
 			{
 				Result[i][j] = 0;
+				std::cout << " null ";
 				continue;
 			}
 			Result[i][j] = Child[i][j]->N;
+			printf("%.3f ", Child[i][j]->N);
 		}
+		std::cout << std::endl;
 	}
 }
 
@@ -230,5 +233,5 @@ node* node::Deepen(action_id Action1, action_id Action2)
 	node *Ret = Child[Action1][Action2];
 	Ret->Parent = nullptr;
 	Child[Action1][Action2] = nullptr;
-	return Child[Action1][Action2];
+	return Ret;
 }
