@@ -6,8 +6,8 @@
 class node
 {
 public:
-	const static int NumCallPlay = 10000;
-	const static int Threshold = 100;
+	const static int NumCallPlay = 100;
+	const static int Threshold = 10;
 
 private:
 	node *Parent;
@@ -26,6 +26,7 @@ private:
 	int Rollout(stage &Stage, int NumTurn);
 	float Cost(int Ns);
 	bool IsLeafNode();
+	void ClearChildNode();
 
 public:
 	node(node *Parent, stage &Stage, team_no Team);

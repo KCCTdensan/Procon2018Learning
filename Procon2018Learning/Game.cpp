@@ -215,7 +215,7 @@ void stage::Action(intention(&Intentions)[NumTeams][NumAgents])
 			}
 		}
 	}
-	UpdateTileScore();
+	UpdateScore();
 }
 
 void stage::Action(action_id(&IntentionIDs)[NumTeams][NumAgents])

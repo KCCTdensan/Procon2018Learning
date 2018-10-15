@@ -162,6 +162,22 @@ bool node::IsLeafNode()
 	return NumChildren == 0;
 }
 
+void node::ClearChildNode()
+{
+	for(action_id i = 0; i < Max_ActionID; ++i)
+	{
+		for(action_id j = 0; j < Max_ActionID; ++j)
+		{
+			if(Child[i][j] == nullptr)
+			{
+				continue;
+			}
+			delete Child[i][j];
+			Child[i][j] = nullptr;
+		}
+	}
+}
+
 node::node(node *Parent, stage &Stage, team_no Team)
 {
 	this->Parent = Parent;
@@ -182,7 +198,7 @@ node::node(node *Parent, stage &Stage, team_no Team)
 
 node::~node()
 {
-
+	ClearChildNode();
 }
 
 void node::Search(int NumCallPlay, int(&Result)[Max_ActionID][Max_ActionID])
@@ -211,21 +227,8 @@ void node::Search(int NumCallPlay, int(&Result)[Max_ActionID][Max_ActionID])
 
 node* node::Deepen(action_id Action1, action_id Action2)
 {
-	for(action_id i = 0; i < Max_ActionID; ++i)
-	{
-		for(action_id j = 0; j < Max_ActionID; ++j)
-		{
-			if(Child[i][j] == nullptr)
-			{
-				continue;
-			}
-			if(i != Action1 || j != Action2)
-			{
-				delete Child[i][j];
-				Child[i][j] = nullptr;
-			}
-		}
-	}
-	Child[Action1][Action2]->Parent = nullptr;
+	node *Ret = Child[Action1][Action2];
+	Ret->Parent = nullptr;
+	Child[Action1][Action2] = nullptr;
 	return Child[Action1][Action2];
 }
