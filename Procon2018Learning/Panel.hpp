@@ -12,7 +12,7 @@ enum
 
 class panel
 {
-	int Point;
+	char Point;
 	team_no State;
 	bool Surrounded[NumTeams];
 
@@ -20,10 +20,10 @@ public:
 	panel();
 	~panel();
 
-	void Init(int Point);
+	void Init(char Point);
 	void MakeCard(team_no Team);
 	void RemoveCard();
-	int GetScore();
+	char GetScore();
 	team_no GetState();
 	void SetSurrounded(bool IsSurrounded, team_no Team);
 	bool GetSurrounded(team_no Team);

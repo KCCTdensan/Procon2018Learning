@@ -11,7 +11,7 @@ panel::~panel()
 
 }
 
-void panel::Init(int Point)
+void panel::Init(char Point)
 {
 	this->Point = Point;
 	State = Neutral;
@@ -27,7 +27,7 @@ void panel::RemoveCard()
 	State = Neutral;
 }
 
-int panel::GetScore()
+char panel::GetScore()
 {
 	return Point;
 }

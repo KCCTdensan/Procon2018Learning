@@ -23,7 +23,7 @@ private:
 	int Selection();
 	void Expansion();
 	int Evaluation();
-	int Rollout(stage &Stage, int NumTurn);
+	int Rollout(stage Stage, int NumTurn);
 	float UCB1(float Q, int NChild);
 	bool IsLeafNode();
 	void ClearChildNode();

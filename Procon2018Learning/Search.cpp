@@ -90,14 +90,18 @@ int node::Evaluation()
 	return Rollout(Stage, stage::MaxTurn - Stage.GetCntTurn());
 }
 
-int node::Rollout(stage &Stage, int NumTurn)//ランダムに手を最後まで打って勝敗を返す
+int node::Rollout(stage Stage, int NumTurn)//ランダムに手を最後まで打って勝敗を返す
 {
 	if(Team == Team_1P)
 	{
-		intention Intentions[NumTeams];
+		action_id Intentions[NumTeams];
+		for(char a = 0; a < stage::NumAgents; ++a)
+		{
+			Intentions[a] = (action_id)rand() % Max_ActionID;
+		}
 		Stage.Action(Intentions, Team_2P);
 	}
-	for(int i = 0; i < NumTurn; ++i)
+	for(int i = 0; i < 1; ++i)//1手だけすすめる
 	{
 		intention Intentions[NumTeams][stage::NumAgents];
 		do
@@ -110,10 +114,10 @@ int node::Rollout(stage &Stage, int NumTurn)//ランダムに手を最後まで�
 				}
 			}
 		} while(!Stage.CanAction(Intentions));
-		Stage.PrintStage();
+		//Stage.PrintStage();
 		Stage.Action(Intentions);
 	}
-	std::cout << "End" << std::endl;
+	//std::cout << "End" << std::endl;
 
 	if(Stage.GetScore1P() > Stage.GetScore2P())
 	{
@@ -240,6 +244,10 @@ void node::Search(int NumCallPlay, int(&Result)[Max_ActionID][Max_ActionID])
 
 node* node::Deepen(action_id Action1, action_id Action2)
 {
+	if(Action1 == -1 || Action2 == -1)
+	{
+		throw "ActionError";
+	}
 	node *Ret = Child[Action1][Action2];
 	Ret->Parent = nullptr;
 	Child[Action1][Action2] = nullptr;

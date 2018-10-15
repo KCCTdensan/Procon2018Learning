@@ -36,6 +36,10 @@ void stage::InitRandomStage()
 				int Score = Panels[y][x].GetScore();
 				Panels[y][xInv].Init(Score);
 			}
+			if(NumX % 2 != 0)
+			{
+				Panels[y][NumX / 2].Init(PanelPointRandom());
+			}
 		}
 		Agents[0][0].Init(AgentX, AgentY, Team_1P);
 		Agents[0][1].Init(NumX - AgentX - 1, AgentY, Team_2P);
@@ -52,6 +56,13 @@ void stage::InitRandomStage()
 				int yInv = NumY - y - 1;
 				int Score = Panels[y][x].GetScore();
 				Panels[yInv][x].Init(Score);
+			}
+		}
+		if(NumY % 2 != 0)
+		{
+			for(int x = 0; x < NumX; ++x)
+			{
+				Panels[NumY / 2][x].Init(PanelPointRandom());
 			}
 		}
 		Agents[0][0].Init(AgentX, AgentY, Team_1P);
@@ -220,10 +231,10 @@ void stage::Action(intention(&Intentions)[NumTeams][NumAgents])
 
 void stage::Action(action_id(&IntentionIDs)[NumTeams][NumAgents])
 {
-	intention Intentions[NumTeams][stage::NumAgents];
+	intention Intentions[NumTeams][NumAgents];
 	for(team_no t = 0; t < NumTeams; ++t)
 	{
-		for(char a = 0; a < stage::NumAgents; ++a)
+		for(char a = 0; a < NumAgents; ++a)
 		{
 			Intentions[t][a] = IntentionIDs[t][a];
 		}
@@ -340,6 +351,16 @@ void stage::Action(intention(&Intentions)[NumAgents], team_no Team)
 	UpdateTileScore();
 }
 
+void stage::Action(action_id(&IntentionIDs)[NumTeams], team_no Team)
+{
+	intention Intentions[NumTeams];
+	for(char a = 0; a < NumAgents; ++a)
+	{
+		Intentions[a] = IntentionIDs[a];
+	}
+	Action(Intentions, Team);
+}
+
 bool stage::CanAction(intention(&Intentions)[NumAgents])
 {
 	if(!(CanActionOne(Agents[Team_1P][0].GetPosition(), Intentions[0]) && CanActionOne(Agents[Team_1P][1].GetPosition(), Intentions[1])))
@@ -436,7 +457,22 @@ void stage::PrintStage()
 			switch(Panels[y][x].GetState())
 			{
 			case None:
-				cout << "|";
+				if(Panels[y][x].GetSurrounded(Team_1P))
+				{
+					cout << "1";
+				}
+				else
+				{
+					cout << "-";
+				}
+				if(Panels[y][x].GetSurrounded(Team_2P))
+				{
+					cout << "2";
+				}
+				else
+				{
+					cout << "-";
+				}
 				break;
 
 			case Team_1P:

@@ -47,13 +47,13 @@ private:
 	};
 	panels Panels;
 	agent Agents[NumTeams][NumAgents];
-	int NumX;
-	int NumY;
-	int CntTurn;
-	int TileScore1P;
-	int TileScore2P;
-	int RegionScore1P;
-	int RegionScore2P;
+	unsigned char NumX;
+	unsigned char NumY;
+	unsigned char CntTurn;
+	unsigned short TileScore1P;
+	unsigned short TileScore2P;
+	unsigned short RegionScore1P;
+	unsigned short RegionScore2P;
 
 	int PanelPointRandom();
 	void InitRandomStage();
@@ -74,6 +74,7 @@ public:
 
 	//1チーム用
 	void Action(intention(&Intentions)[NumAgents], team_no Team);
+	void Action(action_id(&IntentionIDs)[NumTeams], team_no Team);
 	bool CanAction(intention(&Intentions)[NumAgents]);
 
 	//1プレイヤー用
