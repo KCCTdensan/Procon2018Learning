@@ -30,10 +30,7 @@ int node::Play() //閾値以上ならノードを展開、閾値未満ならroll
 
 int node::Selection() //子ノードのコスト関数とQ値に基づいて子ノードを選択する
 {
-	float Q_CMax;
-	//相手のターンの場合は次は味方のターンなので、最もQ値(自分側の勝率)の高いノードを選択する。
-	//味方のターンの場合は次は相手のターンなので、最もQ値(自分側の勝率)の低いノードを選択する。
-	Q_CMax = (Team == Team_1P) ? -10.0f : 10.0f;
+	float Q_CMax = -10.0f;
 	action_id Selected_i = None, Selected_j = None;
 	for(action_id i = 0; i < Max_ActionID; ++i)
 	{
@@ -48,13 +45,7 @@ int node::Selection() //子ノードのコスト関数とQ値に基づいて子�
 			{
 				return Child[i][j]->Play();
 			}
-			if(Q_CMax < Q_C && Team == Team_1P)
-			{
-				Q_CMax = Q_C;
-				Selected_i = i;
-				Selected_j = j;
-			}
-			else if(Q_CMax > Q_C && Team == Team_2P)
+			if(Q_CMax < Q_C)
 			{
 				Q_CMax = Q_C;
 				Selected_i = i;
@@ -62,10 +53,6 @@ int node::Selection() //子ノードのコスト関数とQ値に基づいて子�
 			}
 
 		}
-	}
-	if(Selected_i == -1)
-	{
-		return 0;
 	}
 	//std::cout << std::setw(4) << (int)Selected_i << "," << std::setw(4) << (int)Selected_j << ":" << Child[Selected_i][Selected_j]->Q << std::endl;
 	return Child[Selected_i][Selected_j]->Play();
@@ -91,14 +78,7 @@ void node::Expansion()
 			}
 
 			node *NewNode = new node(this, Stage, (Team == Team_1P) ? Team_2P : Team_1P);
-			if(Team == Team_1P)
-			{
-				NewNode->Stage.Action(Intentions, Team);
-			}
-			else
-			{
-				NewNode->Stage.Action(Intentions, Team);
-			}
+			NewNode->Stage.Action(Intentions, Team);
 			Child[i][j] = NewNode;
 			NumChildren++;
 		}
@@ -149,7 +129,7 @@ int node::Rollout(stage &Stage, int NumTurn)//ランダムに手を最後まで�
 
 float node::UCB1(float Q, int NChild)
 {
-	const static float Cp = 1.0f;
+	const static float Cp = 10.0f;
 	if(NChild == 0)
 	{
 		return INFINITY;

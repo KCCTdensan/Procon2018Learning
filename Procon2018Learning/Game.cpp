@@ -437,23 +437,32 @@ void stage::PrintStage()
 	{
 		for (int x = 0; x < NumX; x++)
 		{
-			if (Agents[0][0].GetPosition().x == x && Agents[0][0].GetPosition().y == y) { cout << "Z"; continue; }
-			if (Agents[0][1].GetPosition().x == x && Agents[0][1].GetPosition().y == y) { cout << ""; continue; }
-			if (Agents[1][0].GetPosition().x == x && Agents[1][0].GetPosition().y == y) { cout << "œ"; continue; }
-			if (Agents[1][1].GetPosition().x == x && Agents[1][1].GetPosition().y == y) { cout << "£"; continue; }
+			if (Agents[0][0].GetPosition().x == x && Agents[0][0].GetPosition().y == y) { cout << "œ"; continue; }
+			if (Agents[0][1].GetPosition().x == x && Agents[0][1].GetPosition().y == y) { cout << "¡"; continue; }
+			if (Agents[1][0].GetPosition().x == x && Agents[1][0].GetPosition().y == y) { cout << "›"; continue; }
+			if (Agents[1][1].GetPosition().x == x && Agents[1][1].GetPosition().y == y) { cout << " "; continue; }
 
-			switch (Panels[y][x].GetState())
+			cout << "|";
+		}
+		cout << endl;
+	}
+	cout << endl;
+	for(int y = 0; y < NumY; y++)
+	{
+		for(int x = 0; x < NumX; x++)
+		{
+			switch(Panels[y][x].GetState())
 			{
 			case None:
-				cout << " ";
+				cout << "|";
 				break;
 
 			case Team_1P:
-				cout << "Ÿ";
+				cout << "¡";
 				break;
 
 			case Team_2P:
-				cout << "¡";
+				cout << " ";
 				break;
 			}
 		}
