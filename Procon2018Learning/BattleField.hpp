@@ -12,7 +12,7 @@ class battle_field
 	void DeepenNode(action_id Action1, action_id Action2);
 
 public:
-	battle_field(stage Stg);
+	battle_field();
 	~battle_field();
 	void Battle(int NumTurn);
 };

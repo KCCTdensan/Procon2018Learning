@@ -10,9 +10,8 @@ void battle_field::DeepenNode(action_id Action1, action_id Action2)
 	CurrentNode = ChildNode;
 }
 
-battle_field::battle_field(stage stg)
+battle_field::battle_field()
 {
-	Stage = stg;
 	CurrentNode = new node(nullptr, Stage, Team_1P);
 }
 
@@ -26,11 +25,11 @@ void battle_field::Battle(int NumTurn)
 {
 	for (int i = 0; i < NumTurn; ++i)
 	{
-		//DEBUG=====================================================================================================
+#ifdef _DEBUG
 		using namespace std;
 		cout << "================================================" << endl;
 		cout << "Action" << i << endl;
-		//==========================================================================================================
+#endif
 
 		int Result[Max_ActionID][Max_ActionID];
 		CurrentNode->Search(node::NumCallPlay, Result);
@@ -53,14 +52,14 @@ void battle_field::Battle(int NumTurn)
 		}
 		DeepenNode(IntentionIDs[Team_1P][0], IntentionIDs[Team_1P][1]);
 
-		//DEBUG=====================================================================================================
+#ifdef _DEBUG
 		{
 			intention Intention1P_1 = IntentionIDs[Team_1P][0];
 			intention Intention1P_2 = IntentionIDs[Team_1P][1];
 			cout << "1P-1 : [x : " << Intention1P_1.DeltaX << " y : " << Intention1P_1.DeltaY << " a : " << (int)Intention1P_1.Action << "]" << endl;
 			cout << "1P-2 : [x : " << Intention1P_2.DeltaX << " y : " << Intention1P_2.DeltaY << " a : " << (int)Intention1P_2.Action << "]" << endl;
 		}
-		//==========================================================================================================
+#endif
 
 		CurrentNode->Search(node::NumCallPlay, Result);
 		Max = 0;
@@ -80,7 +79,7 @@ void battle_field::Battle(int NumTurn)
 
 		Stage.Action(IntentionIDs);
 
-		//DEBUG=====================================================================================================
+#ifdef _DEBUG
 		{
 			intention Intention2P_1 = IntentionIDs[Team_2P][0];
 			intention Intention2P_2 = IntentionIDs[Team_2P][1];
@@ -88,6 +87,6 @@ void battle_field::Battle(int NumTurn)
 			cout << "2P-2 : [x : " << Intention2P_2.DeltaX << " y : " << Intention2P_2.DeltaY << " a : " << (int)Intention2P_2.Action << "]" << endl;
 		}
 		Stage.PrintStage();
-		//==========================================================================================================
+#endif
 	}
 }

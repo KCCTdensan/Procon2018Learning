@@ -6,8 +6,8 @@
 class node
 {
 public:
-	const static int NumCallPlay = 10000;
-	const static int Threshold = 1000;
+	const static int NumCallPlay = 1000;
+	const static int Threshold = 10;
 
 private:
 	node *Parent;

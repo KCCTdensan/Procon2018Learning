@@ -5,14 +5,8 @@
 
 int main()
 {
-	
-	//ステージ作成単体テスト
-	stage s;
-	s.InitRandomStage();
-	s.PrintStage();
-	
 	//探索テスト
-	battle_field BattleField(s);
+	battle_field BattleField;
 	BattleField.Battle(60);
 
 	return 0;

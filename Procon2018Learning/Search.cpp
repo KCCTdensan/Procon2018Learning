@@ -172,6 +172,7 @@ void node::ClearChildNode()
 }
 
 node::node(node *Parent, stage &Stage, team_no Team)
+	:Stage(Stage)
 {
 	this->Parent = Parent;
 	NumChildren = 0;
@@ -182,7 +183,6 @@ node::node(node *Parent, stage &Stage, team_no Team)
 			Child[i][j] = nullptr;
 		}
 	}
-	this->Stage = Stage;
 	Q = 0.0;
 	N = 0;
 	Record = 0;
@@ -218,7 +218,8 @@ void node::Search(int NumCallPlay, int(&Result)[Max_ActionID][Max_ActionID])
 		}
 	}
 
-	/*using namespace std;
+#ifdef _DEBUG
+	using namespace std;
 	cout << "Ns : " << N << endl;
 	for(action_id i = 0; i < Max_ActionID; ++i)
 	{
@@ -242,15 +243,12 @@ void node::Search(int NumCallPlay, int(&Result)[Max_ActionID][Max_ActionID])
 			printf("[R:%6d] ", Child[i][j]->Record);
 		}
 		cout << endl << endl;
-	}*/
+	}
+#endif
 }
 
 node* node::Deepen(action_id Action1, action_id Action2)
 {
-	if(Action1 == -1 || Action2 == -1)
-	{
-		throw "ActionError";
-	}
 	node *Ret = Child[Action1][Action2];
 	Ret->Parent = nullptr;
 	Child[Action1][Action2] = nullptr;
