@@ -301,15 +301,21 @@ void stage::CanAction(intention(&Intentions)[NumTeams][NumAgents], bool(&Result)
 						}
 					}
 				}
+				team_no EnemyTeam = t == Team_1P ? Team_2P : Team_1P;
 				if(Intentions[t][a].Action == IA_MoveAgent)
 				{
-					team_no EnemyTeam = t == Team_1P ? Team_2P : Team_1P;
 					if(Panels[ExpectedPositions[t][a]].GetState() == EnemyTeam)
 					{
 						Flags[t][a] = F_Decided;
 						ExpectedPositions[t][a] = Agents[t][a].GetPosition();
 						Loop = true;
 					}
+				}
+				else if (Panels[ExpectedPositions[t][a]].GetState() != EnemyTeam)
+				{
+					Flags[t][a] = F_Decided;
+					ExpectedPositions[t][a] = Agents[t][a].GetPosition();
+					Loop = true;
 				}
 				Result[t][a] = (Flags[t][a] & F_Decided) != 0;
 			}

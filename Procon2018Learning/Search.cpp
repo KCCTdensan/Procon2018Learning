@@ -101,7 +101,7 @@ int node::Rollout(stage Stage, int NumTurn)//ランダムに手を最後まで�
 		}
 		Stage.Action(Intentions, Team_2P);
 	}
-	for(int i = 0; i < 1; ++i)//1手だけすすめる
+	for(int i = 0; i < NumTurn; ++i)
 	{
 		intention Intentions[NumTeams][stage::NumAgents];
 		do
@@ -111,6 +111,7 @@ int node::Rollout(stage Stage, int NumTurn)//ランダムに手を最後まで�
 				for(char a = 0; a < stage::NumAgents; ++a)
 				{
 					Intentions[t][a] = (action_id)rand() % Max_ActionID;
+					if (Intentions[t][a].DeltaX == 0 && Intentions[t][a].DeltaY == 0) { Intentions[t][a] = (action_id)rand() % Max_ActionID; }
 				}
 			}
 		} while(!Stage.CanAction(Intentions));
