@@ -13,8 +13,8 @@ int stage::PanelPointRandom()
 
 void stage::InitRandomStage()
 {
-	NumX = 11;//random::Mod(10) + 3;
-	NumY = 12;//random::Mod(10) + 3;
+	NumX = random::Mod(10) + 3;
+	NumY = random::Mod(10) + 3;
 	CntTurn = 0;
 	TileScore1P = 0;
 	TileScore2P = 0;
