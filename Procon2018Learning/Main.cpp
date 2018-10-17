@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Game.hpp"
 #include "BattleField.hpp"
+#include "Random.hpp"
 
 
 using namespace std;

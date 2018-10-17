@@ -25,8 +25,8 @@ void battle_field::Battle(int NumTurn)
 {
 	for (int i = 0; i < NumTurn; ++i)
 	{
-#ifdef _DEBUG
 		using namespace std;
+#ifdef _DEBUG
 		cout << "================================================" << endl;
 		cout << "Action" << i << endl;
 #endif
@@ -52,16 +52,14 @@ void battle_field::Battle(int NumTurn)
 		}
 		DeepenNode(IntentionIDs[Team_1P][0], IntentionIDs[Team_1P][1]);
 
-#ifdef _DEBUG
 		{
 			intention Intention1P_1 = IntentionIDs[Team_1P][0];
 			intention Intention1P_2 = IntentionIDs[Team_1P][1];
 			cout << "1P-1  x : " << (int)Intention1P_1.DeltaX << " y : " << (int)Intention1P_1.DeltaY << endl;
 			cout << "1P-2  x : " << (int)Intention1P_2.DeltaX << " y : " << (int)Intention1P_2.DeltaY << endl;
 		}
-#endif
 
-		CurrentNode->Search(node::NumCallPlay, Result);
+		CurrentNode->Search(node::NumCallPlay/10, Result);
 		Max = 0;
 		for(action_id i = 0; i < ID_MaxID; ++i)
 		{
@@ -79,14 +77,12 @@ void battle_field::Battle(int NumTurn)
 
 		Stage.Action(IntentionIDs);
 
-#ifdef _DEBUG
 		{
 			intention Intention2P_1 = IntentionIDs[Team_2P][0];
 			intention Intention2P_2 = IntentionIDs[Team_2P][1];
 			cout << "2P-1 : x : " << (int)Intention2P_1.DeltaX << " y : " << (int)Intention2P_1.DeltaY << endl;
 			cout << "2P-2 : x : " << (int)Intention2P_2.DeltaX << " y : " << (int)Intention2P_2.DeltaY << endl;
 		}
-#endif
 		Stage.PrintStage();
 	}
 }

@@ -72,7 +72,7 @@ void node::Expansion()
 		for(action_id j = 0; j < ID_MaxID; ++j)
 		{
 			Intentions[1] = j;
-			if(!Stage.CanAction(Intentions[1], Team, 1))
+			if(!Stage.CanAction(Intentions))
 			{
 				continue;
 			}
@@ -90,6 +90,17 @@ void node::Expansion()
 
 int node::Evaluation()
 {
+	/*stage Stage = this->Stage;
+
+	if(Stage.GetScore1P() > Stage.GetScore2P())
+	{
+		return 1;
+	}
+	if(Stage.GetScore1P() == Stage.GetScore2P())
+	{
+		return 0;
+	}
+	return -1;*/
 	return Rollout(Stage, stage::MaxTurn - Stage.GetCntTurn());
 }
 
@@ -150,7 +161,7 @@ int node::Rollout(stage Stage, int NumTurn)//ランダムに手を最後まで�
 
 float node::UCB1(float Q, int NChild)
 {
-	const static float Cp = 10.0f;
+	const static float Cp = 3.0f;
 	if(NChild == 0)
 	{
 		return INFINITY;

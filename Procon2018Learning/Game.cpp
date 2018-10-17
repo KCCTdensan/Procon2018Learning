@@ -126,6 +126,7 @@ void stage::UpdateRegionScore_Set(int x, int y, team_no Team, bool Surrounded, p
 	if(Panels[y][x].GetState() == Team)
 	{
 		Panels[y][x].SetSurrounded(false, Team);
+		return;
 	}
 	if(CheckedPanel[Team][y][x] == PC_Set)
 	{
@@ -434,7 +435,7 @@ void stage::Action(action_id(&IntentionIDs)[NumAgents], team_no Team)
 
 bool stage::CanAction(intention(&Intentions)[NumAgents])
 {
-	if(!(CanActionOne(Agents[Team_1P][0].GetPosition(), Intentions[0]) && CanActionOne(Agents[Team_1P][1].GetPosition(), Intentions[1])))
+	if(!(CanActionOne(Agents[Team_1P][0].GetPosition(), Intentions[0]) != -1 && CanActionOne(Agents[Team_1P][1].GetPosition(), Intentions[1]) != -1))
 	{
 		return false;
 	}
