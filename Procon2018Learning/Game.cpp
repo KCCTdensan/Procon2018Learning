@@ -463,6 +463,18 @@ void stage::ChangeColor(color_id CharColor, color_id BackColor)
 	{
 		attr |= BACKGROUND_INTENSITY;
 	}
+	if (BackColor & MASK_RED)
+	{
+		attr |= BACKGROUND_RED;
+	}
+	if (BackColor & MASK_GREEN)
+	{
+		attr |= BACKGROUND_GREEN;
+	}
+	if (BackColor & MASK_BLUE)
+	{
+		attr |= BACKGROUND_BLUE;
+	}
 	SetConsoleTextAttribute(hConsole, attr);
 }
 
@@ -470,85 +482,59 @@ void stage::PrintStage()
 {
 	using namespace std;
 
-	for(int y = 0; y < NumY; y++)
+	position AgentPositions[NumTeams][NumAgents];
+	for (team_no t = 0; t < NumTeams; ++t)
 	{
-		for(int x = 0; x < NumX; x++)
+		for (char a = 0; a < NumAgents; ++a)
 		{
-
-			printf("%3d ", Panels[y][x].GetScore());
+			AgentPositions[t][a] = Agents[t][a].GetPosition();
 		}
-		cout << endl;
 	}
-	cout << endl;
-	for (int y = 0; y < NumY; y++)
+	for (char y = 0; y < NumY; y++)
 	{
-		for (int x = 0; x < NumX; x++)
+		for (char x = 0; x < NumX; x++)
 		{
-			if (Agents[0][0].GetPosition().x == x && Agents[0][0].GetPosition().y == y) { cout << "œ"; continue; }
-			if (Agents[0][1].GetPosition().x == x && Agents[0][1].GetPosition().y == y) { cout << "¡"; continue; }
-			if (Agents[1][0].GetPosition().x == x && Agents[1][0].GetPosition().y == y) { cout << "›"; continue; }
-			if (Agents[1][1].GetPosition().x == x && Agents[1][1].GetPosition().y == y) { cout << " "; continue; }
-
-			cout << "|";
-		}
-		cout << endl;
-	}
-	cout << endl;
-	for(int y = 0; y < NumY; y++)
-	{
-		for(int x = 0; x < NumX; x++)
-		{
-			switch(Panels[y][x].GetState())
+			position n = { x,y };
+			color_id CharColor = 0;
+			color_id BackColor = 0;
+			switch (Panels[y][x].GetState())
 			{
 			case Neutral:
-				if(Panels[y][x].GetSurrounded(Team_1P))
+				if (Panels[y][x].GetSurrounded(Team_1P))
 				{
-					cout << "1";
+					CharColor |= MASK_BLUE;
 				}
-				else
+				if (Panels[y][x].GetSurrounded(Team_2P))
 				{
-					cout << "-";
+					CharColor |= MASK_RED;
 				}
-				if(Panels[y][x].GetSurrounded(Team_2P))
+				if (CharColor == 0)
 				{
-					cout << "2";
-				}
-				else
-				{
-					cout << "-";
+					CharColor = COL_WHITE;
 				}
 				break;
 
 			case Team_1P:
-				cout << "¡";
+				CharColor = COL_CYAN;
 				break;
 
 			case Team_2P:
-				cout << " ";
+				CharColor = COL_YELLOW;
 				break;
 			}
+			if (AgentPositions[0][0] == n || AgentPositions[0][1] == n)
+			{
+				BackColor = COL_BLUE;
+			}
+			if (AgentPositions[1][0] == n || AgentPositions[1][1] == n)
+			{
+				BackColor = COL_RED;
+			}
+			ChangeColor(CharColor, BackColor);
+			std::printf("%3d ", Panels[y][x].GetScore());
 		}
 		cout << endl;
 	}
 	cout << endl;
-}
-
-void stage:: color(int a, int b, int c, int d)
-{
-	HANDLE hStdout;
-	WORD wAttributes;
-	char txt;
-
-	CONSOLE_SCREEN_BUFFER_INFO csbi;
-	hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
-	GetConsoleScreenBufferInfo(hStdout, &csbi);
-
-	txt = a; //ƒ^ƒCƒgƒ‹‚Ì•¶ŽšF
-
-	wAttributes = txt;
-	wAttributes = wAttributes | b; // •¶Žš‹­’² 
-	wAttributes = wAttributes | c; // ƒ^ƒCƒgƒ‹‚Ì”wŒiF 
-	wAttributes = wAttributes | d; // ”wŒiF‹­’²
-	SetConsoleTextAttribute(hStdout, wAttributes); // SET
-	return;
+	ChangeColor(COL_WHITE, COL_BLACK);
 }
