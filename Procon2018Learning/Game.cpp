@@ -154,6 +154,8 @@ void stage::UpdateRegionScore_Set(int x, int y, team_no Team, bool Surrounded, p
 void stage::UpdateRegionScore()
 {
 	panel_check CheckedPanel[NumTeams][MaxY][MaxX] = {};
+	RegionScore1P = 0;
+	RegionScore2P = 0;
 	for(team_no t = 0; t < NumTeams; ++t)
 	{
 		for(char y = 0; y < NumY; ++y)
@@ -171,12 +173,26 @@ void stage::UpdateRegionScore()
 			}
 		}
 	}
+	for (char y = 0; y < NumY; ++y)
+	{
+		for (char x = 0; x < NumX; ++x)
+		{
+			if (Panels[y][x].GetSurrounded(Team_1P))
+			{
+				RegionScore1P += abs(Panels[y][x].GetScore());
+			}
+			if (Panels[y][x].GetSurrounded(Team_2P))
+			{
+				RegionScore2P += abs(Panels[y][x].GetScore());
+			}
+		}
+	}
 }
 
 void stage::UpdateTileScore()
 {
-	RegionScore1P = 0;
-	RegionScore2P = 0;
+	TileScore1P = 0;
+	TileScore2P = 0;
 	for(int y = 0; y < NumY; ++y)
 	{
 		for(int x = 0; x < NumX; ++x)
@@ -185,11 +201,11 @@ void stage::UpdateTileScore()
 			switch(Panels[y][x].GetState())
 			{
 			case Team_1P:
-				RegionScore1P += Score;
+				TileScore1P += Score;
 				break;
 
 			case Team_2P:
-				RegionScore2P += Score;
+				TileScore2P += Score;
 				break;
 			}
 		}
@@ -214,44 +230,51 @@ bool stage::Move(intention_info(&Infos)[NumTeams][NumAgents], team_no Team, char
 		return true;
 	}
 
-	//if (Agents[Team][0].GetPosition() == Infos[Team][1].ExpectedPosition&&Agents[Team][1].GetPosition() == Infos[Team][0].ExpectedPosition)
-	//{
-	//	Infos[Team][0].CanAct = -1;
-	//	Infos[Team][1].CanAct = -1;
-	//	return false;
-	//}
-
-	//目標座標の重複や他のエージェントの位置に移動しようとした場合
+	//目標座標の重複や他エージェントの位置に移動しようとした場合などを判定
 	for (team_no t = 0; t < NumTeams; ++t)
 	{
 		for (char a = 0; a < NumAgents; ++a)
 		{
+			//自分のエージェントとは比較しない
 			if (t == Team && a == AgentNo)
 			{
 				continue;
 			}
+
+			//他エージェントと目標座標が重複していた場合
 			if (Infos[Team][AgentNo].ExpectedPosition == Infos[t][a].ExpectedPosition)
 			{
 				Infos[Team][AgentNo].CanAct = -1;
 				Infos[t][a].CanAct = -1;
 				return false;
 			}
+
+			//他エージェントの位置と目標座標が重複していた場合
 			if (Infos[Team][AgentNo].ExpectedPosition == Infos[t][a].NextPosition)
 			{
 				Infos[Team][AgentNo].CanAct = -1;
 				return false;
 			}
+
+			//他エージェントの現在の位置が目標座標と重複していた場合
 			if (Infos[Team][AgentNo].ExpectedPosition == Agents[t][a].GetPosition())
 			{
+				//自エージェントの現在の位置が目標座標と重複していた場合
 				if (Infos[t][a].ExpectedPosition == Agents[Team][AgentNo].GetPosition())
 				{
-					return -1;
+					Infos[Team][AgentNo].CanAct = -1;
+					Infos[t][a].CanAct = -1;
+					return false;
 				}
+
+				//他エージェントが移動できる場合
 				if (Move(Infos, t, a))
 				{
 					Infos[Team][AgentNo].CanAct = 1;
 					return true;
 				}
+
+				//他エージェントが移動できない場合
 				Infos[Team][AgentNo].CanAct = -1;
 				return false;
 			}
@@ -396,7 +419,7 @@ void stage::Action(intention(&Intentions)[NumAgents], team_no Team)
 			Panels[Agents[Team][a].GetPosition()].RemoveCard();
 		}
 	}
-	UpdateTileScore();
+	UpdateScore();
 }
 
 void stage::Action(action_id(&IntentionIDs)[NumAgents], team_no Team)
