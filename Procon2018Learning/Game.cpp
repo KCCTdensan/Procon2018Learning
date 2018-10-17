@@ -215,6 +215,7 @@ void stage::UpdateTileScore()
 
 bool stage::Move(intention_info(&Infos)[NumTeams][NumAgents], team_no Team, char AgentNo)
 {
+	static int NumCall = 0;
 	//すでに移動不可とわかっている場合
 	if (Infos[Team][AgentNo].CanAct == -1)
 	{
@@ -271,6 +272,7 @@ bool stage::Move(intention_info(&Infos)[NumTeams][NumAgents], team_no Team, char
 				//他エージェントが移動できる場合
 				if (Move(Infos, t, a))
 				{
+					NumCall--;
 					Infos[Team][AgentNo].CanAct = 1;
 					return true;
 				}
@@ -307,8 +309,7 @@ void stage::Action(intention(&Intentions)[NumTeams][NumAgents])
 				continue;
 			}
 			intention &Intention = Intentions[t][a];
-			position AgentPosition = Agents[t][a].GetPosition();
-			position NextPosition = AgentPosition + Intention;
+			position NextPosition = Agents[t][a].GetPosition() + Intention;
 			if (Panels[NextPosition].GetState() == Neutral || Panels[NextPosition].GetState() == t)
 			{
 				Agents[t][a].Move(Intention);
@@ -408,8 +409,7 @@ void stage::Action(intention(&Intentions)[NumAgents], team_no Team)
 	for(char a = 0; a < NumAgents; ++a)
 	{
 		intention &Intention = Intentions[a];
-		position AgentPosition = Agents[Team][a].GetPosition();
-		position NextPosition = AgentPosition + Intention;
+		position NextPosition = Agents[Team][a].GetPosition() + Intention;
 		if (Panels[NextPosition].GetState() == Neutral || Panels[NextPosition].GetState() == Team)
 		{
 			Agents[Team][a].Move(Intention);
@@ -417,7 +417,7 @@ void stage::Action(intention(&Intentions)[NumAgents], team_no Team)
 		}
 		else
 		{
-			Panels[Agents[Team][a].GetPosition()].RemoveCard();
+			Panels[NextPosition].RemoveCard();
 		}
 	}
 	UpdateScore();
