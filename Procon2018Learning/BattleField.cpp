@@ -23,6 +23,7 @@ battle_field::~battle_field()
 
 void battle_field::Battle(int NumTurn)
 {
+	Stage.PrintStage();
 	for (int i = 0; i < NumTurn; ++i)
 	{
 		using namespace std;
@@ -59,7 +60,7 @@ void battle_field::Battle(int NumTurn)
 			cout << "1P-2  x : " << (int)Intention1P_2.DeltaX << " y : " << (int)Intention1P_2.DeltaY << endl;
 		}
 
-		CurrentNode->Search(node::NumCallPlay/10, Result);
+		CurrentNode->Search(node::NumCallPlay, Result);
 		Max = 0;
 		for(action_id i = 0; i < ID_MaxID; ++i)
 		{

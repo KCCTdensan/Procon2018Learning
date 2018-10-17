@@ -433,13 +433,13 @@ void stage::Action(action_id(&IntentionIDs)[NumAgents], team_no Team)
 	Action(Intentions, Team);
 }
 
-bool stage::CanAction(intention(&Intentions)[NumAgents])
+bool stage::CanAction(intention(&Intentions)[NumAgents], team_no Team)
 {
-	if(!(CanActionOne(Agents[Team_1P][0].GetPosition(), Intentions[0]) != -1 && CanActionOne(Agents[Team_1P][1].GetPosition(), Intentions[1]) != -1))
+	if(!(CanActionOne(Agents[Team][0].GetPosition(), Intentions[0]) != -1 && CanActionOne(Agents[Team][1].GetPosition(), Intentions[1]) != -1))
 	{
 		return false;
 	}
-	return Agents[Team_1P][0].GetPosition() + Intentions[0] != Agents[Team_1P][1].GetPosition() + Intentions[1];
+	return Agents[Team][0].GetPosition() + Intentions[0] != Agents[Team][1].GetPosition() + Intentions[1];
 }
 
 bool stage::CanAction(intention &Intention, team_no Team, char AgentNo)

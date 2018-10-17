@@ -113,7 +113,7 @@ public:
 	//1チーム用
 	void Action(intention(&Intentions)[NumAgents], team_no Team);
 	void Action(action_id(&IntentionIDs)[NumAgents], team_no Team);
-	bool CanAction(intention(&Intentions)[NumAgents]);
+	bool CanAction(intention(&Intentions)[NumAgents], team_no Team);
 
 	//1プレイヤー用
 	bool CanAction(intention &Intention, team_no Team, char AgentNo);

@@ -90,17 +90,6 @@ void node::Expansion()
 
 int node::Evaluation()
 {
-	/*stage Stage = this->Stage;
-
-	if(Stage.GetScore1P() > Stage.GetScore2P())
-	{
-		return 1;
-	}
-	if(Stage.GetScore1P() == Stage.GetScore2P())
-	{
-		return 0;
-	}
-	return -1;*/
 	return Rollout(Stage, stage::MaxTurn - Stage.GetCntTurn());
 }
 
@@ -115,6 +104,7 @@ int node::Rollout(stage Stage, int NumTurn)//ランダムに手を最後まで�
 		}
 		Stage.Action(Intentions, Team_2P);
 	}
+	if(NumTurn > 10)NumTurn = 10;
 	for(int i = 0; i < NumTurn; ++i)
 	{
 		intention Intentions[NumTeams][stage::NumAgents];
@@ -161,7 +151,7 @@ int node::Rollout(stage Stage, int NumTurn)//ランダムに手を最後まで�
 
 float node::UCB1(float Q, int NChild)
 {
-	const static float Cp = 3.0f;
+	const static float Cp = 1.0f;
 	if(NChild == 0)
 	{
 		return INFINITY;
