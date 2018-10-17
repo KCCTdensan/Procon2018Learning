@@ -72,7 +72,7 @@ void node::Expansion()
 		for(action_id j = 0; j < ID_MaxID; ++j)
 		{
 			Intentions[1] = j;
-			if(!Stage.CanAction(Intentions))
+			if(!Stage.CanAction(Intentions, Team))
 			{
 				continue;
 			}

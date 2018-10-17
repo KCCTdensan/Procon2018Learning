@@ -401,7 +401,7 @@ void stage::CanAction(action_id(&IntentionIDs)[NumTeams][NumAgents])
 
 void stage::Action(intention(&Intentions)[NumAgents], team_no Team)
 {
-	if(!CanAction(Intentions))
+	if(!CanAction(Intentions, Team))
 	{
 		return;
 	}
