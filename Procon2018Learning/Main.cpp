@@ -3,6 +3,8 @@
 #include "BattleField.hpp"
 
 
+using namespace std;
+
 int main()
 {
 	//’TõƒeƒXƒg

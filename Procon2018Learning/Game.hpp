@@ -10,7 +10,8 @@ typedef unsigned char can_action_flag;
 enum
 {
 	F_Decided = 0x01,
-	F_CanAction = 0x02
+	F_CanAction = 0x02,
+	F_Move = 0x04
 };
 
 typedef char color_id;
@@ -70,6 +71,13 @@ private:
 		PC_Checked,
 		PC_Set
 	};
+	struct intention_info
+	{
+		intention Delta;
+		position ExpectedPosition;
+		position NextPosition;
+		char CanAct;
+	};
 	panels Panels;
 	agent Agents[NumTeams][NumAgents];
 	unsigned char NumX;
@@ -87,6 +95,8 @@ private:
 	void UpdateRegionScore();
 	void UpdateTileScore();
 
+	bool Move(intention_info(&Infos)[NumTeams][NumAgents], team_no t, char a);
+
 public:
 	stage();
 	~stage();
@@ -95,12 +105,14 @@ public:
 	//両チーム用
 	void Action(intention(&Intentions)[NumTeams][NumAgents]);
 	void Action(action_id(&IntentionIDs)[NumTeams][NumAgents]);
-	void CanAction(intention(&Intentions)[NumTeams][NumAgents], bool (&Result)[NumTeams][NumAgents]);
+	void CanAction(intention(&Intentions)[NumTeams][NumAgents], bool(&Result)[NumTeams][NumAgents]);
+	void CanAction(action_id(&IntentionIDs)[NumTeams][NumAgents], bool(&Result)[NumTeams][NumAgents]);
 	bool CanAction(intention(&Intentions)[NumTeams][NumAgents]);
+	void CanAction(action_id(&IntentionIDs)[NumTeams][NumAgents]);
 
 	//1チーム用
 	void Action(intention(&Intentions)[NumAgents], team_no Team);
-	void Action(action_id(&IntentionIDs)[NumTeams], team_no Team);
+	void Action(action_id(&IntentionIDs)[NumAgents], team_no Team);
 	bool CanAction(intention(&Intentions)[NumAgents]);
 
 	//1プレイヤー用

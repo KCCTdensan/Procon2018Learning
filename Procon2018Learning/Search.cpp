@@ -125,18 +125,26 @@ int node::Rollout(stage Stage, int NumTurn)//ランダムに手を最後まで�
 	}
 	//std::cout << "End" << std::endl;
 
-	std::cout << (Team == Team_1P ? "Team1P" : "Team2P") << " : ";
+#ifdef _DEBUG
+	//std::cout << (Team == Team_1P ? "Team1P" : "Team2P") << " : ";
+#endif
 	if(Stage.GetScore1P() > Stage.GetScore2P())
 	{
-		std::cout << "win" << std::endl;
+#ifdef _DEBUG
+	//	std::cout << "win" << std::endl;
+#endif
 		return 1;
 	}
 	if(Stage.GetScore1P() == Stage.GetScore2P())
 	{
-		std::cout << "draw" << std::endl;
+#ifdef _DEBUG
+	//	std::cout << "draw" << std::endl;
+#endif
 		return 0;
 	}
-	std::cout << "lose" << std::endl;
+#ifdef _DEBUG
+	//std::cout << "lose" << std::endl;
+#endif
 	return -1;
 }
 

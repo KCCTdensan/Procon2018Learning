@@ -196,6 +196,70 @@ void stage::UpdateTileScore()
 	}
 }
 
+bool stage::Move(intention_info(&Infos)[NumTeams][NumAgents], team_no Team, char AgentNo)
+{
+	//すでに移動不可とわかっている場合
+	if (Infos[Team][AgentNo].CanAct == -1)
+	{
+		return false;
+	}
+
+	//座標外への移動の試行やとどまる手など、移動可能かどうかがすぐに確定する場合
+	switch (CanActionOne(Agents[Team][AgentNo].GetPosition(), Infos[Team][AgentNo].Delta))
+	{
+	case -1:
+		return false;
+
+	case 1:
+		return true;
+	}
+
+	//if (Agents[Team][0].GetPosition() == Infos[Team][1].ExpectedPosition&&Agents[Team][1].GetPosition() == Infos[Team][0].ExpectedPosition)
+	//{
+	//	Infos[Team][0].CanAct = -1;
+	//	Infos[Team][1].CanAct = -1;
+	//	return false;
+	//}
+
+	//目標座標の重複や他のエージェントの位置に移動しようとした場合
+	for (team_no t = 0; t < NumTeams; ++t)
+	{
+		for (char a = 0; a < NumAgents; ++a)
+		{
+			if (t == Team && a == AgentNo)
+			{
+				continue;
+			}
+			if (Infos[Team][AgentNo].ExpectedPosition == Infos[t][a].ExpectedPosition)
+			{
+				Infos[Team][AgentNo].CanAct = -1;
+				Infos[t][a].CanAct = -1;
+				return false;
+			}
+			if (Infos[Team][AgentNo].ExpectedPosition == Infos[t][a].NextPosition)
+			{
+				Infos[Team][AgentNo].CanAct = -1;
+				return false;
+			}
+			if (Infos[Team][AgentNo].ExpectedPosition == Agents[t][a].GetPosition())
+			{
+				if (Infos[t][a].ExpectedPosition == Agents[Team][AgentNo].GetPosition())
+				{
+					return -1;
+				}
+				if (Move(Infos, t, a))
+				{
+					Infos[Team][AgentNo].CanAct = 1;
+					return true;
+				}
+				Infos[Team][AgentNo].CanAct = -1;
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
 stage::stage()
 {
 	InitRandomStage();
@@ -250,91 +314,45 @@ void stage::Action(action_id(&IntentionIDs)[NumTeams][NumAgents])
 
 void stage::CanAction(intention(&Intentions)[NumTeams][NumAgents], bool(&Result)[NumTeams][NumAgents])
 {
-	position ExpectedPositions[NumTeams][NumAgents];
-	can_action_flag Flags[NumTeams][NumAgents];
-	//ステージ1・座標外への移動意思、留まる意思に対して決定
-	for(team_no t = 0; t < NumTeams; ++t)
+	intention_info Infos[NumTeams][NumAgents];
+	for (team_no t = 0; t < NumTeams; ++t)
 	{
-		for(char a = 0; a < NumAgents; ++a)
+		for (char a = 0; a < NumAgents; ++a)
 		{
-			position Position = Agents[t][a].GetPosition();
-			intention Intention = Intentions[t][a];
-			ExpectedPositions[t][a] = Position += Intention;
-			Flags[t][a] = 0;
-			switch(CanActionOne(Position, Intention))
+			Infos[t][a].Delta = Intentions[t][a];
+			Infos[t][a].ExpectedPosition = Agents[t][a].GetPosition() + Infos[t][a].Delta;
+			team_no ExpectedPosState = Panels[Infos[t][a].ExpectedPosition].GetState();
+			if (ExpectedPosState != t && ExpectedPosState != Neutral)
 			{
-			case -1:
-				Flags[t][a] = F_Decided;
-				break;
-
-			case 1:
-				Flags[t][a] = F_Decided | F_CanAction;
-				break;
+				Infos[t][a].NextPosition = Agents[t][a].GetPosition();
 			}
+			else
+			{
+				Infos[t][a].NextPosition = Infos[t][a].ExpectedPosition;
+			}
+			Infos[t][a].CanAct = 0;
 		}
 	}
-	//ステージ2・目標の座標の重複,またはエージェントか敵タイルがあるパネルへの移動に対して決定
-	bool Loop;
-	do
+	for (team_no t = 0; t < NumTeams; ++t)
 	{
-		Loop = false;
-		for(team_no t = 0; t < NumTeams; ++t)
+		for (char a = 0; a < NumAgents; ++a)
 		{
-			for(char a = 0; a < NumAgents; ++a)
-			{
-				if(Flags[t][a] & F_Decided)
-				{
-					continue;
-				}
-				for(team_no tt = 0; tt < NumTeams; ++tt)
-				{
-					for(char aa = 0; aa < NumAgents; ++aa)
-					{
-						if(t == tt && a == aa)
-						{
-							continue;
-						}
-						if(ExpectedPositions[t][a] == ExpectedPositions[tt][aa])
-						{
-							Flags[t][a] = F_Decided;
-							Flags[tt][aa] = F_Decided;
-							ExpectedPositions[t][a] = Agents[t][a].GetPosition();
-							ExpectedPositions[tt][aa] = Agents[tt][aa].GetPosition();
-							Loop = true;
-						}
-					}
-				}
-				/*team_no EnemyTeam = t == Team_1P ? Team_2P : Team_1P;
-				if (Panels[ExpectedPositions[t][a]].GetState() == EnemyTeam)
-				{
-
-				}
-				if(Intentions[t][a].Action == IA_MoveAgent)
-				{
-					if(Panels[ExpectedPositions[t][a]].GetState() == EnemyTeam)
-					{
-						Flags[t][a] = F_Decided;
-						ExpectedPositions[t][a] = Agents[t][a].GetPosition();
-						Loop = true;
-					}
-				}
-				else if (Panels[ExpectedPositions[t][a]].GetState() != EnemyTeam)
-				{
-					Flags[t][a] = F_Decided;
-					ExpectedPositions[t][a] = Agents[t][a].GetPosition();
-					Loop = true;
-				}*/
-				Result[t][a] = (Flags[t][a] & F_Decided) != 0;
-			}
-		}
-	} while(Loop);
-	for(team_no t = 0; t < NumTeams; ++t)
-	{
-		for(char a = 0; a < NumAgents; ++a)
-		{
-			Result[t][a] = !(Flags[t][a] & F_Decided) || (Flags[t][a] & F_CanAction);
+			Result[t][a] = Move(Infos, t, a);
 		}
 	}
+}
+
+void stage::CanAction(action_id(&IntentionIDs)[NumTeams][NumAgents], bool(&Result)[NumTeams][NumAgents])
+{
+	intention Intentions[NumTeams][NumAgents];
+	for (team_no t = 0; t < NumTeams; ++t)
+	{
+		for (char a = 0; a < NumAgents; ++a)
+		{
+			Intentions[t][a] = IntentionIDs[t][a];
+		}
+	}
+	CanAction(Intentions, Result);
 }
 
 bool stage::CanAction(intention(&Intentions)[NumTeams][NumAgents])
@@ -342,6 +360,19 @@ bool stage::CanAction(intention(&Intentions)[NumTeams][NumAgents])
 	bool Result[NumTeams][NumAgents];
 	CanAction(Intentions, Result);
 	return (Result[0][0] && Result[0][1]) && (Result[1][0] && Result[1][1]);
+}
+
+void stage::CanAction(action_id(&IntentionIDs)[NumTeams][NumAgents])
+{
+	intention Intentions[NumTeams][NumAgents];
+	for (team_no t = 0; t < NumTeams; ++t)
+	{
+		for (char a = 0; a < NumAgents; ++a)
+		{
+			Intentions[t][a] = IntentionIDs[t][a];
+		}
+	}
+	CanAction(Intentions);
 }
 
 void stage::Action(intention(&Intentions)[NumAgents], team_no Team)
@@ -368,7 +399,7 @@ void stage::Action(intention(&Intentions)[NumAgents], team_no Team)
 	UpdateTileScore();
 }
 
-void stage::Action(action_id(&IntentionIDs)[NumTeams], team_no Team)
+void stage::Action(action_id(&IntentionIDs)[NumAgents], team_no Team)
 {
 	intention Intentions[NumTeams];
 	for(char a = 0; a < NumAgents; ++a)
