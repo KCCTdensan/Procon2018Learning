@@ -31,16 +31,16 @@ void battle_field::Battle(int NumTurn)
 		cout << "Action" << i << endl;
 #endif
 
-		int Result[Max_ActionID][Max_ActionID];
+		int Result[ID_MaxID][ID_MaxID];
 		CurrentNode->Search(node::NumCallPlay, Result);
 
 		int Max = 0;
 		action_id IntentionIDs[NumTeams][stage::NumAgents] = {
 			{-1,-1},{-1,-1}
 		};
-		for(action_id i = 0; i < Max_ActionID; ++i)
+		for(action_id i = 0; i < ID_MaxID; ++i)
 		{
-			for(action_id j = 0; j < Max_ActionID; ++j)
+			for(action_id j = 0; j < ID_MaxID; ++j)
 			{
 				if(Max < Result[i][j])
 				{
@@ -56,16 +56,16 @@ void battle_field::Battle(int NumTurn)
 		{
 			intention Intention1P_1 = IntentionIDs[Team_1P][0];
 			intention Intention1P_2 = IntentionIDs[Team_1P][1];
-			cout << "1P-1 : [x : " << Intention1P_1.DeltaX << " y : " << Intention1P_1.DeltaY << " a : " << (int)Intention1P_1.Action << "]" << endl;
-			cout << "1P-2 : [x : " << Intention1P_2.DeltaX << " y : " << Intention1P_2.DeltaY << " a : " << (int)Intention1P_2.Action << "]" << endl;
+			cout << "1P-1  x : " << (int)Intention1P_1.DeltaX << " y : " << (int)Intention1P_1.DeltaY << endl;
+			cout << "1P-2  x : " << (int)Intention1P_2.DeltaX << " y : " << (int)Intention1P_2.DeltaY << endl;
 		}
 #endif
 
 		CurrentNode->Search(node::NumCallPlay, Result);
 		Max = 0;
-		for(action_id i = 0; i < Max_ActionID; ++i)
+		for(action_id i = 0; i < ID_MaxID; ++i)
 		{
-			for(action_id j = 0; j < Max_ActionID; ++j)
+			for(action_id j = 0; j < ID_MaxID; ++j)
 			{
 				if(Max < Result[i][j])
 				{
@@ -83,10 +83,10 @@ void battle_field::Battle(int NumTurn)
 		{
 			intention Intention2P_1 = IntentionIDs[Team_2P][0];
 			intention Intention2P_2 = IntentionIDs[Team_2P][1];
-			cout << "2P-1 : [x : " << Intention2P_1.DeltaX << " y : " << Intention2P_1.DeltaY << " a : " << (int)Intention2P_1.Action << "]" << endl;
-			cout << "2P-2 : [x : " << Intention2P_2.DeltaX << " y : " << Intention2P_2.DeltaY << " a : " << (int)Intention2P_2.Action << "]" << endl;
+			cout << "2P-1 : x : " << (int)Intention2P_1.DeltaX << " y : " << (int)Intention2P_1.DeltaY << endl;
+			cout << "2P-2 : x : " << (int)Intention2P_2.DeltaX << " y : " << (int)Intention2P_2.DeltaY << endl;
 		}
-		Stage.PrintStage();
 #endif
+		Stage.PrintStage();
 	}
 }

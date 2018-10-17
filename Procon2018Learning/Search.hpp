@@ -6,13 +6,13 @@
 class node
 {
 public:
-	const static int NumCallPlay = 1000;
-	const static int Threshold = 10;
+	const static int NumCallPlay = 10000;
+	const static int Threshold = 100;
 
 private:
 	node *Parent;
 	unsigned short NumChildren;
-	node *Child[Max_ActionID][Max_ActionID];
+	node *Child[ID_MaxID][ID_MaxID];
 	stage Stage;
 	float Q;
 	int N;
@@ -31,6 +31,6 @@ private:
 public:
 	node(node *Parent, stage &Stage, team_no Team);
 	~node();
-	void Search(int NumCallPlay, int(&Result)[Max_ActionID][Max_ActionID]);
+	void Search(int NumCallPlay, int(&Result)[ID_MaxID][ID_MaxID]);
 	node* Deepen(action_id Action1, action_id Action2);
 };

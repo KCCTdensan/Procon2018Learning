@@ -3,10 +3,6 @@
 
 position position::operator+=(intention Intention)
 {
-	if(Intention.Action == IA_RemovePanel)
-	{
-		return *this;
-	}
 	x += Intention.DeltaX;
 	y += Intention.DeltaY;
 	return *this;
@@ -16,39 +12,32 @@ position position::operator+=(action_id ActionID)
 {
 	switch(ActionID)
 	{
-	case Move_TopLeft:
-	case Move_Top:
-	case Move_TopRight:
+	case ID_TopLeft:
+	case ID_Top:
+	case ID_TopRight:
 		y--;
 		break;
 
-	case Move_BottomLeft:
-	case Move_Bottom:
-	case Move_BottomRight:
+	case ID_BottomLeft:
+	case ID_Bottom:
+	case ID_BottomRight:
 		y++;
 		break;
 	}
 	switch(ActionID)
 	{
-	case Move_TopLeft:
-	case Move_Left:
-	case Move_BottomLeft:
+	case ID_TopLeft:
+	case ID_Left:
+	case ID_BottomLeft:
 		x--;
 		break;
 
-	case Move_TopRight:
-	case Move_Right:
-	case Move_BottomRight:
+	case ID_TopRight:
+	case ID_Right:
+	case ID_BottomRight:
 		x++;
 		break;
 	}
-	return *this;
-}
-
-position position::operator<<=(intention Intention)
-{
-	x += Intention.DeltaX;
-	y += Intention.DeltaY;
 	return *this;
 }
 
@@ -61,11 +50,6 @@ position operator+(position Position, intention Intention)
 position operator+(position Position, action_id ActionID)
 {
 	return position(Position) += ActionID;
-}
-
-position operator<<(position Position, intention Intention)
-{
-	return position(Position) <<= Intention;
 }
 
 bool operator==(position Position1, position Position2)

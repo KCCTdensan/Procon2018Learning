@@ -1,5 +1,6 @@
 #pragma once
 
+#include "General.hpp"
 #include "Panel.hpp"
 #include "Position.hpp"
 
@@ -13,7 +14,9 @@ public:
 	agent();
 	~agent();
 
-	void Init(int PositionX, int PositionY, team_no Team);
-	void Move(int DeltaX, int DeltaY);
+	void Init(char PositionX, char PositionY, team_no Team);
+	void Move(char DeltaX, char DeltaY);
+	void Move(intention Intention);
+	void Move(action_id ActionID);
 	position GetPosition();
 };

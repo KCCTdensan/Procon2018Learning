@@ -31,10 +31,10 @@ int node::Play() //閾値以上ならノードを展開、閾値未満ならroll
 int node::Selection() //子ノードのコスト関数とQ値に基づいて子ノードを選択する
 {
 	float Q_CMax = -10.0f;
-	action_id Selected_i = None, Selected_j = None;
-	for(action_id i = 0; i < Max_ActionID; ++i)
+	action_id Selected_i = ID_None, Selected_j = ID_None;
+	for(action_id i = 0; i < ID_MaxID; ++i)
 	{
-		for(action_id j = 0; j < Max_ActionID; ++j)
+		for(action_id j = 0; j < ID_MaxID; ++j)
 		{
 			if(Child[i][j] == nullptr)
 			{
@@ -62,14 +62,14 @@ void node::Expansion()
 {
 	intention Intentions[stage::NumAgents];
 
-	for(action_id i = 0; i < 17; ++i)
+	for(action_id i = 0; i < ID_MaxID; ++i)
 	{
 		Intentions[0] = i;
 		if(!Stage.CanAction(Intentions[0], Team, 0))
 		{
 			continue;
 		}
-		for(action_id j = 0; j < 17; ++j)
+		for(action_id j = 0; j < ID_MaxID; ++j)
 		{
 			Intentions[1] = j;
 			if(!Stage.CanAction(Intentions[1], Team, 1))
@@ -97,7 +97,7 @@ int node::Rollout(stage Stage, int NumTurn)//ランダムに手を最後まで�
 		action_id Intentions[NumTeams];
 		for(char a = 0; a < stage::NumAgents; ++a)
 		{
-			Intentions[a] = (action_id)rand() % Max_ActionID;
+			Intentions[a] = (action_id)rand() % ID_MaxID;
 		}
 		Stage.Action(Intentions, Team_2P);
 	}
@@ -110,8 +110,8 @@ int node::Rollout(stage Stage, int NumTurn)//ランダムに手を最後まで�
 			{
 				for(char a = 0; a < stage::NumAgents; ++a)
 				{
-					Intentions[t][a] = (action_id)rand() % Max_ActionID;
-					if (Intentions[t][a].DeltaX == 0 && Intentions[t][a].DeltaY == 0) { Intentions[t][a] = (action_id)rand() % Max_ActionID; }
+					Intentions[t][a] = (action_id)rand() % ID_MaxID;
+					if (Intentions[t][a].DeltaX == 0 && Intentions[t][a].DeltaY == 0) { Intentions[t][a] = (action_id)rand() % ID_MaxID; }
 				}
 			}
 		} while(!Stage.CanAction(Intentions));
@@ -157,9 +157,9 @@ bool node::IsLeafNode()
 
 void node::ClearChildNode()
 {
-	for(action_id i = 0; i < Max_ActionID; ++i)
+	for(action_id i = 0; i < ID_MaxID; ++i)
 	{
-		for(action_id j = 0; j < Max_ActionID; ++j)
+		for(action_id j = 0; j < ID_MaxID; ++j)
 		{
 			if(Child[i][j] == nullptr)
 			{
@@ -176,9 +176,9 @@ node::node(node *Parent, stage &Stage, team_no Team)
 {
 	this->Parent = Parent;
 	NumChildren = 0;
-	for(action_id i = 0; i < Max_ActionID; ++i)
+	for(action_id i = 0; i < ID_MaxID; ++i)
 	{
-		for(action_id j = 0; j < Max_ActionID; ++j)
+		for(action_id j = 0; j < ID_MaxID; ++j)
 		{
 			Child[i][j] = nullptr;
 		}
@@ -194,7 +194,7 @@ node::~node()
 	ClearChildNode();
 }
 
-void node::Search(int NumCallPlay, int(&Result)[Max_ActionID][Max_ActionID])
+void node::Search(int NumCallPlay, int(&Result)[ID_MaxID][ID_MaxID])
 {
 	if(IsLeafNode())
 	{
@@ -205,9 +205,9 @@ void node::Search(int NumCallPlay, int(&Result)[Max_ActionID][Max_ActionID])
 		Selection();
 		N++;
 	}
-	for(action_id i = 0; i < Max_ActionID; ++i)
+	for(action_id i = 0; i < ID_MaxID; ++i)
 	{
-		for(action_id j = 0; j < Max_ActionID; ++j)
+		for(action_id j = 0; j < ID_MaxID; ++j)
 		{
 			if(Child[i][j] == nullptr)
 			{
@@ -221,9 +221,9 @@ void node::Search(int NumCallPlay, int(&Result)[Max_ActionID][Max_ActionID])
 #ifdef _DEBUG
 	using namespace std;
 	cout << "Ns : " << N << endl;
-	for(action_id i = 0; i < Max_ActionID; ++i)
+	for(action_id i = 0; i < ID_MaxID; ++i)
 	{
-		for(action_id j = 0; j < Max_ActionID; ++j)
+		for(action_id j = 0; j < ID_MaxID; ++j)
 		{
 			if(Child[i][j] == nullptr)
 			{
@@ -233,7 +233,7 @@ void node::Search(int NumCallPlay, int(&Result)[Max_ActionID][Max_ActionID])
 			printf("[N:%6d] ", Child[i][j]->N);
 		}
 		cout << endl;
-		for(action_id j = 0; j < Max_ActionID; ++j)
+		for(action_id j = 0; j < ID_MaxID; ++j)
 		{
 			if(Child[i][j] == nullptr)
 			{

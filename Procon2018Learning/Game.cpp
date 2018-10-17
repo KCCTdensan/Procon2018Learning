@@ -212,17 +212,18 @@ void stage::Action(intention(&Intentions)[NumTeams][NumAgents])
 	CanAction(Intentions, CanActionFlags);
 	for(team_no t = 0; t < NumTeams; ++t)
 	{
-		for(char a = 0; a < NumAgents; ++a)
+		for (char a = 0; a < NumAgents; ++a)
 		{
-			if(!CanActionFlags[t][a])
+			if (!CanActionFlags[t][a])
 			{
 				continue;
 			}
 			intention &Intention = Intentions[t][a];
-			if(Intention.Action == IA_MoveAgent)
+			position AgentPosition = Agents[t][a].GetPosition();
+			position NextPosition = AgentPosition + Intention;
+			if (Panels[NextPosition].GetState() == Neutral || Panels[NextPosition].GetState() == t)
 			{
-				Agents[t][a].Move(Intention.DeltaX, Intention.DeltaY);
-				position NextPosition = Agents[t][a].GetPosition();
+				Agents[t][a].Move(Intention);
 				Panels[NextPosition].MakeCard(t);
 			}
 			else
@@ -258,7 +259,7 @@ void stage::CanAction(intention(&Intentions)[NumTeams][NumAgents], bool(&Result)
 		{
 			position Position = Agents[t][a].GetPosition();
 			intention Intention = Intentions[t][a];
-			ExpectedPositions[t][a] = Position << Intention;
+			ExpectedPositions[t][a] = Position += Intention;
 			Flags[t][a] = 0;
 			switch(CanActionOne(Position, Intention))
 			{
@@ -303,7 +304,11 @@ void stage::CanAction(intention(&Intentions)[NumTeams][NumAgents], bool(&Result)
 						}
 					}
 				}
-				team_no EnemyTeam = t == Team_1P ? Team_2P : Team_1P;
+				/*team_no EnemyTeam = t == Team_1P ? Team_2P : Team_1P;
+				if (Panels[ExpectedPositions[t][a]].GetState() == EnemyTeam)
+				{
+
+				}
 				if(Intentions[t][a].Action == IA_MoveAgent)
 				{
 					if(Panels[ExpectedPositions[t][a]].GetState() == EnemyTeam)
@@ -318,7 +323,7 @@ void stage::CanAction(intention(&Intentions)[NumTeams][NumAgents], bool(&Result)
 					Flags[t][a] = F_Decided;
 					ExpectedPositions[t][a] = Agents[t][a].GetPosition();
 					Loop = true;
-				}
+				}*/
 				Result[t][a] = (Flags[t][a] & F_Decided) != 0;
 			}
 		}
@@ -348,10 +353,11 @@ void stage::Action(intention(&Intentions)[NumAgents], team_no Team)
 	for(char a = 0; a < NumAgents; ++a)
 	{
 		intention &Intention = Intentions[a];
-		if(Intention.Action == IA_MoveAgent)
+		position AgentPosition = Agents[Team][a].GetPosition();
+		position NextPosition = AgentPosition + Intention;
+		if (Panels[NextPosition].GetState() == Neutral || Panels[NextPosition].GetState() == Team)
 		{
-			Agents[Team][a].Move(Intention.DeltaX, Intention.DeltaY);
-			position NextPosition = Agents[Team][a].GetPosition();
+			Agents[Team][a].Move(Intention);
 			Panels[NextPosition].MakeCard(Team);
 		}
 		else
@@ -378,7 +384,7 @@ bool stage::CanAction(intention(&Intentions)[NumAgents])
 	{
 		return false;
 	}
-	return Agents[Team_1P][0].GetPosition() << Intentions[0] != Agents[Team_1P][1].GetPosition() << Intentions[1];
+	return Agents[Team_1P][0].GetPosition() + Intentions[0] != Agents[Team_1P][1].GetPosition() + Intentions[1];
 }
 
 bool stage::CanAction(intention &Intention, team_no Team, char AgentNo)
@@ -392,7 +398,6 @@ char stage::CanActionOne(position Position, intention Intention)
 	{
 		return 1;
 	}
-	Intention.Action = IA_MoveAgent;
 	Position += Intention;
 	return (0 <= Position.x && Position.x < NumX) && (0 <= Position.y && Position.y < NumY) ? 0 : -1;
 }
@@ -434,6 +439,33 @@ agent* stage::GetAgent(team_no Team, int AgentNo)
 	return &Agents[Team][AgentNo];
 }
 
+void stage::ChangeColor(color_id CharColor, color_id BackColor)
+{
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	WORD attr = 0;
+	if (CharColor & MASK_INTENSITY)
+	{
+		attr |= FOREGROUND_INTENSITY;
+	}
+	if (CharColor & MASK_RED)
+	{
+		attr |= FOREGROUND_RED;
+	}
+	if (CharColor & MASK_GREEN)
+	{
+		attr |= FOREGROUND_GREEN;
+	}
+	if (CharColor & MASK_BLUE)
+	{
+		attr |= FOREGROUND_BLUE;
+	}
+	if (BackColor & MASK_INTENSITY)
+	{
+		attr |= BACKGROUND_INTENSITY;
+	}
+	SetConsoleTextAttribute(hConsole, attr);
+}
+
 void stage::PrintStage()
 {
 	using namespace std;
@@ -442,6 +474,7 @@ void stage::PrintStage()
 	{
 		for(int x = 0; x < NumX; x++)
 		{
+
 			printf("%3d ", Panels[y][x].GetScore());
 		}
 		cout << endl;
@@ -467,7 +500,7 @@ void stage::PrintStage()
 		{
 			switch(Panels[y][x].GetState())
 			{
-			case None:
+			case Neutral:
 				if(Panels[y][x].GetSurrounded(Team_1P))
 				{
 					cout << "1";

@@ -167,6 +167,7 @@
     <ClInclude Include="Agent.hpp" />
     <ClInclude Include="BattleField.hpp" />
     <ClInclude Include="Game.hpp" />
+    <ClInclude Include="General.hpp" />
     <ClInclude Include="Intention.hpp" />
     <ClInclude Include="Panel.hpp" />
     <ClInclude Include="Position.hpp" />
