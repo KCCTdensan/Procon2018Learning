@@ -315,7 +315,7 @@ void stage::Action(intention(&Intentions)[NumTeams][NumAgents])
 			}
 			else
 			{
-				Panels[Agents[t][a].GetPosition()].RemoveCard();
+				Panels[NextPosition].RemoveCard();
 			}
 		}
 	}
@@ -479,7 +479,6 @@ int stage::GetCntTurn()
 
 int stage::GetScore1P()
 {
-	//std::cout << "Tile:" << TileScore1P << "Region" << RegionScore1P << std::endl;
 	return TileScore1P + RegionScore1P;
 }
 
@@ -544,25 +543,25 @@ void stage::PrintStage()
 			AgentPositions[t][a] = Agents[t][a].GetPosition();
 		}
 	}
-	for (char y = 0; y < NumY; y++)
+	for(char y = 0; y < NumY; y++)
 	{
-		for (char x = 0; x < NumX; x++)
+		for(char x = 0; x < NumX; x++)
 		{
-			position n = { x,y };
+			position n = {x,y};
 			color_id CharColor = 0;
 			color_id BackColor = 0;
-			switch (Panels[y][x].GetState())
+			switch(Panels[y][x].GetState())
 			{
 			case Neutral:
-				if (Panels[y][x].GetSurrounded(Team_1P))
+				if(Panels[y][x].GetSurrounded(Team_1P))
 				{
 					CharColor |= MASK_BLUE;
 				}
-				if (Panels[y][x].GetSurrounded(Team_2P))
+				if(Panels[y][x].GetSurrounded(Team_2P))
 				{
 					CharColor |= MASK_RED;
 				}
-				if (CharColor == 0)
+				if(CharColor == 0)
 				{
 					CharColor = COL_WHITE;
 				}
@@ -576,17 +575,18 @@ void stage::PrintStage()
 				CharColor = COL_YELLOW;
 				break;
 			}
-			if (AgentPositions[0][0] == n || AgentPositions[0][1] == n)
+			if(AgentPositions[0][0] == n || AgentPositions[0][1] == n)
 			{
 				BackColor = COL_BLUE;
 			}
-			if (AgentPositions[1][0] == n || AgentPositions[1][1] == n)
+			if(AgentPositions[1][0] == n || AgentPositions[1][1] == n)
 			{
 				BackColor = COL_RED;
 			}
 			ChangeColor(CharColor, BackColor);
 			std::printf("%3d ", Panels[y][x].GetScore());
 		}
+		ChangeColor(COL_WHITE, COL_BLACK);
 		cout << endl;
 	}
 	cout << endl;
