@@ -15,6 +15,10 @@ void panel::Init(char Point)
 {
 	this->Point = Point;
 	State = Neutral;
+	for (team_no t = 0; t < NumTeams; ++t)
+	{
+		Surrounded[t] = false;
+	}
 }
 
 void panel::MakeCard(team_no Team)

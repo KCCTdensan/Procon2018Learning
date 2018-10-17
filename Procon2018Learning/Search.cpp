@@ -83,9 +83,9 @@ void node::Expansion()
 			NumChildren++;
 		}
 	}
-	Child[0][0]->N = 10;
-	Child[0][0]->Record = -1;
-	Child[0][0]->Q = -0.1;
+	//Child[0][0]->N = 10;
+	//Child[0][0]->Record = -1;
+	//Child[0][0]->Q = -0.1;
 }
 
 int node::Evaluation()
@@ -125,17 +125,18 @@ int node::Rollout(stage Stage, int NumTurn)//ランダムに手を最後まで�
 	}
 	//std::cout << "End" << std::endl;
 
+	std::cout << (Team == Team_1P ? "Team1P" : "Team2P") << " : ";
 	if(Stage.GetScore1P() > Stage.GetScore2P())
 	{
-		//std::cout << "win" << std::endl;
+		std::cout << "win" << std::endl;
 		return 1;
 	}
 	if(Stage.GetScore1P() == Stage.GetScore2P())
 	{
-		//std::cout << "draw" << std::endl;
+		std::cout << "draw" << std::endl;
 		return 0;
 	}
-	//std::cout << "lose" << std::endl;
+	std::cout << "lose" << std::endl;
 	return -1;
 }
 
