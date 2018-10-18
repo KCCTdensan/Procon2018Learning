@@ -83,9 +83,6 @@ void node::Expansion()
 			NumChildren++;
 		}
 	}
-	//Child[0][0]->N = 10;
-	//Child[0][0]->Record = -1;
-	//Child[0][0]->Q = -0.1;
 }
 
 int node::Evaluation()

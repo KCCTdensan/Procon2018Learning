@@ -60,7 +60,7 @@ void battle_field::Battle(int NumTurn)
 			cout << "1P-2  x : " << (int)Intention1P_2.DeltaX << " y : " << (int)Intention1P_2.DeltaY << endl;
 		}
 
-		CurrentNode->Search(node::NumCallPlay, Result);
+		CurrentNode->Search(node::NumCallPlay / 100, Result);
 		Max = 0;
 		for(action_id i = 0; i < ID_MaxID; ++i)
 		{
@@ -85,5 +85,7 @@ void battle_field::Battle(int NumTurn)
 			cout << "2P-2 : x : " << (int)Intention2P_2.DeltaX << " y : " << (int)Intention2P_2.DeltaY << endl;
 		}
 		Stage.PrintStage();
+		cout << "1PScore : " << Stage.GetScore1P() << endl;
+		cout << "2PScore : " << Stage.GetScore2P() << endl;
 	}
 }

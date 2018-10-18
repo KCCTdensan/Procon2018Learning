@@ -310,14 +310,17 @@ void stage::Action(intention(&Intentions)[NumTeams][NumAgents])
 			}
 			intention &Intention = Intentions[t][a];
 			position NextPosition = Agents[t][a].GetPosition() + Intention;
+			//ˆÚ“®‚·‚éŽè
 			if (Panels[NextPosition].GetState() == Neutral || Panels[NextPosition].GetState() == t)
 			{
 				Agents[t][a].Move(Intention);
 				Panels[NextPosition].MakeCard(t);
 			}
+			//ƒpƒlƒ‹‚ð•Ô‚·Žè
 			else
 			{
 				Panels[NextPosition].RemoveCard();
+				Panels[Agents[t][a].GetPosition()].MakeCard(t);
 			}
 		}
 	}
@@ -418,6 +421,7 @@ void stage::Action(intention(&Intentions)[NumAgents], team_no Team)
 		else
 		{
 			Panels[NextPosition].RemoveCard();
+			Panels[Agents[Team][a].GetPosition()].MakeCard(Team);
 		}
 	}
 	UpdateScore();
@@ -439,7 +443,11 @@ bool stage::CanAction(intention(&Intentions)[NumAgents], team_no Team)
 	{
 		return false;
 	}
-	return Agents[Team][0].GetPosition() + Intentions[0] != Agents[Team][1].GetPosition() + Intentions[1];
+	if (Agents[Team][0].GetPosition() + Intentions[0] == Agents[Team][1].GetPosition() + Intentions[1])
+	{
+		return false;
+	}
+	return !((Agents[Team][0].GetPosition() + Intentions[0] == Agents[Team][1].GetPosition()) && (Agents[Team][1].GetPosition() + Intentions[1] == Agents[Team][0].GetPosition()));
 }
 
 bool stage::CanAction(intention &Intention, team_no Team, char AgentNo)
@@ -569,11 +577,11 @@ void stage::PrintStage()
 				break;
 
 			case Team_1P:
-				CharColor = COL_CYAN;
+				CharColor = COL_DARKCYAN;
 				break;
 
 			case Team_2P:
-				CharColor = COL_YELLOW;
+				CharColor = COL_DARKYELLOW;
 				break;
 			}
 			if(AgentPositions[0][0] == n || AgentPositions[0][1] == n)
