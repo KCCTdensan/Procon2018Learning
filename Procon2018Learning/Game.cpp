@@ -439,7 +439,7 @@ void stage::Action(action_id(&IntentionIDs)[NumAgents], team_no Team)
 
 bool stage::CanAction(intention(&Intentions)[NumAgents], team_no Team)
 {
-	if(!(CanActionOne(Agents[Team][0].GetPosition(), Intentions[0]) != -1 && CanActionOne(Agents[Team][1].GetPosition(), Intentions[1]) != -1))
+	if(CanActionOne(Agents[Team][0].GetPosition(), Intentions[0]) == -1 || CanActionOne(Agents[Team][1].GetPosition(), Intentions[1]) == -1)
 	{
 		return false;
 	}
@@ -447,12 +447,30 @@ bool stage::CanAction(intention(&Intentions)[NumAgents], team_no Team)
 	{
 		return false;
 	}
-	return !((Agents[Team][0].GetPosition() + Intentions[0] == Agents[Team][1].GetPosition()) && (Agents[Team][1].GetPosition() + Intentions[1] == Agents[Team][0].GetPosition()));
+	if ((Agents[Team][0].GetPosition() + Intentions[0] == Agents[Team][1].GetPosition()) && (Agents[Team][1].GetPosition() + Intentions[1] == Agents[Team][0].GetPosition()))
+	{
+		return false;
+	}
 }
 
-bool stage::CanAction(intention &Intention, team_no Team, char AgentNo)
+bool stage::CanAction(action_id(&IntentionIDs)[NumAgents], team_no Team)
+{
+	intention Intentions[NumAgents];
+	for (char a = 0; a < NumAgents; ++a)
+	{
+		Intentions[a] = IntentionIDs[a];
+	}
+	return CanAction(Intentions, Team);
+}
+
+bool stage::CanAction(intention Intention, team_no Team, char AgentNo)
 {
 	return CanActionOne(Agents[Team][AgentNo].GetPosition(), Intention) != -1;
+}
+
+bool stage::CanAction(action_id IntentionID, team_no Team, char AgentNo)
+{
+	return CanAction((intention)IntentionID, Team, AgentNo);
 }
 
 char stage::CanActionOne(position Position, intention Intention)
@@ -462,7 +480,7 @@ char stage::CanActionOne(position Position, intention Intention)
 		return 1;
 	}
 	Position += Intention;
-	return (0 <= Position.x && Position.x < NumX) && (0 <= Position.y && Position.y < NumY) ? 0 : -1;
+	return ((0 <= Position.x && Position.x < NumX) && (0 <= Position.y && Position.y < NumY)) ? 0 : -1;
 }
 
 void stage::UpdateScore()

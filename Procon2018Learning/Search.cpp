@@ -60,25 +60,22 @@ int node::Selection() //子ノードのコスト関数とQ値に基づいて子�
 
 void node::Expansion()
 {
-	intention Intentions[stage::NumAgents];
-
 	for(action_id i = 0; i < ID_MaxID; ++i)
 	{
-		Intentions[0] = i;
-		if(!Stage.CanAction(Intentions[0], Team, 0))
+		if(!Stage.CanAction(i, Team, 0))
 		{
 			continue;
 		}
 		for(action_id j = 0; j < ID_MaxID; ++j)
 		{
-			Intentions[1] = j;
-			if(!Stage.CanAction(Intentions, Team))
+			action_id IDs[stage::NumAgents] = { i,j };
+			if (!Stage.CanAction(IDs, Team))
 			{
 				continue;
 			}
 
 			node *NewNode = new node(this, Stage, (Team == Team_1P) ? Team_2P : Team_1P);
-			NewNode->Stage.Action(Intentions, Team);
+			NewNode->Stage.Action(IDs, Team);
 			Child[i][j] = NewNode;
 			NumChildren++;
 		}
@@ -214,7 +211,14 @@ void node::Search(int NumCallPlay, int(&Result)[ID_MaxID][ID_MaxID])
 	{
 		Selection();
 		N++;
+//#ifdef _DEBUG
+		if (i % 1000 == 0)
+		{
+			//std::cout << "*";
+		}
+//#endif
 	}
+	std::cout << std::endl;
 	for(action_id i = 0; i < ID_MaxID; ++i)
 	{
 		for(action_id j = 0; j < ID_MaxID; ++j)
@@ -230,6 +234,7 @@ void node::Search(int NumCallPlay, int(&Result)[ID_MaxID][ID_MaxID])
 
 #ifdef _DEBUG
 	using namespace std;
+	cout << endl;
 	cout << "Ns : " << N << endl;
 	for(action_id i = 0; i < ID_MaxID; ++i)
 	{
@@ -263,4 +268,9 @@ node* node::Deepen(action_id Action1, action_id Action2)
 	Ret->Parent = nullptr;
 	Child[Action1][Action2] = nullptr;
 	return Ret;
+}
+
+void node::PrintStage()
+{
+	Stage.PrintStage();
 }

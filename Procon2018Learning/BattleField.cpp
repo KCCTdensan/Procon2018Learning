@@ -85,6 +85,7 @@ void battle_field::Battle(int NumTurn)
 			cout << "2P-2 : x : " << (int)Intention2P_2.DeltaX << " y : " << (int)Intention2P_2.DeltaY << endl;
 		}
 		Stage.PrintStage();
+		CurrentNode->PrintStage();
 		cout << "1PScore : " << Stage.GetScore1P() << endl;
 		cout << "2PScore : " << Stage.GetScore2P() << endl;
 	}

@@ -6,7 +6,7 @@
 class node
 {
 public:
-	const static int NumCallPlay = 50000;
+	const static int NumCallPlay = 30000;
 	const static int Threshold = 100;
 
 private:
@@ -33,4 +33,5 @@ public:
 	~node();
 	void Search(int NumCallPlay, int(&Result)[ID_MaxID][ID_MaxID]);
 	node* Deepen(action_id Action1, action_id Action2);
+	void PrintStage();
 };
