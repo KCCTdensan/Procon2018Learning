@@ -211,12 +211,6 @@ void node::Search(int NumCallPlay, int(&Result)[ID_MaxID][ID_MaxID])
 	{
 		Selection();
 		N++;
-//#ifdef _DEBUG
-		if (i % 1000 == 0)
-		{
-			//std::cout << "*";
-		}
-//#endif
 	}
 	std::cout << std::endl;
 	for(action_id i = 0; i < ID_MaxID; ++i)
