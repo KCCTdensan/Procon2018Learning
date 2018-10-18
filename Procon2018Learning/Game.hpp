@@ -108,7 +108,7 @@ public:
 	void CanAction(intention(&Intentions)[NumTeams][NumAgents], bool(&Result)[NumTeams][NumAgents]);
 	void CanAction(action_id(&IntentionIDs)[NumTeams][NumAgents], bool(&Result)[NumTeams][NumAgents]);
 	bool CanAction(intention(&Intentions)[NumTeams][NumAgents]);
-	void CanAction(action_id(&IntentionIDs)[NumTeams][NumAgents]);
+	bool CanAction(action_id(&IntentionIDs)[NumTeams][NumAgents]);
 
 	//1É`Å[ÉÄóp
 	void Action(intention(&Intentions)[NumAgents], team_no Team);

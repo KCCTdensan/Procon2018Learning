@@ -390,7 +390,7 @@ bool stage::CanAction(intention(&Intentions)[NumTeams][NumAgents])
 	return (Result[0][0] && Result[0][1]) && (Result[1][0] && Result[1][1]);
 }
 
-void stage::CanAction(action_id(&IntentionIDs)[NumTeams][NumAgents])
+bool stage::CanAction(action_id(&IntentionIDs)[NumTeams][NumAgents])
 {
 	intention Intentions[NumTeams][NumAgents];
 	for (team_no t = 0; t < NumTeams; ++t)
@@ -400,7 +400,7 @@ void stage::CanAction(action_id(&IntentionIDs)[NumTeams][NumAgents])
 			Intentions[t][a] = IntentionIDs[t][a];
 		}
 	}
-	CanAction(Intentions);
+	return CanAction(Intentions);
 }
 
 void stage::Action(intention(&Intentions)[NumAgents], team_no Team)
@@ -451,6 +451,7 @@ bool stage::CanAction(intention(&Intentions)[NumAgents], team_no Team)
 	{
 		return false;
 	}
+	return true;
 }
 
 bool stage::CanAction(action_id(&IntentionIDs)[NumAgents], team_no Team)

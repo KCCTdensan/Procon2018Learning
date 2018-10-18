@@ -2,27 +2,19 @@
 #include <iostream>
 
 
-void battle_field::DeepenNode(action_id Action1, action_id Action2)
-{
-	node *ChildNode = CurrentNode->Deepen(Action1, Action2);
-
-	delete CurrentNode;
-	CurrentNode = ChildNode;
-}
-
 battle_field::battle_field()
 {
-	CurrentNode = new node(nullptr, Stage, Team_1P);
+
 }
 
 battle_field::~battle_field()
 {
-	delete CurrentNode;
-	CurrentNode = nullptr;
+
 }
 
 void battle_field::Battle(int NumTurn)
 {
+	friend_node *CurrentNode = new friend_node(nullptr, Stage, NumTurn);
 	Stage.PrintStage();
 	for (int i = 0; i < NumTurn; ++i)
 	{
@@ -51,7 +43,6 @@ void battle_field::Battle(int NumTurn)
 				}
 			}
 		}
-		DeepenNode(IntentionIDs[Team_1P][0], IntentionIDs[Team_1P][1]);
 
 		{
 			intention Intention1P_1 = IntentionIDs[Team_1P][0];
@@ -74,8 +65,8 @@ void battle_field::Battle(int NumTurn)
 				}
 			}
 		}
-		DeepenNode(IntentionIDs[Team_2P][0], IntentionIDs[Team_2P][1]);
 
+		CurrentNode = CurrentNode->UpdateCurrentNode(IntentionIDs);
 		Stage.Action(IntentionIDs);
 
 		{
@@ -89,4 +80,6 @@ void battle_field::Battle(int NumTurn)
 		cout << "1PScore : " << Stage.GetScore1P() << endl;
 		cout << "2PScore : " << Stage.GetScore2P() << endl;
 	}
+	delete CurrentNode;
+	CurrentNode = nullptr;
 }

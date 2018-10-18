@@ -161,7 +161,7 @@
     <ClCompile Include="Panel.cpp" />
     <ClCompile Include="Position.cpp" />
     <ClCompile Include="Random.cpp" />
-    <ClCompile Include="Search.cpp" />
+    <ClCompile Include="Node.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Agent.hpp" />
@@ -172,7 +172,7 @@
     <ClInclude Include="Panel.hpp" />
     <ClInclude Include="Position.hpp" />
     <ClInclude Include="Random.hpp" />
-    <ClInclude Include="Search.hpp" />
+    <ClInclude Include="Node.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
