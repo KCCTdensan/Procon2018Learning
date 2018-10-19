@@ -155,6 +155,7 @@
   <ItemGroup>
     <ClCompile Include="Agent.cpp" />
     <ClCompile Include="BattleField.cpp" />
+    <ClCompile Include="File.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Intention.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -166,6 +167,7 @@
   <ItemGroup>
     <ClInclude Include="Agent.hpp" />
     <ClInclude Include="BattleField.hpp" />
+    <ClInclude Include="File.hpp" />
     <ClInclude Include="Game.hpp" />
     <ClInclude Include="General.hpp" />
     <ClInclude Include="Intention.hpp" />
