@@ -3,15 +3,7 @@
 #include <iostream>
 
 
-float node::UCB1(float Q, int NChild)
-{
-	const static float Cp = 1.0f;
-	if(NChild == 0)
-	{
-		return INFINITY;
-	}
-	return Q + Cp * std::sqrtf(2.0f * std::logf((float)N) / (float)NChild);
-}
+const static float Cp = 1.0f;
 
 bool node::IsLeafNode()
 {
@@ -165,10 +157,18 @@ void friend_node::ClearChildNode()
 	}
 }
 
+float friend_node::UCB1(float Q, int NChild)
+{
+	if (NChild == 0)
+	{
+		return INFINITY;
+	}
+	return Q + Cp * std::sqrtf(2.0f * std::logf((float)N) / (float)NChild);
+}
+
 friend_node::friend_node(opponent_node *ParentNode, stage Stage, unsigned char NumTurns)
 	:node(NumTurns), Stage(Stage)
 {
-	this->ParentNode = ParentNode;
 	for (action_id i = 0; i < ID_MaxID; ++i)
 	{
 		for (action_id j = 0; j < ID_MaxID; ++j)
@@ -275,9 +275,9 @@ int opponent_node::Play()
 	}
 	int Ret = Selection();
 	N++;
-	Record -= Ret;
+	Record += Ret;
 	Q = (float)Record / N;
-	return -Ret;
+	return Ret;
 }
 
 int opponent_node::Selection()
@@ -330,14 +330,14 @@ void opponent_node::Expansion()
 				continue;
 			}
 
-			Children[i][j] = new friend_node(this, ParentNode->Stage, NumTurns - 1);
 			action_id IntentionIDs[NumTeams][stage::NumAgents] = {
 				{FriendIntentionIDs[0],FriendIntentionIDs[1]},{ID[0],ID[1]}
 			};
-			if (!Children[i][j]->Stage.CanAction(IntentionIDs))
+			if (!ParentNode->Stage.CanAction(IntentionIDs))
 			{
-				Children[i][j]->Q = -1.0f;
+				continue;
 			}
+			Children[i][j] = new friend_node(this, ParentNode->Stage, NumTurns - 1);
 			Children[i][j]->Stage.Action(IntentionIDs);
 			NumChildren++;
 		}
@@ -358,6 +358,15 @@ void opponent_node::ClearChildNode()
 			Children[i][j] = nullptr;
 		}
 	}
+}
+
+float opponent_node::UCB1(float Q, int NChild)
+{
+	if (NChild == 0)
+	{
+		return INFINITY;
+	}
+	return -Q + Cp * std::sqrtf(2.0f * std::logf((float)N) / (float)NChild);
 }
 
 opponent_node::opponent_node(friend_node *ParentNode, action_id(&Intentions)[stage::NumAgents], unsigned char NumTurns)

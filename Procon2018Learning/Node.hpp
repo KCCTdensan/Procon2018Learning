@@ -16,7 +16,6 @@ protected:
 	int N;
 	int Record;
 
-	float UCB1(float Q, int NChild);
 	bool IsLeafNode();
 
 public:
@@ -34,7 +33,6 @@ class friend_node :public node
 {
 	friend opponent_node;
 
-	opponent_node *ParentNode;
 	opponent_node *Children[ID_MaxID][ID_MaxID];
 	stage Stage;
 
@@ -44,6 +42,7 @@ class friend_node :public node
 	int Evaluation();
 	int Rollout(int NumTurn);
 	void ClearChildNode();
+	float UCB1(float Q, int NChild);
 
 public:
 	friend_node(opponent_node *ParentNode, stage Stage, unsigned char NumTurns);
@@ -74,6 +73,7 @@ class opponent_node :public node
 	int Selection();
 	void Expansion();
 	void ClearChildNode();
+	float UCB1(float Q, int NChild);
 
 public:
 	opponent_node(friend_node *ParentNode, action_id(&Intentions)[stage::NumAgents], unsigned char NumTurns);
