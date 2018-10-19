@@ -23,10 +23,8 @@ void battle_field::Battle(int NumTurn)
 		action_id IntentionIDs[NumTeams][stage::NumAgents] = { {-1,-1},{-1,-1} };
 		int Result[ID_MaxID][ID_MaxID];
 
-#ifdef _DEBUG
-		cout << "================================================" << endl;
+		cout << "================================================================" << endl;
 		cout << "Action" << i << endl;
-#endif
 
 		CurrentNode->Search(node::NumCallPlay);
 		CurrentNode->Result(Result);
@@ -47,7 +45,7 @@ void battle_field::Battle(int NumTurn)
 		{
 			intention Intention1P_1 = IntentionIDs[Team_1P][0];
 			intention Intention1P_2 = IntentionIDs[Team_1P][1];
-			CurrentNode->PrintChildNodeInfo();
+			//CurrentNode->PrintChildNodeInfo();
 			cout << "1P-1  x : " << (int)Intention1P_1.DeltaX << " y : " << (int)Intention1P_1.DeltaY << endl;
 			cout << "1P-2  x : " << (int)Intention1P_2.DeltaX << " y : " << (int)Intention1P_2.DeltaY << endl;
 		}
@@ -71,7 +69,7 @@ void battle_field::Battle(int NumTurn)
 		{
 			intention Intention2P_1 = IntentionIDs[Team_2P][0];
 			intention Intention2P_2 = IntentionIDs[Team_2P][1];
-			CurrentNode->ChildNode(IntentionIDs[Team_1P])->PrintChildNodeInfo();
+			//CurrentNode->ChildNode(IntentionIDs[Team_1P])->PrintChildNodeInfo();
 			cout << "2P-1 : x : " << (int)Intention2P_1.DeltaX << " y : " << (int)Intention2P_1.DeltaY << endl;
 			cout << "2P-2 : x : " << (int)Intention2P_2.DeltaX << " y : " << (int)Intention2P_2.DeltaY << endl;
 		}
@@ -80,7 +78,6 @@ void battle_field::Battle(int NumTurn)
 		Stage.Action(IntentionIDs);
 
 		Stage.PrintStage();
-		CurrentNode->PrintStage();
 		cout << "1PScore : " << Stage.GetScore1P() << endl;
 		cout << "2PScore : " << Stage.GetScore2P() << endl;
 	}

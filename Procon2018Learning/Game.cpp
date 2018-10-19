@@ -70,11 +70,6 @@ void stage::InitRandomStage()
 		Agents[1][0].Init(NumX - AgentX - 1, AgentY, Team_2P);
 		Agents[1][1].Init(NumX - AgentX - 1, NumY - AgentY - 1, Team_2P);
 	}
-#ifdef _DEBUG
-	std::cout << "<===========================================>" << std::endl;
-	PrintStage();
-	std::cout << "<===========================================>" << std::endl;
-#endif
 }
 
 int stage::UpdateRegionScore_Check(int x, int y, team_no Team, panel_check(&CheckedPanel)[NumTeams][MaxY][MaxX])
@@ -559,14 +554,15 @@ void stage::PrintStage()
 				{
 					CharColor = COL_WHITE;
 				}
+				CharColor |= MASK_INTENSITY;
 				break;
 
 			case Team_1P:
-				CharColor = COL_DARKCYAN;
+				CharColor = COL_CYAN;
 				break;
 
 			case Team_2P:
-				CharColor = COL_DARKYELLOW;
+				CharColor = COL_RED;
 				break;
 			}
 			if(AgentPositions[0][0] == n || AgentPositions[0][1] == n)
@@ -575,7 +571,7 @@ void stage::PrintStage()
 			}
 			if(AgentPositions[1][0] == n || AgentPositions[1][1] == n)
 			{
-				BackColor = COL_RED;
+				BackColor = COL_DARKRED;
 			}
 			ChangeColor(CharColor, BackColor);
 			std::printf("%3d ", Panels[y][x].GetScore());
