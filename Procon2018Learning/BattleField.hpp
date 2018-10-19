@@ -6,7 +6,7 @@
 
 class battle_field
 {
-	stage Stage;
+	//stage Stage;
 
 public:
 	battle_field();
