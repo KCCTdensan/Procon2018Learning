@@ -19,18 +19,18 @@ void battle_field::Battle(int NumTurn)
 	for (int i = 0; i < NumTurn; ++i)
 	{
 		using namespace std;
+		int Max = 0;
+		action_id IntentionIDs[NumTeams][stage::NumAgents] = { {-1,-1},{-1,-1} };
+		int Result[ID_MaxID][ID_MaxID];
+
 #ifdef _DEBUG
 		cout << "================================================" << endl;
 		cout << "Action" << i << endl;
 #endif
 
-		int Result[ID_MaxID][ID_MaxID];
-		CurrentNode->Search(node::NumCallPlay, Result);
+		CurrentNode->Search(node::NumCallPlay);
+		CurrentNode->Result(Result);
 
-		int Max = 0;
-		action_id IntentionIDs[NumTeams][stage::NumAgents] = {
-			{-1,-1},{-1,-1}
-		};
 		for(action_id i = 0; i < ID_MaxID; ++i)
 		{
 			for(action_id j = 0; j < ID_MaxID; ++j)
@@ -47,11 +47,13 @@ void battle_field::Battle(int NumTurn)
 		{
 			intention Intention1P_1 = IntentionIDs[Team_1P][0];
 			intention Intention1P_2 = IntentionIDs[Team_1P][1];
+			CurrentNode->PrintChildNodeInfo();
 			cout << "1P-1  x : " << (int)Intention1P_1.DeltaX << " y : " << (int)Intention1P_1.DeltaY << endl;
 			cout << "1P-2  x : " << (int)Intention1P_2.DeltaX << " y : " << (int)Intention1P_2.DeltaY << endl;
 		}
 
-		CurrentNode->Search(node::NumCallPlay / 100, Result);
+		CurrentNode->ChildNode(IntentionIDs[Team_1P])->Search(node::NumCallPlay);
+		CurrentNode->ChildNode(IntentionIDs[Team_1P])->Result(Result);
 		Max = 0;
 		for(action_id i = 0; i < ID_MaxID; ++i)
 		{
@@ -65,16 +67,18 @@ void battle_field::Battle(int NumTurn)
 				}
 			}
 		}
-
-		CurrentNode = CurrentNode->UpdateCurrentNode(IntentionIDs);
-		Stage.Action(IntentionIDs);
-
+		
 		{
 			intention Intention2P_1 = IntentionIDs[Team_2P][0];
 			intention Intention2P_2 = IntentionIDs[Team_2P][1];
+			CurrentNode->ChildNode(IntentionIDs[Team_1P])->PrintChildNodeInfo();
 			cout << "2P-1 : x : " << (int)Intention2P_1.DeltaX << " y : " << (int)Intention2P_1.DeltaY << endl;
 			cout << "2P-2 : x : " << (int)Intention2P_2.DeltaX << " y : " << (int)Intention2P_2.DeltaY << endl;
 		}
+		
+		CurrentNode = CurrentNode->UpdateCurrentNode(IntentionIDs);
+		Stage.Action(IntentionIDs);
+
 		Stage.PrintStage();
 		CurrentNode->PrintStage();
 		cout << "1PScore : " << Stage.GetScore1P() << endl;

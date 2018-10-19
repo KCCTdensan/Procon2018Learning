@@ -403,40 +403,6 @@ bool stage::CanAction(action_id(&IntentionIDs)[NumTeams][NumAgents])
 	return CanAction(Intentions);
 }
 
-void stage::Action(intention(&Intentions)[NumAgents], team_no Team)
-{
-	if(!CanAction(Intentions, Team))
-	{
-		return;
-	}
-	for(char a = 0; a < NumAgents; ++a)
-	{
-		intention &Intention = Intentions[a];
-		position NextPosition = Agents[Team][a].GetPosition() + Intention;
-		if (Panels[NextPosition].GetState() == Neutral || Panels[NextPosition].GetState() == Team)
-		{
-			Agents[Team][a].Move(Intention);
-			Panels[NextPosition].MakeCard(Team);
-		}
-		else
-		{
-			Panels[NextPosition].RemoveCard();
-			Panels[Agents[Team][a].GetPosition()].MakeCard(Team);
-		}
-	}
-	UpdateScore();
-}
-
-void stage::Action(action_id(&IntentionIDs)[NumAgents], team_no Team)
-{
-	intention Intentions[NumTeams];
-	for(char a = 0; a < NumAgents; ++a)
-	{
-		Intentions[a] = IntentionIDs[a];
-	}
-	Action(Intentions, Team);
-}
-
 bool stage::CanAction(intention(&Intentions)[NumAgents], team_no Team)
 {
 	if(CanActionOne(Agents[Team][0].GetPosition(), Intentions[0]) == -1 || CanActionOne(Agents[Team][1].GetPosition(), Intentions[1]) == -1)
@@ -490,27 +456,27 @@ void stage::UpdateScore()
 	UpdateTileScore();
 }
 
-int stage::GetNumX()
+unsigned char stage::GetNumX()
 {
 	return NumX;
 }
 
-int stage::GetNumY()
+unsigned char stage::GetNumY()
 {
 	return NumY;
 }
 
-int stage::GetCntTurn()
+unsigned char stage::GetCntTurn()
 {
 	return CntTurn;
 }
 
-int stage::GetScore1P()
+short stage::GetScore1P()
 {
 	return TileScore1P + RegionScore1P;
 }
 
-int stage::GetScore2P()
+short stage::GetScore2P()
 {
 	return TileScore2P + RegionScore2P;
 }

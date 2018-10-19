@@ -83,10 +83,10 @@ private:
 	unsigned char NumX;
 	unsigned char NumY;
 	unsigned char CntTurn;
-	unsigned short TileScore1P;
-	unsigned short TileScore2P;
-	unsigned short RegionScore1P;
-	unsigned short RegionScore2P;
+	short TileScore1P;
+	short TileScore2P;
+	short RegionScore1P;
+	short RegionScore2P;
 
 	int PanelPointRandom();
 	
@@ -111,8 +111,6 @@ public:
 	bool CanAction(action_id(&IntentionIDs)[NumTeams][NumAgents]);
 
 	//1É`Å[ÉÄóp
-	void Action(intention(&Intentions)[NumAgents], team_no Team);
-	void Action(action_id(&IntentionIDs)[NumAgents], team_no Team);
 	bool CanAction(intention(&Intentions)[NumAgents], team_no Team);
 	bool CanAction(action_id(&IntentionIDs)[NumAgents], team_no Team);
 
@@ -122,11 +120,11 @@ public:
 	char CanActionOne(position Position, intention Intention);
 
 	void UpdateScore();
-	int GetNumX();
-	int GetNumY();
-	int GetCntTurn();
-	int GetScore1P();
-	int GetScore2P();
+	unsigned char GetNumX();
+	unsigned char GetNumY();
+	unsigned char GetCntTurn();
+	short GetScore1P();
+	short GetScore2P();
 	agent* GetAgent(team_no Team, int AgentNo);
 	void ChangeColor(color_id CharColor, color_id BackColor);
 	void PrintStage();

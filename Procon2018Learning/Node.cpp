@@ -117,6 +117,10 @@ int friend_node::Evaluation()
 int friend_node::Rollout(int NumTurn)
 {
 	stage RolloutStage(Stage);
+	if (NumTurn > 10)
+	{
+		NumTurn = 10;
+	}
 	for (int i = 0; i < NumTurn; ++i)
 	{
 		action_id IntentionIDs[NumTeams][stage::NumAgents];
@@ -179,7 +183,7 @@ friend_node::~friend_node()
 	ClearChildNode();
 }
 
-void friend_node::Search(int NumCallPlay, int(&Result)[ID_MaxID][ID_MaxID])
+void friend_node::Search(int NumCallPlay)
 {
 	if (IsLeafNode())
 	{
@@ -191,7 +195,10 @@ void friend_node::Search(int NumCallPlay, int(&Result)[ID_MaxID][ID_MaxID])
 		Record += Selection();
 		Q = (float)Record / N;
 	}
-	
+}
+
+void friend_node::Result(int(&Result)[ID_MaxID][ID_MaxID])
+{
 	for (action_id i = 0; i < ID_MaxID; ++i)
 	{
 		for (action_id j = 0; j < ID_MaxID; ++j)
@@ -204,6 +211,34 @@ void friend_node::Search(int NumCallPlay, int(&Result)[ID_MaxID][ID_MaxID])
 			Result[i][j] = Children[i][j]->N;
 		}
 	}
+}
+
+opponent_node* friend_node::ChildNode(action_id IntentionID1, action_id IntentionID2)
+{
+	return Children[IntentionID1][IntentionID2];
+}
+
+opponent_node* friend_node::ChildNode(action_id(&IntentionIDs)[stage::NumAgents])
+{
+	return ChildNode(IntentionIDs[0], IntentionIDs[1]);
+}
+
+friend_node* friend_node::UpdateCurrentNode(action_id(&SelectIntentionIDs)[NumTeams][stage::NumAgents])
+{
+	opponent_node *SelectedOpponentNode = Children[SelectIntentionIDs[Team_1P][0]][SelectIntentionIDs[Team_1P][1]];
+	friend_node *SelectedFriendNode = SelectedOpponentNode->Children[SelectIntentionIDs[Team_2P][0]][SelectIntentionIDs[Team_2P][1]];
+	SelectedOpponentNode->Children[SelectIntentionIDs[Team_2P][0]][SelectIntentionIDs[Team_2P][1]] = nullptr;
+	delete this;
+	return SelectedFriendNode;
+}
+
+void friend_node::PrintStage()
+{
+	Stage.PrintStage();
+}
+
+void friend_node::PrintChildNodeInfo()
+{
 	using namespace std;
 	cout << endl;
 	cout << "Ns : " << N << endl;
@@ -232,20 +267,6 @@ void friend_node::Search(int NumCallPlay, int(&Result)[ID_MaxID][ID_MaxID])
 	}
 }
 
-friend_node* friend_node::UpdateCurrentNode(action_id(&SelectIntentionIDs)[NumTeams][stage::NumAgents])
-{
-	opponent_node *SelectedOpponentNode = Children[SelectIntentionIDs[Team_1P][0]][SelectIntentionIDs[Team_1P][1]];
-	friend_node *SelectedFriendNode = SelectedOpponentNode->Children[SelectIntentionIDs[Team_2P][0]][SelectIntentionIDs[Team_2P][1]];
-	SelectedOpponentNode->Children[SelectIntentionIDs[Team_2P][0]][SelectIntentionIDs[Team_2P][1]] = nullptr;
-	delete this;
-	return SelectedFriendNode;
-}
-
-void friend_node::PrintStage()
-{
-	Stage.PrintStage();
-}
-
 int opponent_node::Play()
 {
 	if (IsLeafNode())
@@ -256,7 +277,7 @@ int opponent_node::Play()
 	N++;
 	Record -= Ret;
 	Q = (float)Record / N;
-	return Ret;
+	return -Ret;
 }
 
 int opponent_node::Selection()
@@ -304,7 +325,7 @@ void opponent_node::Expansion()
 		for (action_id j = 0; j < ID_MaxID; ++j)
 		{
 			action_id ID[] = { i,j };
-			if (!ParentNode->Stage.CanAction(ID, Team_1P))
+			if (!ParentNode->Stage.CanAction(ID, Team_2P))
 			{
 				continue;
 			}
@@ -359,4 +380,74 @@ opponent_node::opponent_node(friend_node *ParentNode, action_id(&Intentions)[sta
 opponent_node::~opponent_node()
 {
 	ClearChildNode();
+}
+
+void opponent_node::Search(int NumCallPlay)
+{
+	if (IsLeafNode())
+	{
+		Expansion();
+	}
+	for (int i = 0; i < NumCallPlay; ++i)
+	{
+		N++;
+		Record += Selection();
+		Q = (float)Record / N;
+	}
+}
+
+void opponent_node::Result(int(&Result)[ID_MaxID][ID_MaxID])
+{
+	for (action_id i = 0; i < ID_MaxID; ++i)
+	{
+		for (action_id j = 0; j < ID_MaxID; ++j)
+		{
+			if (Children[i][j] == nullptr)
+			{
+				Result[i][j] = 0;
+				continue;
+			}
+			Result[i][j] = Children[i][j]->N;
+		}
+	}
+}
+
+friend_node* opponent_node::ChildNode(action_id IntentionID1, action_id IntentionID2)
+{
+	return Children[IntentionID1][IntentionID2];
+}
+
+friend_node* opponent_node::ChildNode(action_id(&IntentionIDs)[stage::NumAgents])
+{
+	return ChildNode(IntentionIDs[0], IntentionIDs[1]);
+}
+
+void opponent_node::PrintChildNodeInfo()
+{
+	using namespace std;
+	cout << endl;
+	cout << "Ns : " << N << endl;
+	for (action_id i = 0; i < ID_MaxID; ++i)
+	{
+		for (action_id j = 0; j < ID_MaxID; ++j)
+		{
+			if (Children[i][j] == nullptr)
+			{
+				cout << " ********  ";
+				continue;
+			}
+			printf("[N:%6d] ", Children[i][j]->N);
+		}
+		cout << endl;
+		for (action_id j = 0; j < ID_MaxID; ++j)
+		{
+			if (Children[i][j] == nullptr)
+			{
+				cout << " ********  ";
+				continue;
+			}
+			printf("[R:%6d] ", Children[i][j]->Record);
+		}
+		cout << endl << endl;
+	}
 }
