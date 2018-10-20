@@ -33,6 +33,9 @@ void battle_field::Battle(int NumTurn)
 		CurrentNode->Search(node::NumCallPlay);
 		CurrentNode->Result(Result);
 
+		Stages[t] = Stage;
+		CurrentNodes[t] = CurrentNode;
+
 		for(action_id i = 0; i < ID_MaxID; ++i)
 		{
 			for(action_id j = 0; j < ID_MaxID; ++j)
@@ -53,7 +56,8 @@ void battle_field::Battle(int NumTurn)
 			cout << "1P-1  x : " << (int)Intention1P_1.DeltaX << " y : " << (int)Intention1P_1.DeltaY << endl;
 			cout << "1P-2  x : " << (int)Intention1P_2.DeltaX << " y : " << (int)Intention1P_2.DeltaY << endl;
 		}
-
+		if (CurrentNode == nullptr) { cout << "null1" << endl; }
+		if (CurrentNode->ChildNode(IntentionIDs[Team_1P]) == nullptr) { cout << "null2" << endl; }
 		CurrentNode->ChildNode(IntentionIDs[Team_1P])->Search(node::NumCallPlay);
 		CurrentNode->ChildNode(IntentionIDs[Team_1P])->Result(Result);
 		Max = 0;
@@ -110,11 +114,28 @@ void battle_field::Battle(int NumTurn)
 		std::cout << "Turn" << (int)Stage.GetCntTurn() << endl;
 
 		Stage.PrintStage();
+		cout << "node" << endl;
+		CurrentNode->PrintStage();
 		cout << "1PScore : " << Stage.GetScore1P() << endl;
 		cout << "2PScore : " << Stage.GetScore2P() << endl;
-		cin >> isContinue;
+
 		t++;
-	} while (isContinue == 't');
+
+		do
+		{
+			cout << "0‚ÅI—¹,‚»‚Ì‘¼‚Å‘±s,r‚ÅŒ³‚É–ß‚·" << endl;
+			cin >> isContinue;
+			if (isContinue == 'r' && t>0)
+			{
+				t--;
+				Stage = Stages[t];
+				CurrentNode = CurrentNodes[t];
+				Stage.PrintStage();
+				CurrentNode->PrintStage();
+			}
+		} while (isContinue == 'r' && t>0);
+		
+	} while (isContinue != '0');
 	delete CurrentNode;
 	CurrentNode = nullptr;
 }

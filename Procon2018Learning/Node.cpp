@@ -227,8 +227,8 @@ friend_node* friend_node::UpdateCurrentNode(action_id(&SelectIntentionIDs)[NumTe
 {
 	opponent_node *SelectedOpponentNode = Children[SelectIntentionIDs[Team_1P][0]][SelectIntentionIDs[Team_1P][1]];
 	friend_node *SelectedFriendNode = SelectedOpponentNode->Children[SelectIntentionIDs[Team_2P][0]][SelectIntentionIDs[Team_2P][1]];
-	SelectedOpponentNode->Children[SelectIntentionIDs[Team_2P][0]][SelectIntentionIDs[Team_2P][1]] = nullptr;
-	delete this;
+	//SelectedOpponentNode->Children[SelectIntentionIDs[Team_2P][0]][SelectIntentionIDs[Team_2P][1]] = nullptr;
+	//delete this;
 	return SelectedFriendNode;
 }
 

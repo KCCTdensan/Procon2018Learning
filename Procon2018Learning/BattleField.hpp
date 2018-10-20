@@ -7,6 +7,8 @@
 class battle_field
 {
 	//stage Stage;
+	stage Stages[80];
+	friend_node* CurrentNodes[80];
 
 public:
 	battle_field();
