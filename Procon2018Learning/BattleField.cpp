@@ -82,6 +82,7 @@ void battle_field::Battle(int NumTurn)
 			cout << "2P-2 : x : " << (int)Intention2P_2.DeltaX << " y : " << (int)Intention2P_2.DeltaY << endl;
 		}
 		
+		cout << "=====================Input intentionIDs =====================" << endl;
 		cout << "1 2 3" << endl;
 		cout << "4 0 5" << endl;
 		cout << "6 7 8" << endl;
@@ -98,6 +99,7 @@ void battle_field::Battle(int NumTurn)
 				UserIntentions[(i == 0) ? Team_1P : Team_2P][j] = (action_id)UserIntention;
 			}
 		}
+		cout << "=====================End Input intentionIDs =====================" << endl;
 		Stage.CanAction(UserIntentions,Results);
 		for (int i = 0; i < NumTeams; i++)
 		{
@@ -113,14 +115,16 @@ void battle_field::Battle(int NumTurn)
 		Stage.Action(UserIntentions);
 		std::cout << "Turn" << (int)Stage.GetCntTurn() << endl;
 
+		cout << "Stage;" << endl;
 		Stage.PrintStage();
-		cout << "node" << endl;
+		cout << "Node" << endl;
 		CurrentNode->PrintStage();
 		cout << "1PScore : " << Stage.GetScore1P() << endl;
 		cout << "2PScore : " << Stage.GetScore2P() << endl;
 
 		t++;
 
+		cout << "================Redo or Continue or End===================" << endl;
 		do
 		{
 			cout << "0‚ÅI—¹,‚»‚Ì‘¼‚Å‘±s,r‚ÅŒ³‚É–ß‚·" << endl;
@@ -130,7 +134,9 @@ void battle_field::Battle(int NumTurn)
 				t--;
 				Stage = Stages[t];
 				CurrentNode = CurrentNodes[t];
+				cout << "Stage:" << endl;
 				Stage.PrintStage();
+				cout << "Node:" << endl;
 				CurrentNode->PrintStage();
 			}
 		} while (isContinue == 'r' && t>0);
