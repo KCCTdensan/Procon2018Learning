@@ -80,7 +80,7 @@ void battle_field::Battle(int NumTurn)
 		
 		cout << "1 2 3" << endl;
 		cout << "4 0 5" << endl;
-		cout << "8 7 8" << endl;
+		cout << "6 7 8" << endl;
 		bool Results[NumTeams][stage::NumAgents];
 		for (int i  = 0; i < NumTeams; i++)
 		{
