@@ -14,6 +14,7 @@ battle_field::~battle_field()
 
 void battle_field::Battle(int NumTurn)
 {
+	stage Stage;
 	friend_node *CurrentNode = new friend_node(nullptr, Stage, NumTurn);
 	Stage.PrintStage();
 	for (int i = 0; i < NumTurn; ++i)
@@ -76,6 +77,7 @@ void battle_field::Battle(int NumTurn)
 		
 		CurrentNode = CurrentNode->UpdateCurrentNode(IntentionIDs);
 		Stage.Action(IntentionIDs);
+		std::cout << "Turn" << (int)Stage.GetCntTurn() << endl;
 
 		Stage.PrintStage();
 		cout << "1PScore : " << Stage.GetScore1P() << endl;
