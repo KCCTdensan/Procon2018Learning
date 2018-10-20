@@ -47,11 +47,19 @@ class panels
 	panel Panels[MaxY][MaxX];
 
 public:
-	panel* operator[](char y)
+	panel* operator[](unsigned char y)
+	{
+		return Panels[y];
+	}
+	const panel* operator[](unsigned char y)const
 	{
 		return Panels[y];
 	}
 	panel& operator[](position p)
+	{
+		return Panels[p.y][p.x];
+	}
+	const panel& operator[](position p)const
 	{
 		return Panels[p.y][p.x];
 	}
@@ -95,7 +103,7 @@ private:
 	void UpdateRegionScore();
 	void UpdateTileScore();
 
-	bool Move(intention_info(&Infos)[NumTeams][NumAgents], team_no t, char a);
+	bool Move(intention_info(&Infos)[NumTeams][NumAgents], team_no t, char a)const;
 
 public:
 	stage();
@@ -105,19 +113,19 @@ public:
 	//両チーム用
 	void Action(intention(&Intentions)[NumTeams][NumAgents]);
 	void Action(action_id(&IntentionIDs)[NumTeams][NumAgents]);
-	void CanAction(intention(&Intentions)[NumTeams][NumAgents], bool(&Result)[NumTeams][NumAgents]);
-	void CanAction(action_id(&IntentionIDs)[NumTeams][NumAgents], bool(&Result)[NumTeams][NumAgents]);
-	bool CanAction(intention(&Intentions)[NumTeams][NumAgents]);
-	bool CanAction(action_id(&IntentionIDs)[NumTeams][NumAgents]);
+	void CanAction(intention(&Intentions)[NumTeams][NumAgents], bool(&Result)[NumTeams][NumAgents])const;
+	void CanAction(action_id(&IntentionIDs)[NumTeams][NumAgents], bool(&Result)[NumTeams][NumAgents])const;
+	bool CanAction(intention(&Intentions)[NumTeams][NumAgents])const;
+	bool CanAction(action_id(&IntentionIDs)[NumTeams][NumAgents])const;
 
 	//1チーム用
-	bool CanAction(intention(&Intentions)[NumAgents], team_no Team);
-	bool CanAction(action_id(&IntentionIDs)[NumAgents], team_no Team);
+	bool CanAction(intention(&Intentions)[NumAgents], team_no Team)const;
+	bool CanAction(action_id(&IntentionIDs)[NumAgents], team_no Team)const;
 
 	//1プレイヤー用
-	bool CanAction(intention Intention, team_no Team, char AgentNo);
-	bool CanAction(action_id IntentionID, team_no Team, char AgentNo);
-	char CanActionOne(position Position, intention Intention);
+	bool CanAction(intention Intention, team_no Team, char AgentNo)const;
+	bool CanAction(action_id IntentionID, team_no Team, char AgentNo)const;
+	char CanActionOne(position Position, intention Intention)const;
 
 	void UpdateScore();
 	unsigned char GetNumX();
@@ -125,7 +133,9 @@ public:
 	unsigned char GetCntTurn();
 	short GetScore1P();
 	short GetScore2P();
-	agent* GetAgent(team_no Team, int AgentNo);
+	agent& GetAgent(team_no Team, char AgentNo);
+	const agent& GetAgent(team_no Team, char AgentNo)const;
+	panels GetPanels();
 	void ChangeColor(color_id CharColor, color_id BackColor);
 	void PrintStage();
 };

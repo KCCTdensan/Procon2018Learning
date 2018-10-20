@@ -41,10 +41,10 @@ void stage::InitRandomStage()
 				Panels[y][NumX / 2].Init(PanelPointRandom());
 			}
 		}
-		Agents[0][0].Init(AgentX, AgentY, Team_1P);
-		Agents[0][1].Init(NumX - AgentX - 1, AgentY, Team_2P);
-		Agents[1][0].Init(AgentX, NumY - AgentY - 1, Team_1P);
-		Agents[1][1].Init(NumX - AgentX - 1, NumY - AgentY - 1, Team_2P);
+		Agents[Team_1P][0].Init(AgentX, AgentY);
+		Agents[Team_1P][1].Init(NumX - AgentX - 1, AgentY);
+		Agents[Team_2P][0].Init(AgentX, NumY - AgentY - 1);
+		Agents[Team_2P][1].Init(NumX - AgentX - 1, NumY - AgentY - 1);
 	}
 	else
 	{
@@ -65,10 +65,10 @@ void stage::InitRandomStage()
 				Panels[NumY / 2][x].Init(PanelPointRandom());
 			}
 		}
-		Agents[0][0].Init(AgentX, AgentY, Team_1P);
-		Agents[0][1].Init(AgentX, NumY - AgentY - 1, Team_1P);
-		Agents[1][0].Init(NumX - AgentX - 1, AgentY, Team_2P);
-		Agents[1][1].Init(NumX - AgentX - 1, NumY - AgentY - 1, Team_2P);
+		Agents[Team_1P][0].Init(AgentX, AgentY);
+		Agents[Team_1P][1].Init(AgentX, NumY - AgentY - 1);
+		Agents[Team_2P][0].Init(NumX - AgentX - 1, AgentY);
+		Agents[Team_2P][1].Init(NumX - AgentX - 1, NumY - AgentY - 1);
 	}
 }
 
@@ -208,7 +208,7 @@ void stage::UpdateTileScore()
 	}
 }
 
-bool stage::Move(intention_info(&Infos)[NumTeams][NumAgents], team_no Team, char AgentNo)
+bool stage::Move(intention_info(&Infos)[NumTeams][NumAgents], team_no Team, char AgentNo)const
 {
 	static int NumCall = 0;
 	//Ç∑Ç≈Ç…à⁄ìÆïsâ¬Ç∆ÇÌÇ©Ç¡ÇƒÇ¢ÇÈèÍçá
@@ -335,7 +335,7 @@ void stage::Action(action_id(&IntentionIDs)[NumTeams][NumAgents])
 	Action(Intentions);
 }
 
-void stage::CanAction(intention(&Intentions)[NumTeams][NumAgents], bool(&Result)[NumTeams][NumAgents])
+void stage::CanAction(intention(&Intentions)[NumTeams][NumAgents], bool(&Result)[NumTeams][NumAgents])const
 {
 	intention_info Infos[NumTeams][NumAgents];
 	for (team_no t = 0; t < NumTeams; ++t)
@@ -365,7 +365,7 @@ void stage::CanAction(intention(&Intentions)[NumTeams][NumAgents], bool(&Result)
 	}
 }
 
-void stage::CanAction(action_id(&IntentionIDs)[NumTeams][NumAgents], bool(&Result)[NumTeams][NumAgents])
+void stage::CanAction(action_id(&IntentionIDs)[NumTeams][NumAgents], bool(&Result)[NumTeams][NumAgents])const
 {
 	intention Intentions[NumTeams][NumAgents];
 	for (team_no t = 0; t < NumTeams; ++t)
@@ -378,14 +378,14 @@ void stage::CanAction(action_id(&IntentionIDs)[NumTeams][NumAgents], bool(&Resul
 	CanAction(Intentions, Result);
 }
 
-bool stage::CanAction(intention(&Intentions)[NumTeams][NumAgents])
+bool stage::CanAction(intention(&Intentions)[NumTeams][NumAgents])const
 {
 	bool Result[NumTeams][NumAgents];
 	CanAction(Intentions, Result);
 	return (Result[0][0] && Result[0][1]) && (Result[1][0] && Result[1][1]);
 }
 
-bool stage::CanAction(action_id(&IntentionIDs)[NumTeams][NumAgents])
+bool stage::CanAction(action_id(&IntentionIDs)[NumTeams][NumAgents])const
 {
 	intention Intentions[NumTeams][NumAgents];
 	for (team_no t = 0; t < NumTeams; ++t)
@@ -398,7 +398,7 @@ bool stage::CanAction(action_id(&IntentionIDs)[NumTeams][NumAgents])
 	return CanAction(Intentions);
 }
 
-bool stage::CanAction(intention(&Intentions)[NumAgents], team_no Team)
+bool stage::CanAction(intention(&Intentions)[NumAgents], team_no Team)const
 {
 	if(CanActionOne(Agents[Team][0].GetPosition(), Intentions[0]) == -1 || CanActionOne(Agents[Team][1].GetPosition(), Intentions[1]) == -1)
 	{
@@ -415,7 +415,7 @@ bool stage::CanAction(intention(&Intentions)[NumAgents], team_no Team)
 	return true;
 }
 
-bool stage::CanAction(action_id(&IntentionIDs)[NumAgents], team_no Team)
+bool stage::CanAction(action_id(&IntentionIDs)[NumAgents], team_no Team)const
 {
 	intention Intentions[NumAgents];
 	for (char a = 0; a < NumAgents; ++a)
@@ -425,17 +425,17 @@ bool stage::CanAction(action_id(&IntentionIDs)[NumAgents], team_no Team)
 	return CanAction(Intentions, Team);
 }
 
-bool stage::CanAction(intention Intention, team_no Team, char AgentNo)
+bool stage::CanAction(intention Intention, team_no Team, char AgentNo)const
 {
 	return CanActionOne(Agents[Team][AgentNo].GetPosition(), Intention) != -1;
 }
 
-bool stage::CanAction(action_id IntentionID, team_no Team, char AgentNo)
+bool stage::CanAction(action_id IntentionID, team_no Team, char AgentNo)const
 {
 	return CanAction((intention)IntentionID, Team, AgentNo);
 }
 
-char stage::CanActionOne(position Position, intention Intention)
+char stage::CanActionOne(position Position, intention Intention)const
 {
 	if(Intention.DeltaX == 0 && Intention.DeltaY == 0)
 	{
@@ -476,9 +476,19 @@ short stage::GetScore2P()
 	return TileScore2P + RegionScore2P;
 }
 
-agent* stage::GetAgent(team_no Team, int AgentNo)
+agent& stage::GetAgent(team_no Team, char AgentNo)
 {
-	return &Agents[Team][AgentNo];
+	return Agents[Team][AgentNo];
+}
+
+const agent& stage::GetAgent(team_no Team, char AgentNo)const
+{
+	return Agents[Team][AgentNo];
+}
+
+panels stage::GetPanels()
+{
+	return Panels;
 }
 
 void stage::ChangeColor(color_id CharColor, color_id BackColor)

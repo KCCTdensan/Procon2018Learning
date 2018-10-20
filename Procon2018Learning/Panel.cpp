@@ -31,12 +31,12 @@ void panel::RemoveCard()
 	State = Neutral;
 }
 
-char panel::GetScore()
+char panel::GetScore()const
 {
 	return Point;
 }
 
-team_no panel::GetState()
+team_no panel::GetState()const
 {
 	return State;
 }
@@ -46,7 +46,7 @@ void panel::SetSurrounded(bool IsSurrounded, team_no Team)
 	Surrounded[Team] = IsSurrounded;
 }
 
-bool panel::GetSurrounded(team_no Team)
+bool panel::GetSurrounded(team_no Team)const
 {
 	return Surrounded[Team];
 }

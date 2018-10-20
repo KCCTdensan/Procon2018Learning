@@ -11,11 +11,10 @@ agent::~agent()
 
 }
 
-void agent::Init(char PositionX, char PositionY, team_no Team)
+void agent::Init(char PositionX, char PositionY)
 {
 	Position.x = PositionX;
 	Position.y = PositionY;
-	this->Team = Team;
 }
 
 void agent::Move(char DeltaX, char DeltaY)
@@ -34,7 +33,7 @@ void agent::Move(action_id ActionID)
 	Move((intention)ActionID);
 }
 
-position agent::GetPosition()
+position agent::GetPosition()const
 {
 	return Position;
 }

@@ -5,14 +5,14 @@
 
 class image
 {
-	float Value[MaxY][MaxX];
+	int Value[MaxY][MaxX];
 
 public:
-	float* operator[](int y)
+	int* operator[](int y)
 	{
 		return Value[y];
 	}
-	float& operator[](position p)
+	int& operator[](position p)
 	{
 		return Value[p.y][p.x];
 	}
@@ -22,22 +22,24 @@ struct input
 {
 	image StageSize;
 	image PanelPoints;
-	image FriendAgents;
+	image FriendAgent1;
+	image FriendAgent2;
 	image FriendPanels;
 	image FriendRegion;
-	image OpponentAgents;
+	image OpponentAgent1;
+	image OpponentAgent2;
 	image OpponentPanels;
 	image OpponentRegion;
 };
 
 struct output_policy
 {
-	float EvaluationValue[ID_MaxID][ID_MaxID];
+	int EvaluationValue[ID_MaxID][ID_MaxID];
 };
 
 struct output_value
 {
-	float WinningRate;
+	int WinningRate;
 };
 
 struct training_data
@@ -46,5 +48,7 @@ struct training_data
 	output_policy OutputPolicy;
 	output_value OutputValue;
 };
+
+void StageToTrainingData(stage &Stage, action_id(&BestIntentions)[stage::NumAgents], bool Win);
 
 void WriteTrainingData(training_data &Data, const char *FileName);

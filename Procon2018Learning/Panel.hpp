@@ -23,8 +23,8 @@ public:
 	void Init(char Point);
 	void MakeCard(team_no Team);
 	void RemoveCard();
-	char GetScore();
-	team_no GetState();
+	char GetScore()const;
+	team_no GetState()const;
 	void SetSurrounded(bool IsSurrounded, team_no Team);
-	bool GetSurrounded(team_no Team);
+	bool GetSurrounded(team_no Team)const;
 };
