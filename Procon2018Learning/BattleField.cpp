@@ -14,18 +14,21 @@ battle_field::~battle_field()
 
 void battle_field::Battle(int NumTurn)
 {
+	int t = 0;
+	char isContinue;
 	stage Stage;
 	friend_node *CurrentNode = new friend_node(nullptr, Stage, NumTurn);
 	Stage.PrintStage();
-	for (int i = 0; i < NumTurn; ++i)
+	do
 	{
 		using namespace std;
 		int Max = 0;
+		action_id UserIntentions[NumTeams][stage::NumAgents] = { { -1,-1 },{ -1,-1 } };
 		action_id IntentionIDs[NumTeams][stage::NumAgents] = { {-1,-1},{-1,-1} };
 		int Result[ID_MaxID][ID_MaxID];
 
 		cout << "================================================================" << endl;
-		cout << "Action" << i << endl;
+		cout << "Action" << t << endl;
 
 		CurrentNode->Search(node::NumCallPlay);
 		CurrentNode->Result(Result);
@@ -75,14 +78,43 @@ void battle_field::Battle(int NumTurn)
 			cout << "2P-2 : x : " << (int)Intention2P_2.DeltaX << " y : " << (int)Intention2P_2.DeltaY << endl;
 		}
 		
-		CurrentNode = CurrentNode->UpdateCurrentNode(IntentionIDs);
-		Stage.Action(IntentionIDs);
+		cout << "1 2 3" << endl;
+		cout << "4 0 5" << endl;
+		cout << "8 7 8" << endl;
+		bool Results[NumTeams][stage::NumAgents];
+		for (int i  = 0; i < NumTeams; i++)
+		{
+			cout << "Team" << i+1 << "P:" << endl;
+			for (int j = 0; j < stage::NumAgents; j++) 
+			{
+				
+				int UserIntention;
+				cout << "Agent" << j+1 << ":" << endl;
+				cin >> UserIntention;
+				UserIntentions[(i == 0) ? Team_1P : Team_2P][j] = (action_id)UserIntention;
+			}
+		}
+		Stage.CanAction(UserIntentions,Results);
+		for (int i = 0; i < NumTeams; i++)
+		{
+			for (int j = 0; j < stage::NumAgents; j++) 
+			{
+				if (!Results[i][j]) { UserIntentions[(i == 0) ? Team_1P : Team_2P][j] = (action_id)0; }
+			}
+		}
+
+
+		CurrentNode = CurrentNode->UpdateCurrentNode(UserIntentions);
+
+		Stage.Action(UserIntentions);
 		std::cout << "Turn" << (int)Stage.GetCntTurn() << endl;
 
 		Stage.PrintStage();
 		cout << "1PScore : " << Stage.GetScore1P() << endl;
 		cout << "2PScore : " << Stage.GetScore2P() << endl;
-	}
+		cin >> isContinue;
+		t++;
+	} while (isContinue == 't');
 	delete CurrentNode;
 	CurrentNode = nullptr;
 }
