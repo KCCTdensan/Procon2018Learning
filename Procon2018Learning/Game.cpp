@@ -2,6 +2,8 @@
 #include "Random.hpp"
 #include <iostream>
 #include <windows.h>
+#include <fstream>
+#include <string>
 
 
 int stage::PanelPointRandom()
@@ -70,6 +72,15 @@ void stage::InitRandomStage()
 		Agents[1][0].Init(NumX - AgentX - 1, AgentY, Team_2P);
 		Agents[1][1].Init(NumX - AgentX - 1, NumY - AgentY - 1, Team_2P);
 	}
+}
+
+void stage::BinaryStage()
+{
+	std::ifstream file("./StageInfo.bin", std::ios_base::in | std::ios_base::binary);
+	std::string QRText(100,'a');
+	file.read(&QRText[0],100);
+	std::cout << QRText << std::endl;
+	file.close();
 }
 
 int stage::UpdateRegionScore_Check(int x, int y, team_no Team, panel_check(&CheckedPanel)[NumTeams][MaxY][MaxX])
@@ -284,6 +295,7 @@ bool stage::Move(intention_info(&Infos)[NumTeams][NumAgents], team_no Team, char
 stage::stage()
 {
 	InitRandomStage();
+	BinaryStage();
 }
 
 stage::~stage()
