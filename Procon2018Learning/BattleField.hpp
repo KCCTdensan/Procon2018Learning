@@ -6,12 +6,12 @@
 
 class battle_field
 {
-	struct log
+	/*struct log
 	{
 		panels Panels[MaxY][MaxX];
 		agent Agents[NumTeams][stage::NumAgents];
 		int N[9][9];//nullptr‚Í0
-	};
+	};*/
 public:
 	battle_field();
 	~battle_field();
