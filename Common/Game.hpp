@@ -107,6 +107,7 @@ private:
 
 public:
 	stage();
+	stage(const char *QRCodeString);
 	~stage();
 
 	void InitRandomStage();

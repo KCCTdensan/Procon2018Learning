@@ -286,6 +286,11 @@ stage::stage()
 	InitRandomStage();
 }
 
+stage::stage(const char *QRCodeString)
+{
+
+}
+
 stage::~stage()
 {
 
