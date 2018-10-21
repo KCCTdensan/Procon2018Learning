@@ -6,12 +6,10 @@
 
 class battle_field
 {
-	/*struct log
-	{
-		panels Panels[MaxY][MaxX];
-		agent Agents[NumTeams][stage::NumAgents];
-		int N[9][9];//nullptr‚Í0
-	};*/
+	//stage Stage;
+	stage Stages[80];
+	friend_node* CurrentNodes[80];
+
 public:
 	battle_field();
 	~battle_field();

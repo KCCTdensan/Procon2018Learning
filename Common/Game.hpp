@@ -97,6 +97,7 @@ private:
 	short RegionScore2P;
 
 	int PanelPointRandom();
+	void BinaryStage();
 	
 	int UpdateRegionScore_Check(int x, int y, team_no Team, panel_check(&CheckedPanel)[NumTeams][MaxY][MaxX]);
 	void UpdateRegionScore_Set(int x, int y, team_no Team, bool Surrounded, panel_check(&CheckedPanel)[NumTeams][MaxY][MaxX]);
