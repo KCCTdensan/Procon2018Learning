@@ -4,7 +4,8 @@
 #include "Panel.hpp"
 #include "Agent.hpp"
 #include "Position.hpp"
-
+#include <string>
+#include <vector>
 
 typedef unsigned char can_action_flag;
 enum
@@ -90,6 +91,8 @@ private:
 
 	int PanelPointRandom();
 	void BinaryStage();
+	void TextStage(std::string text);
+	std::vector<std::string>split(std::string str, char sp);
 	
 	int UpdateRegionScore_Check(int x, int y, team_no Team, panel_check(&CheckedPanel)[NumTeams][MaxY][MaxX]);
 	void UpdateRegionScore_Set(int x, int y, team_no Team, bool Surrounded, panel_check(&CheckedPanel)[NumTeams][MaxY][MaxX]);

@@ -4,6 +4,8 @@
 #include <windows.h>
 #include <fstream>
 #include <string>
+#include <sstream>
+#include <vector>
 
 
 int stage::PanelPointRandom()
@@ -77,10 +79,52 @@ void stage::InitRandomStage()
 void stage::BinaryStage()
 {
 	std::ifstream file("./StageInfo.bin", std::ios_base::in | std::ios_base::binary);
-	std::string QRText(100,'a');
-	file.read(&QRText[0],100);
+	std::string QRText(300,'\0');
+	file.read(&QRText[0],300);
 	std::cout << QRText << std::endl;
+	TextStage(QRText);
 	file.close();
+}
+
+void stage::TextStage(std::string text)
+{
+	CntTurn = 0;
+	TileScore1P = 0;
+	TileScore2P = 0;
+	RegionScore1P = 0;
+	RegionScore2P = 0;
+	NumX = stoi(split(split(text, ':')[0], ' ')[1]);
+	NumY = stoi(split(split(text, ':')[0], ' ')[0]);
+	int Agentx = stoi(split(split(text, ':')[NumY+1],' ')[0]) - 1;
+	std::cout << Agentx << std::endl;
+	int Agenty = stoi(split(split(text, ':')[NumY+1], ' ')[1]) - 1;
+	std::cout << Agenty << std::endl;
+	Agents[0][0].Init(Agentx,Agenty, Team_1P);
+	Agents[0][1].Init(NumX - 1 - Agentx,NumY - 1 - Agenty, Team_1P);
+	Agents[1][0].Init(NumX - 1 - Agentx,Agenty, Team_2P);
+	Agents[1][1].Init(Agentx,NumY - 1 - Agenty, Team_2P);
+
+	for(int y = 0; y < NumY; y++)
+	{
+		for (int x = 0; x < NumX; x++)
+		{
+			std::cout << "Y"<< y << split((split(text, ':')[y+1]), ' ')[x] << std::endl;
+			char PanelsScore = (char)stoi(split((split(text, ':')[y+1]),' ')[x]);
+			Panels[y][x].Init(PanelsScore);
+		}
+	}
+}
+
+std::vector<std::string> stage::split(std::string str,char sp)
+{
+	std::vector<std::string> T;
+	std::stringstream ss(str);
+	std::string buffer;
+	while (std::getline(ss, buffer, sp))
+	{
+		T.push_back(buffer);
+	}
+	return T;
 }
 
 int stage::UpdateRegionScore_Check(int x, int y, team_no Team, panel_check(&CheckedPanel)[NumTeams][MaxY][MaxX])
@@ -294,7 +338,7 @@ bool stage::Move(intention_info(&Infos)[NumTeams][NumAgents], team_no Team, char
 
 stage::stage()
 {
-	InitRandomStage();
+	//InitRandomStage();
 	BinaryStage();
 }
 
