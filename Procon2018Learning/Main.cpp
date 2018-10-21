@@ -6,11 +6,11 @@
 
 using namespace std;
 
-int main()
+int main(int argc,char *argv[])
 {
 	//’TõƒeƒXƒg
 		battle_field BattleField;
 		BattleField.Battle(60);
-
+		
 	return 0;
 }

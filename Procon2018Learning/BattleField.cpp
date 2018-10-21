@@ -16,6 +16,7 @@ void battle_field::Battle(int NumTurn)
 {
 	int t = 0;
 	char isContinue;
+	//stage Stage(QRtext);
 	stage Stage;
 	friend_node *CurrentNode = new friend_node(nullptr, Stage, NumTurn);
 	Stage.PrintStage();
@@ -54,7 +55,9 @@ void battle_field::Battle(int NumTurn)
 			intention Intention1P_2 = IntentionIDs[Team_1P][1];
 			//CurrentNode->PrintChildNodeInfo();
 			cout << "1P-1  x : " << (int)Intention1P_1.DeltaX << " y : " << (int)Intention1P_1.DeltaY << endl;
+			cout << "ID:[ " << (int)IntentionIDs[Team_1P][0] << " ]" << endl;
 			cout << "1P-2  x : " << (int)Intention1P_2.DeltaX << " y : " << (int)Intention1P_2.DeltaY << endl;
+			cout << "ID:[ " << (int)IntentionIDs[Team_1P][1] << " ]" << endl;
 		}
 		if (CurrentNode == nullptr) { cout << "null1" << endl; }
 		if (CurrentNode->ChildNode(IntentionIDs[Team_1P]) == nullptr) { cout << "null2" << endl; }
@@ -79,7 +82,9 @@ void battle_field::Battle(int NumTurn)
 			intention Intention2P_2 = IntentionIDs[Team_2P][1];
 			//CurrentNode->ChildNode(IntentionIDs[Team_1P])->PrintChildNodeInfo();
 			cout << "2P-1 : x : " << (int)Intention2P_1.DeltaX << " y : " << (int)Intention2P_1.DeltaY << endl;
+			cout << "ID: [" << (int)IntentionIDs[Team_2P][0] << " ]" << endl;
 			cout << "2P-2 : x : " << (int)Intention2P_2.DeltaX << " y : " << (int)Intention2P_2.DeltaY << endl;
+			cout << "ID: [" << (int)IntentionIDs[Team_2P][1] << " ]" << endl;
 		}
 		
 		cout << "=====================Input intentionIDs =====================" << endl;

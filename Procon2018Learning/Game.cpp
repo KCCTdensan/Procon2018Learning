@@ -338,8 +338,13 @@ bool stage::Move(intention_info(&Infos)[NumTeams][NumAgents], team_no Team, char
 
 stage::stage()
 {
-	//InitRandomStage();
+	InitRandomStage();
 	BinaryStage();
+}
+
+stage::stage(std::string QRText)
+{
+	TextStage(QRText);
 }
 
 stage::~stage()

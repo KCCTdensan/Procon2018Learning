@@ -103,6 +103,7 @@ private:
 
 public:
 	stage();
+	stage(std::string QRtext);
 	~stage();
 
 	void InitRandomStage();
