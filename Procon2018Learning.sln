@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27703.2000
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Procon2018Learning", "Procon2018Learning\Procon2018Learning.vcxproj", "{59C7002A-C52D-4E09-A266-30BE8EFFF885}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MonteCalroTreeSearchAI", "MonteCalroTreeSearchAI\MonteCalroTreeSearchAI.vcxproj", "{9BD20D47-29C6-4DA2-A1E3-D725BECE454B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{59C7002A-C52D-4E09-A266-30BE8EFFF885}.Release|x64.Build.0 = Release|x64
 		{59C7002A-C52D-4E09-A266-30BE8EFFF885}.Release|x86.ActiveCfg = Release|Win32
 		{59C7002A-C52D-4E09-A266-30BE8EFFF885}.Release|x86.Build.0 = Release|Win32
+		{9BD20D47-29C6-4DA2-A1E3-D725BECE454B}.Debug|x64.ActiveCfg = Debug|x64
+		{9BD20D47-29C6-4DA2-A1E3-D725BECE454B}.Debug|x64.Build.0 = Debug|x64
+		{9BD20D47-29C6-4DA2-A1E3-D725BECE454B}.Debug|x86.ActiveCfg = Debug|Win32
+		{9BD20D47-29C6-4DA2-A1E3-D725BECE454B}.Debug|x86.Build.0 = Debug|Win32
+		{9BD20D47-29C6-4DA2-A1E3-D725BECE454B}.Release|x64.ActiveCfg = Release|x64
+		{9BD20D47-29C6-4DA2-A1E3-D725BECE454B}.Release|x64.Build.0 = Release|x64
+		{9BD20D47-29C6-4DA2-A1E3-D725BECE454B}.Release|x86.ActiveCfg = Release|Win32
+		{9BD20D47-29C6-4DA2-A1E3-D725BECE454B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

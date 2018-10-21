@@ -6,7 +6,6 @@
 
 class battle_field
 {
-	//stage Stage;
 	struct log
 	{
 		panels Panels[MaxY][MaxX];
