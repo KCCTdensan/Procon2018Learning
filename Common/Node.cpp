@@ -4,15 +4,16 @@
 
 
 const static float Cp = 1.0f;
+unsigned char node::NumTurns = 0;
 
 bool node::IsLeafNode()
 {
 	return NumChildren == 0;
 }
 
-node::node(unsigned char NumTurns)
-	:NumTurns(NumTurns)
+node::node(unsigned char CntTurns)
 {
+	this->CntTurns = CntTurns;
 	NumChildren = 0;
 	Q = 0.0;
 	N = 0;
@@ -22,6 +23,16 @@ node::node(unsigned char NumTurns)
 node::~node()
 {
 
+}
+
+void node::ChangeNumTurns(unsigned char NumTurns)
+{
+	node::NumTurns = NumTurns;
+}
+
+void node::ChangeCntTurns(unsigned char CntTurns)
+{
+	this->CntTurns = CntTurns;
 }
 
 int friend_node::Play()
@@ -166,7 +177,7 @@ float friend_node::UCB1(float Q, int NChild)
 	return Q + Cp * std::sqrtf(2.0f * std::logf((float)N) / (float)NChild);
 }
 
-friend_node::friend_node(opponent_node *ParentNode, stage Stage, unsigned char NumTurns)
+friend_node::friend_node(opponent_node *ParentNode, stage &Stage, unsigned char NumTurns)
 	:node(NumTurns), Stage(Stage)
 {
 	for (action_id i = 0; i < ID_MaxID; ++i)

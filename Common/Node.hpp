@@ -10,7 +10,8 @@ public:
 	const static int Threshold = 100;
 
 protected:
-	const unsigned char NumTurns;
+	static unsigned char NumTurns;
+	unsigned char CntTurns;
 	unsigned char NumChildren;
 	float Q;
 	int N;
@@ -19,8 +20,10 @@ protected:
 	bool IsLeafNode();
 
 public:
-	node(unsigned char NumTurns);
+	node(unsigned char CntTurns);
 	~node();
+	static void ChangeNumTurns(unsigned char NumTurns);
+	void ChangeCntTurns(unsigned char CntTurns);
 };
 
 class opponent_node;
@@ -45,7 +48,7 @@ class friend_node :public node
 	float UCB1(float Q, int NChild);
 
 public:
-	friend_node(opponent_node *ParentNode, stage Stage, unsigned char NumTurns);
+	friend_node(opponent_node *ParentNode, stage &Stage, unsigned char NumTurns);
 	~friend_node();
 	void Search(int NumCallPlay);
 	void Result(int(&Result)[ID_MaxID][ID_MaxID]);

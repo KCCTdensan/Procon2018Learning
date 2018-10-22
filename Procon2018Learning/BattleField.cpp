@@ -2,39 +2,52 @@
 #include <iostream>
 
 
-battle_field::battle_field()
+battle_field::battle_field(stage &Stage)
 {
-
+	Stages[0] = new stage(Stage);
+	for (int i = 1; i < 80; ++i)
+	{
+		Stages[i] = nullptr;
+		CurrentNodes[i] = nullptr;
+	}
 }
 
 battle_field::~battle_field()
 {
-
+	for (int i = 0; i < 80; ++i)
+	{
+		if (Stages[i] == nullptr)
+		{
+			break;
+		}
+		delete Stages[i];
+		Stages[i] = nullptr;
+	}
 }
 
 void battle_field::Battle(int NumTurn)
 {
-	int t = 0;
+	int CntTurn = 0;
 	char isContinue;
-	stage Stage;
-	friend_node *CurrentNode = new friend_node(nullptr, Stage, NumTurn);
-	Stage.PrintStage();
+	CurrentNodes[0] = new friend_node(nullptr, *Stages[0], NumTurn);
+	friend_node *CurrentNode = CurrentNodes[0];
+	Stages[0]->PrintStage();
 	do
 	{
 		using namespace std;
 		int Max = 0;
-		action_id UserIntentions[NumTeams][stage::NumAgents] = { { -1,-1 },{ -1,-1 } };
-		action_id IntentionIDs[NumTeams][stage::NumAgents] = { {-1,-1},{-1,-1} };
+		action_id UserIntentions[NumTeams][stage::NumAgents] = {{-1, -1}, {-1, -1}};
+		action_id IntentionIDs[NumTeams][stage::NumAgents] = {{-1, -1}, {-1, -1}};
 		int Result[ID_MaxID][ID_MaxID];
 
 		cout << "================================================================" << endl;
-		cout << "Action" << t << endl;
+		cout << "Action" << CntTurn << endl;
 
 		CurrentNode->Search(node::NumCallPlay);
 		CurrentNode->Result(Result);
 
-		Stages[t] = Stage;
-		CurrentNodes[t] = CurrentNode;
+		//Stages[CntTurn] = new stage(Stages);
+		CurrentNodes[CntTurn] = CurrentNode;
 
 		for(action_id i = 0; i < ID_MaxID; ++i)
 		{
@@ -120,26 +133,30 @@ void battle_field::Battle(int NumTurn)
 		cout << "1PScore : " << Stage.GetScore1P() << endl;
 		cout << "2PScore : " << Stage.GetScore2P() << endl;
 
-		t++;
+		CntTurn++;
 
 		cout << "================Redo or Continue or End===================" << endl;
 		do
 		{
 			cout << "0‚ÅI—¹,‚»‚Ì‘¼‚Å‘±s,r‚ÅŒ³‚É–ß‚·" << endl;
 			cin >> isContinue;
-			if (isContinue == 'r' && t>0)
+			if (isContinue == 'r' && CntTurn>0)
 			{
-				t--;
-				Stage = Stages[t];
-				CurrentNode = CurrentNodes[t];
+				CntTurn--;
+				Stage = Stages[CntTurn];
+				CurrentNode = CurrentNodes[CntTurn];
 				cout << "Stage:" << endl;
 				Stage.PrintStage();
 				cout << "Node:" << endl;
 				CurrentNode->PrintStage();
 			}
-		} while (isContinue == 'r' && t>0);
+		} while (isContinue == 'r' && CntTurn>0);
 		
 	} while (isContinue != '0');
 	delete CurrentNode;
 	CurrentNode = nullptr;
+}
+
+void battle_field::Play()
+{
 }

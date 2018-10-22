@@ -1,17 +1,17 @@
 #pragma once
 
 #include "Game.hpp"
-#include "Node.hpp"
+#include "TreeSearchAI.hpp"
 
 
 class battle_field
 {
-	//stage Stage;
-	stage Stages[80];
-	friend_node* CurrentNodes[80];
+	stage *Stages[80];
+	friend_node *CurrentNodes[80];
 
 public:
-	battle_field();
+	battle_field(stage &Stage);
 	~battle_field();
 	void Battle(int NumTurn);
+	void Play();
 };

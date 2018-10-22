@@ -16,3 +16,4 @@ void AI_API Deinit()
 	delete Stage;
 	Stage = nullptr;
 }
+

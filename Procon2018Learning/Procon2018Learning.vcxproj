@@ -177,6 +177,7 @@
     <ClInclude Include="..\Common\Panel.hpp" />
     <ClInclude Include="..\Common\Position.hpp" />
     <ClInclude Include="..\Common\Random.hpp" />
+    <ClInclude Include="..\Common\TreeSearchAI.hpp" />
     <ClInclude Include="BattleField.hpp" />
     <ClInclude Include="File.hpp" />
   </ItemGroup>
