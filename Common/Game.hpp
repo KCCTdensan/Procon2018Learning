@@ -141,14 +141,14 @@ public:
 	char CanActionOne(position Position, intention Intention)const;
 
 	void UpdateScore();
-	unsigned char GetNumX();
-	unsigned char GetNumY();
-	unsigned char GetCntTurn();
-	short GetScore1P();
-	short GetScore2P();
-	agent& GetAgent(team_no Team, char AgentNo);
+	unsigned char GetNumX()const;
+	unsigned char GetNumY()const;
+	unsigned char GetCntTurn()const;
+	short GetScore1P()const;
+	short GetScore2P()const;
+	//agent& GetAgent(team_no Team, char AgentNo);
 	const agent& GetAgent(team_no Team, char AgentNo)const;
-	panels GetPanels();
+	const panels& GetPanels()const;
 	void ChangeColor(color_id CharColor, color_id BackColor)const;
 	void PrintStage()const;
 };

@@ -525,42 +525,42 @@ void stage::UpdateScore()
 	UpdateTileScore();
 }
 
-unsigned char stage::GetNumX()
+unsigned char stage::GetNumX()const
 {
 	return NumX;
 }
 
-unsigned char stage::GetNumY()
+unsigned char stage::GetNumY()const
 {
 	return NumY;
 }
 
-unsigned char stage::GetCntTurn()
+unsigned char stage::GetCntTurn()const
 {
 	return CntTurn;
 }
 
-short stage::GetScore1P()
+short stage::GetScore1P()const
 {
 	return TileScore1P + RegionScore1P;
 }
 
-short stage::GetScore2P()
+short stage::GetScore2P()const
 {
 	return TileScore2P + RegionScore2P;
 }
-
+/*
 agent& stage::GetAgent(team_no Team, char AgentNo)
 {
 	return Agents[Team][AgentNo];
 }
-
+*/
 const agent& stage::GetAgent(team_no Team, char AgentNo)const
 {
 	return Agents[Team][AgentNo];
 }
 
-panels stage::GetPanels()
+const panels& stage::GetPanels()const
 {
 	return Panels;
 }
