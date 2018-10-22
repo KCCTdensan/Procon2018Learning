@@ -22,6 +22,14 @@ int tree_search_ai::BestMove(action_id(&IntentionIDs)[NumTeams][stage::NumAgents
 	int Result[ID_MaxID][ID_MaxID];
 	int Ret;
 
+	for(team_no t = 0; t < NumTeams; ++t)
+	{
+		for(char a = 0; a < stage::NumAgents; ++a)
+		{
+			IntentionIDs[t][a] = -1;
+		}
+	}
+
 	CurrentNode->Search(node::NumCallPlay);
 	CurrentNode->Result(Result);
 	int Max = 0;
@@ -37,6 +45,11 @@ int tree_search_ai::BestMove(action_id(&IntentionIDs)[NumTeams][stage::NumAgents
 			}
 		}
 	}
+	/*if(IntentionIDs[Team_1P][0] == -1)
+	{
+		IntentionIDs[Team_1P][0] = ID_Stay;
+		IntentionIDs[Team_1P][1] = ID_Stay;
+	}*/
 
 	Ret = Result[IntentionIDs[Team_1P][0]][IntentionIDs[Team_1P][1]];
 
@@ -55,6 +68,11 @@ int tree_search_ai::BestMove(action_id(&IntentionIDs)[NumTeams][stage::NumAgents
 			}
 		}
 	}
+	/*if(IntentionIDs[Team_2P][0] == -1)
+	{
+		IntentionIDs[Team_2P][0] = ID_Stay;
+		IntentionIDs[Team_2P][1] = ID_Stay;
+	}*/
 
 	return Ret;
 }

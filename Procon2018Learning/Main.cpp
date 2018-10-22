@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <process.h>
 #include <iostream>
+#include <fstream>
 
 
 namespace
@@ -39,6 +40,8 @@ int main()
 	{
 		cout << "Error : ƒXƒŒƒbƒh‚Ìì¬‚ÉŽ¸”s‚µ‚Ü‚µ‚½" << endl;
 	}
+	ofstream("TrainingData/");
+	
 	while (Loop)
 	{
 		stage Stage(STAGE_INIT_RANDOM);

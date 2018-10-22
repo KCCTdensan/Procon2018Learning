@@ -46,6 +46,7 @@ void WriteTrainingData(const training_data &Data, const char *FileName)
 	if(!File)
 	{
 		cout << "File Open Error" << endl;
+		return;
 	}
 	File.write((char*)&Data, sizeof(training_data));
 	File.close();

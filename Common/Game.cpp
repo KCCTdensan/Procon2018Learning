@@ -394,6 +394,7 @@ void stage::Action(intention(&Intentions)[NumTeams][NumAgents])
 		}
 	}
 	UpdateScore();
+	CntTurn++;
 }
 
 void stage::Action(action_id(&IntentionIDs)[NumTeams][NumAgents])
