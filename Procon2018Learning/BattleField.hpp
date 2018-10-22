@@ -7,10 +7,12 @@
 class battle_field
 {
 	tree_search_ai AI;
+	bool Loop;
 
 public:
 	battle_field(stage &Stage);
 	~battle_field();
-	void Battle(int NumTurns);
-	void Play();
+	void Battle();
+	void Play(int CntTurns);
+	void Stop();
 };

@@ -260,6 +260,11 @@ friend_node* friend_node::NextNode(action_id(&SelectIntentionIDs)[NumTeams][stag
 	return Children[SelectIntentionIDs[Team_1P][0]][SelectIntentionIDs[Team_1P][1]]->Children[SelectIntentionIDs[Team_2P][0]][SelectIntentionIDs[Team_2P][1]];
 }
 
+const stage& friend_node::GetStage()const
+{
+	return Stage;
+}
+
 void friend_node::PrintStage()const
 {
 	Stage.PrintStage();

@@ -3,7 +3,7 @@
 #include <fstream>
 
 
-void StageToTrainingData(stage &Stage, action_id(&BestIntentions)[stage::NumAgents], bool Win)
+training_data StageToTrainingData(const stage &Stage, action_id(&BestIntentions)[stage::NumAgents], bool Win)
 {
 	training_data TrainingData = {};
 	const panels &Panels = Stage.GetPanels();
@@ -34,9 +34,11 @@ void StageToTrainingData(stage &Stage, action_id(&BestIntentions)[stage::NumAgen
 	TrainingData.OutputPolicy.EvaluationValue[BestIntentions[0]][BestIntentions[1]] = 1;
 
 	TrainingData.OutputValue.WinningRate = Win ? 1 : 0;
+
+	return TrainingData;
 }
 
-void WriteTrainingData(training_data &Data, const char *FileName)
+void WriteTrainingData(const training_data &Data, const char *FileName)
 {
 	using namespace std;
 	ofstream File;

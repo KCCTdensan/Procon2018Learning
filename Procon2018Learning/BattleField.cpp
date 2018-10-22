@@ -1,11 +1,12 @@
 #include "BattleField.hpp"
-#include <iostream>
+#include "File.hpp"
+#include <string>
 
 
 battle_field::battle_field(stage &Stage)
 	:AI(Stage)
 {
-
+	Loop = true;
 }
 
 battle_field::~battle_field()
@@ -13,37 +14,34 @@ battle_field::~battle_field()
 
 }
 
-void battle_field::Battle(int NumTurns)
+void battle_field::Battle()
 {
-	AI.NumTurns(NumTurns);
-	AI.PrintStage();
-	for (int i = 0; i < NumTurns; ++i)
+	AI.NumTurns(stage::MaxTurns);
+	for (int i = 0; i < stage::MaxTurns && Loop; ++i)
 	{
-		Play();
+		Play(i);
 	}
 }
 
-void battle_field::Play()
+void battle_field::Play(int CntTurns)
 {
-	using namespace std;
-	int Max = 0;
-	action_id IntentionIDs[NumTeams][stage::NumAgents] = { {-1,-1},{-1,-1} };
-
-	cout << "================================================================" << endl;
-
-	AI.BestMove(IntentionIDs);
-
-	{
-		intention Intention1P_1 = IntentionIDs[Team_1P][0];
-		intention Intention1P_2 = IntentionIDs[Team_1P][1];
-		intention Intention2P_1 = IntentionIDs[Team_2P][0];
-		intention Intention2P_2 = IntentionIDs[Team_2P][1];
-		cout << "1P-1  x : " << (int)Intention1P_1.DeltaX << " y : " << (int)Intention1P_1.DeltaY << endl;
-		cout << "1P-2  x : " << (int)Intention1P_2.DeltaX << " y : " << (int)Intention1P_2.DeltaY << endl;
-		cout << "2P-1 : x : " << (int)Intention2P_1.DeltaX << " y : " << (int)Intention2P_1.DeltaY << endl;
-		cout << "2P-2 : x : " << (int)Intention2P_2.DeltaX << " y : " << (int)Intention2P_2.DeltaY << endl;
-	}
-
+	std::string FileName = "TrainingData/ProconAITrainingData-";
+	const stage &Stage = AI.GetStage();
+	FileName += Stage.GetNumX() + "x" + Stage.GetNumY();
+	FileName += Stage.GetPanels()[0][0].GetScore();
+	FileName += Stage.GetPanels()[0][Stage.GetNumX() - 1].GetScore();
+	FileName += Stage.GetPanels()[Stage.GetNumY() - 1][0].GetScore();
+	FileName += Stage.GetPanels()[Stage.GetNumY() - 1][Stage.GetNumX() - 1].GetScore();
+	FileName += "-";
+	FileName += CntTurns;
+	FileName += ".pat";
+	action_id IntentionIDs[NumTeams][stage::NumAgents] = {{-1, -1}, {-1, -1}};
+	int Record = AI.BestMove(IntentionIDs);
+	WriteTrainingData(StageToTrainingData(Stage, IntentionIDs[Team_1P], Record > 0), FileName.c_str());
 	AI.Move(IntentionIDs);
-	AI.PrintStage();
+}
+
+void battle_field::Stop()
+{
+	Loop = false;
 }

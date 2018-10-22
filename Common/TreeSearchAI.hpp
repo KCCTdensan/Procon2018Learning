@@ -11,7 +11,9 @@ public:
 	tree_search_ai(stage &Stage);
 	~tree_search_ai();
 	void NumTurns(unsigned char NumTurns);
-	void BestMove(action_id(&IntentionIDs)[NumTeams][stage::NumAgents]);
+	int BestMove(action_id(&IntentionIDs)[NumTeams][stage::NumAgents]);
 	void Move(action_id(&IntentionIDs)[NumTeams][stage::NumAgents]);
+	const stage& GetStage()const;
+
 	void PrintStage()const;
 };

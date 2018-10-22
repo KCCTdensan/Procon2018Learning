@@ -17,9 +17,10 @@ void tree_search_ai::NumTurns(unsigned char NumTurns)
 	node::ChangeNumTurns(NumTurns);
 }
 
-void tree_search_ai::BestMove(action_id(&IntentionIDs)[NumTeams][stage::NumAgents])
+int tree_search_ai::BestMove(action_id(&IntentionIDs)[NumTeams][stage::NumAgents])
 {
 	int Result[ID_MaxID][ID_MaxID];
+	int Ret;
 
 	CurrentNode->Search(node::NumCallPlay);
 	CurrentNode->Result(Result);
@@ -37,6 +38,8 @@ void tree_search_ai::BestMove(action_id(&IntentionIDs)[NumTeams][stage::NumAgent
 		}
 	}
 
+	Ret = Result[IntentionIDs[Team_1P][0]][IntentionIDs[Team_1P][1]];
+
 	CurrentNode->ChildNode(IntentionIDs[Team_1P])->Search(node::NumCallPlay);
 	CurrentNode->ChildNode(IntentionIDs[Team_1P])->Result(Result);
 	Max = 0;
@@ -52,11 +55,18 @@ void tree_search_ai::BestMove(action_id(&IntentionIDs)[NumTeams][stage::NumAgent
 			}
 		}
 	}
+
+	return Ret;
 }
 
 void tree_search_ai::Move(action_id(&IntentionIDs)[NumTeams][stage::NumAgents])
 {
 	CurrentNode = CurrentNode->UpdateCurrentNode(IntentionIDs);
+}
+
+const stage& tree_search_ai::GetStage()const
+{
+	return CurrentNode->GetStage();
 }
 
 void tree_search_ai::PrintStage()const

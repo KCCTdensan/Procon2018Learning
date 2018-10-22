@@ -57,6 +57,7 @@ public:
 	opponent_node* ChildNode(action_id(&IntentionIDs)[stage::NumAgents]);
 	friend_node* UpdateCurrentNode(action_id(&SelectIntentionIDs)[NumTeams][stage::NumAgents]);
 	friend_node* NextNode(action_id(&SelectIntentionIDs)[NumTeams][stage::NumAgents]);
+	const stage& GetStage()const;
 
 	void PrintStage()const;
 	void PrintChildNodeInfo()const;

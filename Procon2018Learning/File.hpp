@@ -49,6 +49,6 @@ struct training_data
 	output_value OutputValue;
 };
 
-void StageToTrainingData(stage &Stage, action_id(&BestIntentions)[stage::NumAgents], bool Win);
+training_data StageToTrainingData(const stage &Stage, action_id(&BestIntentions)[stage::NumAgents], bool Win);
 
-void WriteTrainingData(training_data &Data, const char *FileName);
+void WriteTrainingData(const training_data &Data, const char *FileName);
