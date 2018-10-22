@@ -3,17 +3,24 @@
 
 namespace
 {
-	stage *Stage = nullptr;
+	friend_node *CurrentNode[stage::MaxTurns] = {};
 }
 
 void __stdcall Init(const char *QRCodeString)
 {
-	Stage = new stage(QRCodeString);
+	CurrentNode[0] = new friend_node(*(new stage(QRCodeString)));
 }
 
 void AI_API Deinit()
 {
-	delete Stage;
-	Stage = nullptr;
+	for (int i = 0; i < stage::MaxTurns; ++i)
+	{
+		if (CurrentNode[i] == nullptr)
+		{
+			continue;
+		}
+		delete CurrentNode[i];
+		CurrentNode[i] = nullptr;
+	}
 }
 

@@ -15,6 +15,13 @@ enum
 	F_Move = 0x04
 };
 
+typedef char stage_initialize_flag;
+enum
+{
+	STAGE_INIT_RANDOM,
+	STAGE_INIT_BINARYFILE
+};
+
 typedef char color_id;
 enum
 {
@@ -69,7 +76,7 @@ public:
 class stage
 {
 public:
-	const static int MaxTurn = 60;
+	const static int MaxTurns = 80;
 	const static int NumAgents = 2;
 
 private:
@@ -110,7 +117,7 @@ private:
 	bool Move(intention_info(&Infos)[NumTeams][NumAgents], team_no t, char a)const;
 
 public:
-	stage();
+	stage(stage_initialize_flag Flag);
 	stage(const char *QRCodeString);
 	stage(std::string QRtext);
 	~stage();
@@ -142,6 +149,6 @@ public:
 	agent& GetAgent(team_no Team, char AgentNo);
 	const agent& GetAgent(team_no Team, char AgentNo)const;
 	panels GetPanels();
-	void ChangeColor(color_id CharColor, color_id BackColor);
-	void PrintStage();
+	void ChangeColor(color_id CharColor, color_id BackColor)const;
+	void PrintStage()const;
 };

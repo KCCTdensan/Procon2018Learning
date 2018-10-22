@@ -164,6 +164,7 @@
     <ClCompile Include="..\Common\Panel.cpp" />
     <ClCompile Include="..\Common\Position.cpp" />
     <ClCompile Include="..\Common\Random.cpp" />
+    <ClCompile Include="..\Common\TreeSearchAI.cpp" />
     <ClCompile Include="BattleField.cpp" />
     <ClCompile Include="File.cpp" />
     <ClCompile Include="Main.cpp" />

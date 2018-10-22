@@ -6,12 +6,11 @@
 
 class battle_field
 {
-	stage *Stages[80];
-	friend_node *CurrentNodes[80];
+	tree_search_ai AI;
 
 public:
 	battle_field(stage &Stage);
 	~battle_field();
-	void Battle(int NumTurn);
+	void Battle(int NumTurns);
 	void Play();
 };

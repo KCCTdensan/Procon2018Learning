@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Game.hpp"
+#include "Node.hpp"
 
 #define AI_API	__stdcall __declspec(dllexport)
 

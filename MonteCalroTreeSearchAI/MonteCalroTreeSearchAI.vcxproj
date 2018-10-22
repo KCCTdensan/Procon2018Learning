@@ -154,6 +154,7 @@
     <ClCompile Include="..\Common\Panel.cpp" />
     <ClCompile Include="..\Common\Position.cpp" />
     <ClCompile Include="..\Common\Random.cpp" />
+    <ClCompile Include="..\Common\TreeSearchAI.cpp" />
     <ClCompile Include="Export.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -165,6 +166,7 @@
     <ClInclude Include="..\Common\Panel.hpp" />
     <ClInclude Include="..\Common\Position.hpp" />
     <ClInclude Include="..\Common\Random.hpp" />
+    <ClInclude Include="..\Common\TreeSearchAI.hpp" />
     <ClInclude Include="Export.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

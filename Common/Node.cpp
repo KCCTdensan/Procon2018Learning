@@ -114,7 +114,7 @@ void friend_node::Expansion()
 
 int friend_node::Evaluation()
 {
-	return Rollout(stage::MaxTurn - Stage.GetCntTurn());
+	return Rollout(stage::MaxTurns - Stage.GetCntTurn());
 }
 
 int friend_node::Rollout(int NumTurn)
@@ -177,8 +177,20 @@ float friend_node::UCB1(float Q, int NChild)
 	return Q + Cp * std::sqrtf(2.0f * std::logf((float)N) / (float)NChild);
 }
 
-friend_node::friend_node(opponent_node *ParentNode, stage &Stage, unsigned char NumTurns)
-	:node(NumTurns), Stage(Stage)
+friend_node::friend_node(stage &Stage)
+	:node(0), Stage(Stage)
+{
+	for (action_id i = 0; i < ID_MaxID; ++i)
+	{
+		for (action_id j = 0; j < ID_MaxID; ++j)
+		{
+			Children[i][j] = nullptr;
+		}
+	}
+}
+
+friend_node::friend_node(stage &Stage, unsigned char CntTurns)
+	:node(CntTurns), Stage(Stage)
 {
 	for (action_id i = 0; i < ID_MaxID; ++i)
 	{
@@ -238,17 +250,22 @@ friend_node* friend_node::UpdateCurrentNode(action_id(&SelectIntentionIDs)[NumTe
 {
 	opponent_node *SelectedOpponentNode = Children[SelectIntentionIDs[Team_1P][0]][SelectIntentionIDs[Team_1P][1]];
 	friend_node *SelectedFriendNode = SelectedOpponentNode->Children[SelectIntentionIDs[Team_2P][0]][SelectIntentionIDs[Team_2P][1]];
-	//SelectedOpponentNode->Children[SelectIntentionIDs[Team_2P][0]][SelectIntentionIDs[Team_2P][1]] = nullptr;
-	//delete this;
+	SelectedOpponentNode->Children[SelectIntentionIDs[Team_2P][0]][SelectIntentionIDs[Team_2P][1]] = nullptr;
+	delete this;
 	return SelectedFriendNode;
 }
 
-void friend_node::PrintStage()
+friend_node* friend_node::NextNode(action_id(&SelectIntentionIDs)[NumTeams][stage::NumAgents])
+{
+	return Children[SelectIntentionIDs[Team_1P][0]][SelectIntentionIDs[Team_1P][1]]->Children[SelectIntentionIDs[Team_2P][0]][SelectIntentionIDs[Team_2P][1]];
+}
+
+void friend_node::PrintStage()const
 {
 	Stage.PrintStage();
 }
 
-void friend_node::PrintChildNodeInfo()
+void friend_node::PrintChildNodeInfo()const
 {
 	using namespace std;
 	cout << endl;
@@ -348,7 +365,7 @@ void opponent_node::Expansion()
 			{
 				continue;
 			}
-			Children[i][j] = new friend_node(this, ParentNode->Stage, NumTurns - 1);
+			Children[i][j] = new friend_node(ParentNode->Stage, CntTurns + 1);
 			Children[i][j]->Stage.Action(IntentionIDs);
 			NumChildren++;
 		}
@@ -380,8 +397,8 @@ float opponent_node::UCB1(float Q, int NChild)
 	return -Q + Cp * std::sqrtf(2.0f * std::logf((float)N) / (float)NChild);
 }
 
-opponent_node::opponent_node(friend_node *ParentNode, action_id(&Intentions)[stage::NumAgents], unsigned char NumTurns)
-	:node(NumTurns)
+opponent_node::opponent_node(friend_node *ParentNode, action_id(&Intentions)[stage::NumAgents], unsigned char CntTurns)
+	:node(CntTurns)
 {
 	this->ParentNode = ParentNode;
 	for (action_id i = 0; i < ID_MaxID; ++i)
@@ -442,7 +459,7 @@ friend_node* opponent_node::ChildNode(action_id(&IntentionIDs)[stage::NumAgents]
 	return ChildNode(IntentionIDs[0], IntentionIDs[1]);
 }
 
-void opponent_node::PrintChildNodeInfo()
+void opponent_node::PrintChildNodeInfo()const
 {
 	using namespace std;
 	cout << endl;

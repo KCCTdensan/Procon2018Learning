@@ -48,16 +48,18 @@ class friend_node :public node
 	float UCB1(float Q, int NChild);
 
 public:
-	friend_node(opponent_node *ParentNode, stage &Stage, unsigned char NumTurns);
+	friend_node(stage &Stage);
+	friend_node(stage &Stage, unsigned char CntTurns);
 	~friend_node();
 	void Search(int NumCallPlay);
 	void Result(int(&Result)[ID_MaxID][ID_MaxID]);
 	opponent_node* ChildNode(action_id IntentionID1, action_id IntentionID2);
 	opponent_node* ChildNode(action_id(&IntentionIDs)[stage::NumAgents]);
 	friend_node* UpdateCurrentNode(action_id(&SelectIntentionIDs)[NumTeams][stage::NumAgents]);
+	friend_node* NextNode(action_id(&SelectIntentionIDs)[NumTeams][stage::NumAgents]);
 
-	void PrintStage();
-	void PrintChildNodeInfo();
+	void PrintStage()const;
+	void PrintChildNodeInfo()const;
 };
 
 //==============================================================
@@ -79,12 +81,12 @@ class opponent_node :public node
 	float UCB1(float Q, int NChild);
 
 public:
-	opponent_node(friend_node *ParentNode, action_id(&Intentions)[stage::NumAgents], unsigned char NumTurns);
+	opponent_node(friend_node *ParentNode, action_id(&Intentions)[stage::NumAgents], unsigned char CntTurns);
 	~opponent_node();
 	void Search(int NumCallPlay);
 	void Result(int(&Result)[ID_MaxID][ID_MaxID]);
 	friend_node* ChildNode(action_id IntentionID1, action_id IntentionID2);
 	friend_node* ChildNode(action_id(&IntentionIDs)[stage::NumAgents]);
 
-	void PrintChildNodeInfo();
+	void PrintChildNodeInfo()const;
 };

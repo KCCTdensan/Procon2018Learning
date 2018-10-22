@@ -29,32 +29,32 @@ void stage::InitRandomStage()
 	int AgentX = random::Mod(NumX / 2);
 	int AgentY = random::Mod(NumY / 2);
 
-	if(CopyType == 0)
+	if (CopyType == 0)
 	{
-		for(int y = 0; y < NumY; ++y)
+		for (int y = 0; y < NumY; ++y)
 		{
-			for(int x = 0; x < NumX / 2; ++x)
+			for (int x = 0; x < NumX / 2; ++x)
 			{
 				Panels[y][x].Init(PanelPointRandom());
 				int xInv = NumX - x - 1;
 				int Score = Panels[y][x].GetScore();
 				Panels[y][xInv].Init(Score);
 			}
-			if(NumX % 2 != 0)
+			if (NumX % 2 != 0)
 			{
 				Panels[y][NumX / 2].Init(PanelPointRandom());
 			}
 		}
 		Agents[Team_1P][0].Init(AgentX, AgentY);
-		Agents[Team_1P][1].Init(NumX - AgentX - 1, AgentY);
-		Agents[Team_2P][0].Init(AgentX, NumY - AgentY - 1);
+		Agents[Team_1P][1].Init(AgentX, NumY - AgentY - 1);
+		Agents[Team_2P][0].Init(NumX - AgentX - 1, AgentY);
 		Agents[Team_2P][1].Init(NumX - AgentX - 1, NumY - AgentY - 1);
 	}
 	else
 	{
-		for(int y = 0; y < NumY / 2; ++y)
+		for (int y = 0; y < NumY / 2; ++y)
 		{
-			for(int x = 0; x < NumX; ++x)
+			for (int x = 0; x < NumX; ++x)
 			{
 				Panels[y][x].Init(PanelPointRandom());
 				int yInv = NumY - y - 1;
@@ -62,16 +62,16 @@ void stage::InitRandomStage()
 				Panels[yInv][x].Init(Score);
 			}
 		}
-		if(NumY % 2 != 0)
+		if (NumY % 2 != 0)
 		{
-			for(int x = 0; x < NumX; ++x)
+			for (int x = 0; x < NumX; ++x)
 			{
 				Panels[NumY / 2][x].Init(PanelPointRandom());
 			}
 		}
 		Agents[Team_1P][0].Init(AgentX, AgentY);
-		Agents[Team_1P][1].Init(AgentX, NumY - AgentY - 1);
-		Agents[Team_2P][0].Init(NumX - AgentX - 1, AgentY);
+		Agents[Team_1P][1].Init(NumX - AgentX - 1, AgentY);
+		Agents[Team_2P][0].Init(AgentX, NumY - AgentY - 1);
 		Agents[Team_2P][1].Init(NumX - AgentX - 1, NumY - AgentY - 1);
 	}
 }
@@ -99,10 +99,10 @@ void stage::TextStage(std::string text)
 	std::cout << Agentx << std::endl;
 	int Agenty = stoi(split(split(text, ':')[NumY+1], ' ')[1]) - 1;
 	std::cout << Agenty << std::endl;
-	Agents[0][0].Init(Agentx,Agenty, Team_1P);
-	Agents[0][1].Init(NumX - 1 - Agentx,NumY - 1 - Agenty, Team_1P);
-	Agents[1][0].Init(NumX - 1 - Agentx,Agenty, Team_2P);
-	Agents[1][1].Init(Agentx,NumY - 1 - Agenty, Team_2P);
+	Agents[0][0].Init(Agentx,Agenty);
+	Agents[0][1].Init(NumX - 1 - Agentx,NumY - 1 - Agenty);
+	Agents[1][0].Init(NumX - 1 - Agentx,Agenty);
+	Agents[1][1].Init(Agentx,NumY - 1 - Agenty);
 
 	for(int y = 0; y < NumY; y++)
 	{
@@ -336,20 +336,28 @@ bool stage::Move(intention_info(&Infos)[NumTeams][NumAgents], team_no Team, char
 	return true;
 }
 
-stage::stage()
+stage::stage(stage_initialize_flag Flag)
 {
-	InitRandomStage();
-	BinaryStage();
-}
+	switch (Flag)
+	{
+	case STAGE_INIT_RANDOM:
+		InitRandomStage();
+		return;
 
-stage::stage(std::string QRText)
-{
-	TextStage(QRText);
+	case STAGE_INIT_BINARYFILE:
+		BinaryStage();
+		return;
+	}
 }
 
 stage::stage(const char *QRCodeString)
 {
 	TextStage(QRCodeString);
+}
+
+stage::stage(std::string QRText)
+{
+	TextStage(QRText);
 }
 
 stage::~stage()
@@ -557,7 +565,7 @@ panels stage::GetPanels()
 	return Panels;
 }
 
-void stage::ChangeColor(color_id CharColor, color_id BackColor)
+void stage::ChangeColor(color_id CharColor, color_id BackColor)const
 {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	WORD attr = 0;
@@ -596,7 +604,7 @@ void stage::ChangeColor(color_id CharColor, color_id BackColor)
 	SetConsoleTextAttribute(hConsole, attr);
 }
 
-void stage::PrintStage()
+void stage::PrintStage()const
 {
 	using namespace std;
 

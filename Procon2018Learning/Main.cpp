@@ -10,7 +10,8 @@ using namespace std;
 int main(int argc,char *argv[])
 {
 	//’TõƒeƒXƒg
-	battle_field BattleField;
+	stage Stage(STAGE_INIT_RANDOM);
+	battle_field BattleField(Stage);
 	BattleField.Battle(60);
 
 	return 0;
