@@ -3,6 +3,7 @@
 #include <process.h>
 #include <iostream>
 #include <fstream>
+#include <direct.h>
 
 
 namespace
@@ -40,7 +41,7 @@ int main()
 	{
 		cout << "Error : ƒXƒŒƒbƒh‚Ìì¬‚ÉŽ¸”s‚µ‚Ü‚µ‚½" << endl;
 	}
-	ofstream("TrainingData/");
+	_mkdir("TrainingData/");
 	
 	while (Loop)
 	{
