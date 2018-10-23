@@ -96,9 +96,7 @@ void stage::TextStage(std::string text)
 	NumX = stoi(split(split(text, ':')[0], ' ')[1]);
 	NumY = stoi(split(split(text, ':')[0], ' ')[0]);
 	int Agentx = stoi(split(split(text, ':')[NumY+1],' ')[0]) - 1;
-	std::cout << Agentx << std::endl;
 	int Agenty = stoi(split(split(text, ':')[NumY+1], ' ')[1]) - 1;
-	std::cout << Agenty << std::endl;
 	Agents[0][0].Init(Agentx,Agenty, Team_1P);
 	Agents[0][1].Init(NumX - 1 - Agentx,NumY - 1 - Agenty, Team_1P);
 	Agents[1][0].Init(NumX - 1 - Agentx,Agenty, Team_2P);
@@ -108,7 +106,6 @@ void stage::TextStage(std::string text)
 	{
 		for (int x = 0; x < NumX; x++)
 		{
-			std::cout << "Y"<< y << split((split(text, ':')[y+1]), ' ')[x] << std::endl;
 			char PanelsScore = (char)stoi(split((split(text, ':')[y+1]),' ')[x]);
 			Panels[y][x].Init(PanelsScore);
 		}
