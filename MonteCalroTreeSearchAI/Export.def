@@ -1,0 +1,8 @@
+LIBRARY
+
+EXPORTS
+	Init
+	Deinit
+	SetNumTurns
+	BestMove
+	Move
