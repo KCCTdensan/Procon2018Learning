@@ -133,4 +133,5 @@ public:
 	agent* GetAgent(team_no Team, int AgentNo);
 	void ChangeColor(color_id CharColor, color_id BackColor);
 	void PrintStage();
+	void SetState(int x,int y,int state);
 };

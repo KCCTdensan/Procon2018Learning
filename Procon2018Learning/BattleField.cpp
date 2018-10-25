@@ -132,8 +132,17 @@ void battle_field::Battle(int NumTurn)
 		cout << "================Redo or Continue or End===================" << endl;
 		do
 		{
-			cout << "0で終了,その他で続行,rで元に戻す" << endl;
+			cout << "0で終了,その他で続行,rで元に戻す,vで裏返す" << endl;
 			cin >> isContinue;
+			if (isContinue == 'v')
+			{
+				int x, y,state;
+				cout << "x,y,state(neutral:-1 friendly:0 enemy:1):" << endl;
+				cin >> x >> y >> state;
+				Stage.SetState(x,y,state);
+				friend_node *NewCurrentNode = new friend_node(nullptr, Stage, NumTurn);
+				CurrentNode = NewCurrentNode;
+			}
 			if (isContinue == 'r' && t>0)
 			{
 				t--;
