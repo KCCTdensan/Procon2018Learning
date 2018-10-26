@@ -27,4 +27,5 @@ public:
 	team_no GetState();
 	void SetSurrounded(bool IsSurrounded, team_no Team);
 	bool GetSurrounded(team_no Team);
+	void setSate(team_no s);
 };

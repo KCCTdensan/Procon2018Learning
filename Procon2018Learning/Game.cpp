@@ -640,3 +640,8 @@ void stage::PrintStage()
 	cout << endl;
 	ChangeColor(COL_WHITE, COL_BLACK);
 }
+
+void stage::SetState(int x,int y,int state)
+{
+	Panels[x][y].setSate((team_no)state);
+}

@@ -50,3 +50,8 @@ bool panel::GetSurrounded(team_no Team)
 {
 	return Surrounded[Team];
 }
+
+void panel::setSate(team_no s)
+{
+	State = s;
+}
