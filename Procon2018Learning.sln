@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Procon2018Learning", "Proco
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MonteCalroTreeSearchAI", "MonteCalroTreeSearchAI\MonteCalroTreeSearchAI.vcxproj", "{9BD20D47-29C6-4DA2-A1E3-D725BECE454B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Solver", "Solver\Solver.vcxproj", "{6A5BFCCF-0AE9-4521-85AF-9E3325600BD5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{9BD20D47-29C6-4DA2-A1E3-D725BECE454B}.Release|x64.Build.0 = Release|x64
 		{9BD20D47-29C6-4DA2-A1E3-D725BECE454B}.Release|x86.ActiveCfg = Release|Win32
 		{9BD20D47-29C6-4DA2-A1E3-D725BECE454B}.Release|x86.Build.0 = Release|Win32
+		{6A5BFCCF-0AE9-4521-85AF-9E3325600BD5}.Debug|x64.ActiveCfg = Debug|x64
+		{6A5BFCCF-0AE9-4521-85AF-9E3325600BD5}.Debug|x64.Build.0 = Debug|x64
+		{6A5BFCCF-0AE9-4521-85AF-9E3325600BD5}.Debug|x86.ActiveCfg = Debug|Win32
+		{6A5BFCCF-0AE9-4521-85AF-9E3325600BD5}.Debug|x86.Build.0 = Debug|Win32
+		{6A5BFCCF-0AE9-4521-85AF-9E3325600BD5}.Release|x64.ActiveCfg = Release|x64
+		{6A5BFCCF-0AE9-4521-85AF-9E3325600BD5}.Release|x64.Build.0 = Release|x64
+		{6A5BFCCF-0AE9-4521-85AF-9E3325600BD5}.Release|x86.ActiveCfg = Release|Win32
+		{6A5BFCCF-0AE9-4521-85AF-9E3325600BD5}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

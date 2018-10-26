@@ -1,4 +1,4 @@
-#include "Panel.hpp"
+﻿#include "Panel.hpp"
 
 
 panel::panel()
@@ -34,6 +34,11 @@ void panel::RemoveCard()
 char panel::GetScore()const
 {
 	return Point;
+}
+
+void panel::setSate(team_no s)
+{
+	State = s;
 }
 
 team_no panel::GetState()const

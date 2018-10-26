@@ -24,6 +24,7 @@ public:
 	void MakeCard(team_no Team);
 	void RemoveCard();
 	char GetScore()const;
+	void setState(team_no s);
 	team_no GetState()const;
 	void SetSurrounded(bool IsSurrounded, team_no Team);
 	bool GetSurrounded(team_no Team)const;
