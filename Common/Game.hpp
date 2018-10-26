@@ -151,4 +151,5 @@ public:
 	const panels& GetPanels()const;
 	void ChangeColor(color_id CharColor, color_id BackColor)const;
 	void PrintStage()const;
+	void SetState(int x,int y,int state);
 };
