@@ -1,15 +1,9 @@
-﻿#include <iostream>
-#include "Game.hpp"
-#include "BattleField.hpp"
-#include "Random.hpp"
-#include <time.h>
+﻿#include "BattleField.hpp"
 
-using namespace std;
 
-int main(int argc, char *argv[])
+int main()
 {
-	battle_field BattleField;
-	BattleField.Battle(40);
+	battle_field::Battle(40);
 
 	return 0;
 }

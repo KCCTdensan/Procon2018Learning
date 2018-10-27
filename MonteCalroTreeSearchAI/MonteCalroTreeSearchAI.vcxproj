@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Common\Agent.cpp" />
+    <ClCompile Include="..\Common\Console.cpp" />
     <ClCompile Include="..\Common\Game.cpp" />
     <ClCompile Include="..\Common\Intention.cpp" />
     <ClCompile Include="..\Common\Node.cpp" />
@@ -163,6 +164,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Common\Agent.hpp" />
+    <ClInclude Include="..\Common\Console.hpp" />
     <ClInclude Include="..\Common\Game.hpp" />
     <ClInclude Include="..\Common\General.hpp" />
     <ClInclude Include="..\Common\Intention.hpp" />

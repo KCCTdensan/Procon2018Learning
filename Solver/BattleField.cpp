@@ -1,227 +1,231 @@
 #include "BattleField.hpp"
+#include "Node.hpp"
+#include "Console.hpp"
+#include <Windows.h>
+#include <process.h>
 #include <iostream>
 
 
-battle_field::battle_field()
+using namespace std;
+
+namespace battle_field
 {
+	friend_node *CurrentNode;
+	bool LoopSearch = true;
 
-}
-
-battle_field::~battle_field()
-{
-
-}
-
-void battle_field::Battle(int NumTurn)
-{
-	int t = 0;
-	char isContinue;
-	stage Stage;
-	friend_node *CurrentNode = new friend_node(Stage, NumTurn);
-	Stage.PrintStage();
-	do
+	namespace
 	{
-		using namespace std;
-		int Max = 0;
-		action_id UserIntentions[NumTeams][stage::NumAgents] = { { -1,-1 },{ -1,-1 } };
-		action_id IntentionIDs[NumTeams][stage::NumAgents] = { {-1,-1},{-1,-1} };
-		int Result[ID_MaxID][ID_MaxID];
+		HANDLE hThread;
+		DWORD32 ThreadID;
 
-		cout << "================================================================" << endl;
-		cout << "Action" << t << endl;
-
-		CurrentNode->Search(node::NumCallPlay);
-		CurrentNode->Result(Result);
-
-		Stages[t] = Stage;
-		CurrentNodes[t] = CurrentNode;
-
-		for (action_id i = 0; i < ID_MaxID; ++i)
+		unsigned __stdcall SearchThread(void *arg)
 		{
-			for (action_id j = 0; j < ID_MaxID; ++j)
+			if (CurrentNode == nullptr)
 			{
-				if (Max < Result[i][j])
+				return 0;
+			}
+			LoopSearch = true;
+			while (LoopSearch)
+			{
+				CurrentNode->Search(100);
+			}
+			return 0;
+		}
+
+		void StartSearch()
+		{
+			hThread = (HANDLE)_beginthreadex(NULL, 0, SearchThread, NULL, 0, &ThreadID);
+		}
+
+		void StopSearch(action_id(&Result)[stage::NumAgents])
+		{
+			int ResultN[ID_MaxID][ID_MaxID];
+			int Max = 0;
+			LoopSearch = false;
+			WaitForSingleObject(hThread, INFINITE);
+			CloseHandle(hThread);
+			CurrentNode->Result(ResultN);
+			for (char i = 0; i < stage::NumAgents; ++i)
+			{
+				Result[i] = ID_Stay;
+			}
+			for (action_id i = 0; i < ID_MaxID; ++i)
+			{
+				for (action_id j = 0; j < ID_MaxID; ++j)
 				{
-					Max = Result[i][j];
-					IntentionIDs[Team_1P][0] = i;
-					IntentionIDs[Team_1P][1] = j;
+					if (Max < ResultN[i][j])
+					{
+						Max = ResultN[i][j];
+						Result[0] = i;
+						Result[1] = j;
+					}
 				}
 			}
 		}
+	}
 
+	int intoCard(action_id _IntentinoID)
+	{
+		switch (_IntentinoID)
 		{
-			intention Intention1P_1 = IntentionIDs[Team_1P][0];
-			intention Intention1P_2 = IntentionIDs[Team_1P][1];
-			cout << "1P-1  x : " << (int)Intention1P_1.DeltaX << " y : " << (int)Intention1P_1.DeltaY << endl;
-			cout << "ID:[ " << intoCard((int)IntentionIDs[Team_1P][0]) << " ]" << endl;
-			cout << "1P-2  x : " << (int)Intention1P_2.DeltaX << " y : " << (int)Intention1P_2.DeltaY << endl;
-			cout << "ID:[ " << intoCard((int)IntentionIDs[Team_1P][1]) << " ]" << endl;
-		}
-		if (CurrentNode == nullptr) { cout << "null1" << endl; }
-		if (CurrentNode->ChildNode(IntentionIDs[Team_1P]) == nullptr) { cout << "null2" << endl; }
-		CurrentNode->ChildNode(IntentionIDs[Team_1P])->Search(node::NumCallPlay);
-		CurrentNode->ChildNode(IntentionIDs[Team_1P])->Result(Result);
-		Max = 0;
-		for (action_id i = 0; i < ID_MaxID; ++i)
-		{
-			for (action_id j = 0; j < ID_MaxID; ++j)
-			{
-				if (Max < Result[i][j])
-				{
-					Max = Result[i][j];
-					IntentionIDs[Team_2P][0] = i;
-					IntentionIDs[Team_2P][1] = j;
-				}
-			}
-		}
+		case 1:
+			return 7;
 
-		{
-			intention Intention2P_1 = IntentionIDs[Team_2P][0];
-			intention Intention2P_2 = IntentionIDs[Team_2P][1];
-			cout << "2P-1 : x : " << (int)Intention2P_1.DeltaX << " y : " << (int)Intention2P_1.DeltaY << endl;
-			cout << "ID: [" << intoCard((int)IntentionIDs[Team_2P][0]) << " ]" << endl;
-			cout << "2P-2 : x : " << (int)Intention2P_2.DeltaX << " y : " << (int)Intention2P_2.DeltaY << endl;
-			cout << "ID: [" << intoCard((int)IntentionIDs[Team_2P][1]) << " ]" << endl;
-		}
+		case 2:
+			return 8;
 
-		cout << "=====================Input intentionIDs =====================" << endl;
+		case 3:
+			return 9;
+
+		case 4:
+			return 4;
+
+		case 5:
+			return 6;
+
+		case 6:
+			return 1;
+
+		case 7:
+			return 2;
+
+		case 8:
+			return 3;
+
+		default:
+			return 5;
+		}
+	}
+
+	int intoID(int _Card)
+	{
+		switch (_Card)
+		{
+		case 7:
+			return 1;
+
+		case 8:
+			return 2;
+
+		case 9:
+			return 3;
+
+		case 4:
+			return 4;
+
+		case 6:
+			return 5;
+
+		case 1:
+			return 6;
+
+		case 2:
+			return 7;
+
+		case 3:
+			return 8;
+
+		default:
+			return 0;
+		}
+	}
+
+	action_id InputOpponentIntention(string PlayerName)
+	{
+		int CardNo;
+		cout << "PlayerName" << endl;
+		cin >> CardNo;
+		return intoID(CardNo);
+	}
+
+	void InputOpponentIntentions(action_id(&Result)[stage::NumAgents])
+	{
+		cout << "====================== Input Opponent Intentions ======================" << endl;
 		cout << "7 8 9" << endl;
 		cout << "4 5 6" << endl;
 		cout << "1 2 3" << endl;
-		bool Results[NumTeams][stage::NumAgents];
-		for (int i = 0; i < NumTeams; i++)
+		for (char i = 0; i < stage::NumAgents; ++i)
 		{
-			cout << "Team" << i + 1 << "P:" << endl;
-			for (int j = 0; j < stage::NumAgents; j++)
-			{
-
-				int UserIntention;
-				cout << "Agent" << j + 1 << ":" << endl;
-				cin >> UserIntention;
-				UserIntentions[(i == 0) ? Team_1P : Team_2P][j] = (action_id)intoID(UserIntention);
-			}
+			Result[i] = InputOpponentIntention("2P-" + (i + 1));
 		}
-		cout << "=====================End Input intentionIDs =====================" << endl;
-		Stage.CanAction(UserIntentions, Results);
-		for (int i = 0; i < NumTeams; i++)
+	}
+
+	void OutputFriendIntention(string PlayerName, const action_id Intention)
+	{
+		cout << PlayerName << " : " << intoCard(Intention) << endl;
+	}
+
+	void OutputFriendIntentions(const action_id(&Intentions)[stage::NumAgents])
+	{
+		cout << "====================== Output Friend Intentions ======================" << endl;
+		cout << "7 8 9" << endl;
+		cout << "4 5 6" << endl;
+		cout << "1 2 3" << endl;
+		for (char i = 0; i < stage::NumAgents; ++i)
 		{
-			for (int j = 0; j < stage::NumAgents; j++)
+			OutputFriendIntention("1P-" + (i + 1), Intentions[i]);
+		}
+	}
+
+	void battle_field::Battle(int NumTurns)
+	{
+		stage Stage;
+		node::ChangeNumTurns(NumTurns);
+		friend_node *CurrentNode = new friend_node(Stage, 0);
+		if (CurrentNode == nullptr)
+		{
+			return;
+		}
+		Stage.PrintStage();
+
+		for (int i = 0; i < NumTurns; ++i)
+		{
+			cout << "================================================================" << endl;
+			cout << i << "ƒ^[ƒ“–Ú" << endl;
+			cout << "================================================================" << endl;
+			StartSearch();
+			cout << "”CˆÓ‚ÌƒL[‚Å’Tõ‚ð’†’f‚µ‚Ä‚­‚¾‚³‚¢" << endl;
 			{
-				if (!Results[i][j])
+				char Dummy;
+				cin >> Dummy;
+			}
+			action_id Intentions[NumTeams][stage::NumAgents];
+			StopSearch(Intentions[Team_1P]);
+			OutputFriendIntentions(Intentions[Team_1P]);
+			InputOpponentIntentions(Intentions[Team_2P]);
+			if (CurrentNode == nullptr)
+			{
+				ChangeColor(COL_RED, COL_BLACK);
+				cout << "Error : CurrentNode is nullptr" << endl;
+				ChangeColor(COL_WHITE, COL_BLACK);
+				return;
+			}
+			opponent_node *OpponentNode = CurrentNode->ChildNode(Intentions[Team_1P]);
+			if (OpponentNode == nullptr)
+			{
+				ChangeColor(COL_RED, COL_BLACK);
+				cout << "Error : OpponentNode is nullptr" << endl;
+				ChangeColor(COL_WHITE, COL_BLACK);
+				return;
+			}
+			OpponentNode->ChildNode(Intentions[Team_2P]);
+			bool CanAct[NumTeams][stage::NumAgents];
+			CurrentNode->GetStage().CanAction(Intentions, CanAct);
+			for (int i = 0; i < NumTeams; ++i)
+			{
+				for (int j = 0; j < stage::NumAgents; ++j)
 				{
-					UserIntentions[i][j] = ID_Stay;
+					if (!CanAct[i][j])
+					{
+						Intentions[i][j] = ID_Stay;
+					}
 				}
 			}
+			CurrentNode = CurrentNode->UpdateCurrentNode(Intentions);
+			OpponentNode = nullptr;
+			CurrentNode->GetStage().PrintStage();
+			cout << "1PScore : " << CurrentNode->GetStage().GetScore1P() << endl;
+			cout << "2PScore : " << CurrentNode->GetStage().GetScore2P() << endl;
 		}
-
-
-		CurrentNode = CurrentNode->UpdateCurrentNode(UserIntentions);
-
-		Stage.Action(UserIntentions);
-		std::cout << "Turn" << (int)Stage.GetCntTurn() << endl;
-
-		cout << "Stage;" << endl;
-		Stage.PrintStage();
-		cout << "Node" << endl;
-		CurrentNode->PrintStage();
-		cout << "1PScore : " << Stage.GetScore1P() << endl;
-		cout << "2PScore : " << Stage.GetScore2P() << endl;
-
-		t++;
-
-		cout << "================Redo or Continue or End===================" << endl;
-		do
-		{
-			cout << "0‚ÅI—¹,‚»‚Ì‘¼‚Å‘±s,r‚ÅŒ³‚É–ß‚·,v‚Å— •Ô‚·" << endl;
-			cin >> isContinue;
-			if (isContinue == 'v')
-			{
-				int x, y, state;
-				cout << "x,y,state(neutral:-1 friendly:0 enemy:1):" << endl;
-				cin >> x >> y >> state;
-				Stage.SetState(x, y, state);
-				friend_node *NewCurrentNode = new friend_node(Stage, NumTurn);
-				CurrentNode = NewCurrentNode;
-			}
-			if (isContinue == 'r' && t > 0)
-			{
-				t--;
-				Stage = Stages[t];
-				CurrentNode = CurrentNodes[t];
-				cout << "Stage:" << endl;
-				Stage.PrintStage();
-				cout << "Node:" << endl;
-				CurrentNode->PrintStage();
-			}
-		} while (isContinue == 'r' && t > 0);
-
-	} while (isContinue != '0');
-	delete CurrentNode;
-	CurrentNode = nullptr;
-}
-
-int battle_field::intoCard(action_id _IntentinoID)
-{
-	switch (_IntentinoID)
-	{
-	case 1:
-		return 7;
-
-	case 2:
-		return 8;
-
-	case 3:
-		return 9;
-
-	case 4:
-		return 4;
-
-	case 5:
-		return 6;
-
-	case 6:
-		return 1;
-
-	case 7:
-		return 2;
-
-	case 8:
-		return 3;
-
-	default:
-		return 5;
-	}
-}
-
-int battle_field::intoID(int _Card)
-{
-	switch (_Card)
-	{
-	case 7:
-		return 1;
-
-	case 8:
-		return 2;
-
-	case 9:
-		return 3;
-
-	case 4:
-		return 4;
-
-	case 6:
-		return 5;
-
-	case 1:
-		return 6;
-
-	case 2:
-		return 7;
-
-	case 3:
-		return 8;
-
-	default:
-		return 0;
 	}
 }
