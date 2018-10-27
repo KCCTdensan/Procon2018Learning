@@ -16,7 +16,6 @@ void battle_field::Battle(int NumTurn)
 {
 	int t = 0;
 	char isContinue;
-	//stage Stage(QRtext);
 	stage Stage;
 	friend_node *CurrentNode = new friend_node(Stage, NumTurn);
 	Stage.PrintStage();
@@ -53,7 +52,6 @@ void battle_field::Battle(int NumTurn)
 		{
 			intention Intention1P_1 = IntentionIDs[Team_1P][0];
 			intention Intention1P_2 = IntentionIDs[Team_1P][1];
-			//CurrentNode->PrintChildNodeInfo();
 			cout << "1P-1  x : " << (int)Intention1P_1.DeltaX << " y : " << (int)Intention1P_1.DeltaY << endl;
 			cout << "ID:[ " << intoCard((int)IntentionIDs[Team_1P][0]) << " ]" << endl;
 			cout << "1P-2  x : " << (int)Intention1P_2.DeltaX << " y : " << (int)Intention1P_2.DeltaY << endl;
