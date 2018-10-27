@@ -16,6 +16,7 @@ void battle_field::Battle(int NumTurn)
 {
 	int t = 0;
 	char isContinue;
+	//stage Stage(QRtext);
 	stage Stage;
 	friend_node *CurrentNode = new friend_node(Stage, NumTurn);
 	Stage.PrintStage();
