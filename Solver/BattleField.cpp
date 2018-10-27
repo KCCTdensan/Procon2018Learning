@@ -78,7 +78,6 @@ void battle_field::Battle(int NumTurn)
 		{
 			intention Intention2P_1 = IntentionIDs[Team_2P][0];
 			intention Intention2P_2 = IntentionIDs[Team_2P][1];
-			//CurrentNode->ChildNode(IntentionIDs[Team_1P])->PrintChildNodeInfo();
 			cout << "2P-1 : x : " << (int)Intention2P_1.DeltaX << " y : " << (int)Intention2P_1.DeltaY << endl;
 			cout << "ID: [" << intoCard((int)IntentionIDs[Team_2P][0]) << " ]" << endl;
 			cout << "2P-2 : x : " << (int)Intention2P_2.DeltaX << " y : " << (int)Intention2P_2.DeltaY << endl;
@@ -108,7 +107,10 @@ void battle_field::Battle(int NumTurn)
 		{
 			for (int j = 0; j < stage::NumAgents; j++)
 			{
-				if (!Results[i][j]) { UserIntentions[(i == 0) ? Team_1P : Team_2P][j] = (action_id)0; }
+				if (!Results[i][j])
+				{
+					UserIntentions[i][j] = ID_Stay;
+				}
 			}
 		}
 
