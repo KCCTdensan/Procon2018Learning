@@ -20,11 +20,14 @@ namespace battle_field
 
 		unsigned __stdcall SearchThread(void *arg)
 		{
+			friend_node *CurrentNode = (friend_node*)arg;
 			if (CurrentNode == nullptr)
 			{
-				return 0;
+				ChangeColor(COL_RED, COL_BLACK);
+				cout << "Error(In SearchThread) : CurrentNode is nullptr" << endl;
+				ChangeColor(COL_WHITE, COL_BLACK);
+				return -1;
 			}
-			LoopSearch = true;
 			while (LoopSearch)
 			{
 				CurrentNode->Search(100);
@@ -34,7 +37,21 @@ namespace battle_field
 
 		void StartSearch()
 		{
-			hThread = (HANDLE)_beginthreadex(NULL, 0, SearchThread, NULL, 0, &ThreadID);
+			LoopSearch = true;
+			if (CurrentNode == nullptr)
+			{
+				ChangeColor(COL_RED, COL_BLACK);
+				cout << "Error(In StartSearch) : CurrentNode is nullptr" << endl;
+				ChangeColor(COL_WHITE, COL_BLACK);
+				return;
+			}
+			hThread = (HANDLE)_beginthreadex(NULL, 0, SearchThread, CurrentNode, 0, &ThreadID);
+			if (hThread == NULL)
+			{
+				ChangeColor(COL_RED, COL_BLACK);
+				cout << "Error(In StartSearch) : Failed to create SearchThread" << endl;
+				ChangeColor(COL_WHITE, COL_BLACK);
+			}
 		}
 
 		void StopSearch(action_id(&Result)[stage::NumAgents])
@@ -169,14 +186,17 @@ namespace battle_field
 
 	void battle_field::Battle(int NumTurns)
 	{
-		stage Stage;
 		node::ChangeNumTurns(NumTurns);
-		friend_node *CurrentNode = new friend_node(Stage, 0);
+		friend_node *CurrentNode;
+		{
+			stage Stage;
+			CurrentNode = new friend_node(Stage, 0);
+		}
 		if (CurrentNode == nullptr)
 		{
 			return;
 		}
-		Stage.PrintStage();
+		CurrentNode->PrintStage();
 
 		for (int i = 0; i < NumTurns; ++i)
 		{
@@ -196,7 +216,7 @@ namespace battle_field
 			if (CurrentNode == nullptr)
 			{
 				ChangeColor(COL_RED, COL_BLACK);
-				cout << "Error : CurrentNode is nullptr" << endl;
+				cout << "Error(In Battle) : CurrentNode is nullptr" << endl;
 				ChangeColor(COL_WHITE, COL_BLACK);
 				return;
 			}
@@ -204,7 +224,7 @@ namespace battle_field
 			if (OpponentNode == nullptr)
 			{
 				ChangeColor(COL_RED, COL_BLACK);
-				cout << "Error : OpponentNode is nullptr" << endl;
+				cout << "Error(In Battle) : OpponentNode is nullptr" << endl;
 				ChangeColor(COL_WHITE, COL_BLACK);
 				return;
 			}
