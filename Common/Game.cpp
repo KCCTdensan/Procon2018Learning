@@ -8,14 +8,14 @@
 #include <vector>
 
 
-/*int stage::PanelPointRandom()
+int stage::PanelPointRandom()
 {
 	int abs = random::Mod(17);
 	int Negative = random::Mod(10);
 	return (Negative == 0) ? -abs : abs;
-}*/
+}
 
-/*void stage::InitRandomStage()
+void stage::InitRandomStage()
 {
 	NumX = random::Mod(10) + 3;
 	NumY = random::Mod(10) + 3;
@@ -74,7 +74,7 @@
 		Agents[Team_2P][0].Init(AgentX, NumY - AgentY - 1);
 		Agents[Team_2P][1].Init(NumX - AgentX - 1, NumY - AgentY - 1);
 	}
-}*/
+}
 
 void stage::BinaryStage()
 {
@@ -109,36 +109,36 @@ void stage::TextStage(std::string text)
 			Panels[y][x].Init(PanelsScore);
 		}
 	}
-	Agents[0][0].Init(Agentx2,Agenty2, Team_1P);
-	Agents[0][1].Init(Agenty1,Agentx1, Team_1P);
+	Agents[0][0].Init(Agentx2,Agenty2);
+	Agents[0][1].Init(Agenty1,Agentx1);
 	if(Agentx1 == Agentx2)
 	{
-		Agents[1][0].Init(NumX - Agentx1,Agenty1, Team_2P);
-		Agents[1][1].Init(NumX - Agentx2,Agenty2, Team_2P);
-		Panels[Agenty1][NumX - Agentx1].setSate(1);
-		Panels[Agenty2][NumX - Agentx2].setSate(1);
+		Agents[1][0].Init(NumX - Agentx1,Agenty1);
+		Agents[1][1].Init(NumX - Agentx2,Agenty2);
+		Panels[Agenty1][NumX - Agentx1].setState(1);
+		Panels[Agenty2][NumX - Agentx2].setState(1);
 
 	}
 	else if (Agenty1 == Agenty2)
 	{
-		Agents[1][0].Init(Agentx1, NumY - 1 - Agenty1, Team_2P);
-		Agents[1][1].Init(Agentx2, NumY - 1 - Agenty2, Team_2P);
-		Panels[NumY - 1 - Agenty1][Agentx1].setSate(1);
-		Panels[NumY - 1 - Agenty1][Agentx2].setSate(1);
+		Agents[1][0].Init(Agentx1, NumY - 1 - Agenty1);
+		Agents[1][1].Init(Agentx2, NumY - 1 - Agenty2);
+		Panels[NumY - 1 - Agenty1][Agentx1].setState(1);
+		Panels[NumY - 1 - Agenty1][Agentx2].setState(1);
 
 	}
 	else 
 	{
-		Agents[1][0].Init(Agentx1,Agenty2, Team_2P);
-		Agents[1][1].Init(Agentx2,Agenty1, Team_2P);
-		Panels[Agenty2][Agentx1].setSate(1);
-		Panels[Agenty1][Agentx2].setSate(1);
+		Agents[1][0].Init(Agentx1,Agenty2);
+		Agents[1][1].Init(Agentx2,Agenty1);
+		Panels[Agenty2][Agentx1].setState(1);
+		Panels[Agenty1][Agentx2].setState(1);
 
 	}
 	
 
-	Panels[Agenty1][Agentx1].setSate(0);
-	Panels[Agenty2][Agentx2].setSate(0);
+	Panels[Agenty1][Agentx1].setState(0);
+	Panels[Agenty2][Agentx2].setState(0);
 
 }
 
