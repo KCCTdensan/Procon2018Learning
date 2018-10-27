@@ -6,5 +6,4 @@
 namespace battle_field
 {
 	void Battle(int NumTurn);
-	void InputOpponentIntentions();
-};
+}

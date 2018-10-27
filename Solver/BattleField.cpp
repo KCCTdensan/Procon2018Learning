@@ -10,8 +10,8 @@ using namespace std;
 
 namespace battle_field
 {
-	friend_node *CurrentNode;
-	bool LoopSearch = true;
+	static friend_node *CurrentNode;
+	static bool LoopSearch = true;
 
 	namespace
 	{
@@ -150,7 +150,7 @@ namespace battle_field
 	action_id InputOpponentIntention(string PlayerName)
 	{
 		int CardNo;
-		cout << "PlayerName" << endl;
+		cout << PlayerName << endl;
 		cin >> CardNo;
 		return intoID(CardNo);
 	}
@@ -163,7 +163,9 @@ namespace battle_field
 		cout << "1 2 3" << endl;
 		for (char i = 0; i < stage::NumAgents; ++i)
 		{
-			Result[i] = InputOpponentIntention("2P-" + (i + 1));
+			string PlayerName = "2P-";
+			PlayerName += to_string(i + 1);
+			Result[i] = InputOpponentIntention(PlayerName);
 		}
 	}
 
@@ -180,14 +182,70 @@ namespace battle_field
 		cout << "1 2 3" << endl;
 		for (char i = 0; i < stage::NumAgents; ++i)
 		{
-			OutputFriendIntention("1P-" + (i + 1), Intentions[i]);
+			string PlayerName = "1P-";
+			PlayerName += to_string(i + 1);
+			OutputFriendIntention(PlayerName, Intentions[i]);
 		}
 	}
 
-	void battle_field::Battle(int NumTurns)
+	void Play(int CntTurns)
+	{
+		cout << "================================================================" << endl;
+		cout << CntTurns << "ƒ^[ƒ“–Ú" << endl;
+		cout << "================================================================" << endl;
+		if (CurrentNode == nullptr)
+		{
+			cout << "Error(In Play) : CurrentNode is nullptr" << endl;
+			return;
+		}
+		StartSearch();
+		cout << "”CˆÓ‚ÌƒL[‚Å’Tõ‚ð’†’f‚µ‚Ä‚­‚¾‚³‚¢" << endl;
+		{
+			char Dummy;
+			cin >> Dummy;
+		}
+		action_id Intentions[NumTeams][stage::NumAgents];
+		StopSearch(Intentions[Team_1P]);
+		OutputFriendIntentions(Intentions[Team_1P]);
+		InputOpponentIntentions(Intentions[Team_2P]);
+		if (CurrentNode == nullptr)
+		{
+			ChangeColor(COL_RED, COL_BLACK);
+			cout << "Error(In Play) : CurrentNode is nullptr" << endl;
+			ChangeColor(COL_WHITE, COL_BLACK);
+			return;
+		}
+		opponent_node *OpponentNode = CurrentNode->ChildNode(Intentions[Team_1P]);
+		if (OpponentNode == nullptr)
+		{
+			ChangeColor(COL_RED, COL_BLACK);
+			cout << "Error(In Play) : OpponentNode is nullptr" << endl;
+			ChangeColor(COL_WHITE, COL_BLACK);
+			return;
+		}
+		OpponentNode->ChildNode(Intentions[Team_2P]);
+		bool CanAct[NumTeams][stage::NumAgents];
+		CurrentNode->GetStage().CanAction(Intentions, CanAct);
+		for (int i = 0; i < NumTeams; ++i)
+		{
+			for (int j = 0; j < stage::NumAgents; ++j)
+			{
+				if (!CanAct[i][j])
+				{
+					Intentions[i][j] = ID_Stay;
+				}
+			}
+		}
+		CurrentNode = CurrentNode->UpdateCurrentNode(Intentions);
+		OpponentNode = nullptr;
+		CurrentNode->GetStage().PrintStage();
+		cout << "1PScore : " << CurrentNode->GetStage().GetScore1P() << endl;
+		cout << "2PScore : " << CurrentNode->GetStage().GetScore2P() << endl;
+	}
+
+	void Battle(int NumTurns)
 	{
 		node::ChangeNumTurns(NumTurns);
-		friend_node *CurrentNode;
 		{
 			stage Stage;
 			CurrentNode = new friend_node(Stage, 0);
@@ -200,52 +258,8 @@ namespace battle_field
 
 		for (int i = 0; i < NumTurns; ++i)
 		{
-			cout << "================================================================" << endl;
-			cout << i << "ƒ^[ƒ“–Ú" << endl;
-			cout << "================================================================" << endl;
-			StartSearch();
-			cout << "”CˆÓ‚ÌƒL[‚Å’Tõ‚ð’†’f‚µ‚Ä‚­‚¾‚³‚¢" << endl;
-			{
-				char Dummy;
-				cin >> Dummy;
-			}
-			action_id Intentions[NumTeams][stage::NumAgents];
-			StopSearch(Intentions[Team_1P]);
-			OutputFriendIntentions(Intentions[Team_1P]);
-			InputOpponentIntentions(Intentions[Team_2P]);
-			if (CurrentNode == nullptr)
-			{
-				ChangeColor(COL_RED, COL_BLACK);
-				cout << "Error(In Battle) : CurrentNode is nullptr" << endl;
-				ChangeColor(COL_WHITE, COL_BLACK);
-				return;
-			}
-			opponent_node *OpponentNode = CurrentNode->ChildNode(Intentions[Team_1P]);
-			if (OpponentNode == nullptr)
-			{
-				ChangeColor(COL_RED, COL_BLACK);
-				cout << "Error(In Battle) : OpponentNode is nullptr" << endl;
-				ChangeColor(COL_WHITE, COL_BLACK);
-				return;
-			}
-			OpponentNode->ChildNode(Intentions[Team_2P]);
-			bool CanAct[NumTeams][stage::NumAgents];
-			CurrentNode->GetStage().CanAction(Intentions, CanAct);
-			for (int i = 0; i < NumTeams; ++i)
-			{
-				for (int j = 0; j < stage::NumAgents; ++j)
-				{
-					if (!CanAct[i][j])
-					{
-						Intentions[i][j] = ID_Stay;
-					}
-				}
-			}
-			CurrentNode = CurrentNode->UpdateCurrentNode(Intentions);
-			OpponentNode = nullptr;
-			CurrentNode->GetStage().PrintStage();
-			cout << "1PScore : " << CurrentNode->GetStage().GetScore1P() << endl;
-			cout << "2PScore : " << CurrentNode->GetStage().GetScore2P() << endl;
+			Play(i);
 		}
+		delete CurrentNode;
 	}
 }
