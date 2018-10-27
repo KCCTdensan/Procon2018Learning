@@ -4,7 +4,6 @@
 #include <omp.h>
 
 
-const static float Cp = 1.0f;
 unsigned char node::NumTurns = 0;
 
 bool node::IsLeafNode()

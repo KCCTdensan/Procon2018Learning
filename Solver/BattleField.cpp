@@ -165,7 +165,9 @@ namespace battle_field
 		{
 			string PlayerName = "2P-";
 			PlayerName += to_string(i + 1);
+			ChangeColor(BackColors[Team_2P][i], COL_BLACK);
 			Result[i] = InputOpponentIntention(PlayerName);
+			ChangeColor(COL_WHITE, COL_BLACK);
 		}
 	}
 
@@ -184,14 +186,16 @@ namespace battle_field
 		{
 			string PlayerName = "1P-";
 			PlayerName += to_string(i + 1);
+			ChangeColor(BackColors[Team_1P][i], COL_BLACK);
 			OutputFriendIntention(PlayerName, Intentions[i]);
+			ChangeColor(COL_WHITE, COL_BLACK);
 		}
 	}
 
 	void Play(int CntTurns)
 	{
 		cout << "================================================================" << endl;
-		cout << CntTurns << "ターン目" << endl;
+		cout << CntTurns + 1 << "ターン目" << endl;
 		cout << "================================================================" << endl;
 		if (CurrentNode == nullptr)
 		{
@@ -248,6 +252,10 @@ namespace battle_field
 		node::ChangeNumTurns(NumTurns);
 		{
 			stage Stage;
+			//cout << "チーム切り替え YES 1  NO 0" << endl;
+			//int isSwitch;
+			//cin >> isSwitch;
+			//if (isSwitch == 1) { Stage.isSwitch = true; }
 			CurrentNode = new friend_node(Stage, 0);
 		}
 		if (CurrentNode == nullptr)

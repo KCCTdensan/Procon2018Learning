@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Game.hpp"
+
 
 typedef char color_id;
 enum
@@ -24,6 +26,10 @@ enum
 	MASK_RED = 0x04,
 	MASK_GREEN = 0x02,
 	MASK_BLUE = 0x01
+};
+
+const color_id BackColors[][stage::NumAgents] = {
+	{COL_BLUE, COL_DARKBLUE}, {COL_RED, COL_DARKRED}
 };
 
 void ChangeColor(color_id CharColor, color_id BackColor);

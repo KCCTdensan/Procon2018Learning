@@ -3,12 +3,12 @@
 #include "Game.hpp"
 
 
+const static int NumCallPlay = 100000;
+const static int Threshold = 300;
+const static float Cp = 2.0f;
+
 class node
 {
-public:
-	const static int NumCallPlay = 100000;
-	const static int Threshold = 100;
-
 protected:
 	static unsigned char NumTurns;
 	unsigned char CntTurns;

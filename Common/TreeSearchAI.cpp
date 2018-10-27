@@ -30,7 +30,7 @@ int tree_search_ai::BestMove(action_id(&IntentionIDs)[NumTeams][stage::NumAgents
 		}
 	}
 
-	CurrentNode->Search(node::NumCallPlay);
+	CurrentNode->Search(NumCallPlay);
 	CurrentNode->Result(Result);
 	int Max = 0;
 	for (action_id i = 0; i < ID_MaxID; ++i)
@@ -53,7 +53,7 @@ int tree_search_ai::BestMove(action_id(&IntentionIDs)[NumTeams][stage::NumAgents
 
 	Ret = Result[IntentionIDs[Team_1P][0]][IntentionIDs[Team_1P][1]];
 
-	CurrentNode->ChildNode(IntentionIDs[Team_1P])->Search(node::NumCallPlay);
+	CurrentNode->ChildNode(IntentionIDs[Team_1P])->Search(NumCallPlay);
 	CurrentNode->ChildNode(IntentionIDs[Team_1P])->Result(Result);
 	Max = 0;
 	for (action_id i = 0; i < ID_MaxID; ++i)

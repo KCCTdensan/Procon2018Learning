@@ -35,7 +35,7 @@ void __stdcall BestMove(action_id *ID1, action_id *ID2)
 {
 	int Result[ID_MaxID][ID_MaxID];
 
-	CurrentNode[CntTurn]->Search(node::NumCallPlay);
+	CurrentNode[CntTurn]->Search(NumCallPlay);
 	CurrentNode[CntTurn]->Result(Result);
 	int Max = 0;
 	for (action_id i = 0; i < ID_MaxID; ++i)
@@ -51,7 +51,7 @@ void __stdcall BestMove(action_id *ID1, action_id *ID2)
 		}
 	}
 
-	CurrentNode[CntTurn]->ChildNode(*ID1, *ID2)->Search(node::NumCallPlay);
+	CurrentNode[CntTurn]->ChildNode(*ID1, *ID2)->Search(NumCallPlay);
 	CurrentNode[CntTurn]->ChildNode(*ID1, *ID2)->Result(Result);
 	Max = 0;
 	for (action_id i = 0; i < ID_MaxID; ++i)

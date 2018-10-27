@@ -110,36 +110,31 @@ void stage::TextStage(std::string text)
 		}
 	}
 	Agents[0][0].Init(Agentx2,Agenty2);
-	Agents[0][1].Init(Agenty1,Agentx1);
-	if(Agentx1 == Agentx2)
+	Agents[0][1].Init(Agentx1,Agenty1);
+	if (Agentx1 == Agentx2)
 	{
-		Agents[1][0].Init(NumX - Agentx1,Agenty1);
-		Agents[1][1].Init(NumX - Agentx2,Agenty2);
-		Panels[Agenty1][NumX - Agentx1].setState(1);
-		Panels[Agenty2][NumX - Agentx2].setState(1);
-
+		Agents[1][0].Init(NumX - Agentx1 - 1, Agenty1);
+		Agents[1][1].Init(NumX - Agentx2 - 1, Agenty2);
+		Panels[Agenty1][NumX - Agentx1 - 1].setState(1);
+		Panels[Agenty2][NumX - Agentx2 - 1].setState(1);
 	}
 	else if (Agenty1 == Agenty2)
 	{
-		Agents[1][0].Init(Agentx1, NumY - 1 - Agenty1);
-		Agents[1][1].Init(Agentx2, NumY - 1 - Agenty2);
+		Agents[1][0].Init(Agentx1, NumY - Agenty1 - 1);
+		Agents[1][1].Init(Agentx2, NumY - Agenty2 - 1);
 		Panels[NumY - 1 - Agenty1][Agentx1].setState(1);
 		Panels[NumY - 1 - Agenty1][Agentx2].setState(1);
-
 	}
-	else 
+	else
 	{
-		Agents[1][0].Init(Agentx1,Agenty2);
-		Agents[1][1].Init(Agentx2,Agenty1);
+		Agents[1][0].Init(Agentx1, Agenty2);
+		Agents[1][1].Init(Agentx2, Agenty1);
 		Panels[Agenty2][Agentx1].setState(1);
 		Panels[Agenty1][Agentx2].setState(1);
-
-	}
-	
+	}	
 
 	Panels[Agenty1][Agentx1].setState(0);
 	Panels[Agenty2][Agentx2].setState(0);
-
 }
 
 std::vector<std::string> stage::split(std::string str,char sp)
@@ -583,12 +578,7 @@ short stage::GetScore2P()const
 {
 	return TileScore2P + RegionScore2P;
 }
-/*
-agent& stage::GetAgent(team_no Team, char AgentNo)
-{
-	return Agents[Team][AgentNo];
-}
-*/
+
 const agent& stage::GetAgent(team_no Team, char AgentNo)const
 {
 	return Agents[Team][AgentNo];
@@ -644,21 +634,15 @@ void stage::PrintStage()const
 				CharColor = COL_YELLOW;
 				break;
 			}
-			if(AgentPositions[0][0] == n)
+			for (team_no t = 0; t < NumTeams; ++t)
 			{
-				BackColor = COL_BLUE;
-			}
-			if(AgentPositions[0][1] == n)
-			{
-				BackColor = COL_DARKBLUE;
-			}
-			if(AgentPositions[1][0] == n)
-			{
-				BackColor = COL_RED;
-			}
-			if (AgentPositions[1][1] == n)
-			{
-				BackColor = COL_DARKRED;
+				for (char a = 0; a < NumAgents; ++a)
+				{
+					if (AgentPositions[t][a] == n)
+					{
+						BackColor = BackColors[t][a];
+					}
+				}
 			}
 			ChangeColor(CharColor, BackColor);
 			std::printf("%3d ", Panels[y][x].GetScore());
