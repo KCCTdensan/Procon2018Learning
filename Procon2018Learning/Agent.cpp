@@ -1,3 +1,4 @@
+#include<iostream>
 #include "Agent.hpp"
 
 
@@ -15,6 +16,7 @@ void agent::Init(char PositionX, char PositionY, team_no Team)
 {
 	Position.x = PositionX;
 	Position.y = PositionY;
+	std::cout << (int)PositionX << "," << (int)PositionY << std::endl;
 	this->Team = Team;
 }
 

@@ -8,14 +8,14 @@
 #include <vector>
 
 
-int stage::PanelPointRandom()
+/*int stage::PanelPointRandom()
 {
 	int abs = random::Mod(17);
 	int Negative = random::Mod(10);
 	return (Negative == 0) ? -abs : abs;
-}
+}*/
 
-void stage::InitRandomStage()
+/*void stage::InitRandomStage()
 {
 	NumX = random::Mod(10) + 3;
 	NumY = random::Mod(10) + 3;
@@ -74,7 +74,7 @@ void stage::InitRandomStage()
 		Agents[1][0].Init(NumX - AgentX - 1, AgentY, Team_2P);
 		Agents[1][1].Init(NumX - AgentX - 1, NumY - AgentY - 1, Team_2P);
 	}
-}
+}*/
 
 void stage::BinaryStage()
 {
@@ -95,21 +95,51 @@ void stage::TextStage(std::string text)
 	RegionScore2P = 0;
 	NumX = stoi(split(split(text, ':')[0], ' ')[1]);
 	NumY = stoi(split(split(text, ':')[0], ' ')[0]);
-	int Agentx = stoi(split(split(text, ':')[NumY+1],' ')[0]) - 1;
-	int Agenty = stoi(split(split(text, ':')[NumY+1], ' ')[1]) - 1;
-	Agents[0][0].Init(Agentx,Agenty, Team_1P);
-	Agents[0][1].Init(NumX - 1 - Agentx,NumY - 1 - Agenty, Team_1P);
-	Agents[1][0].Init(NumX - 1 - Agentx,Agenty, Team_2P);
-	Agents[1][1].Init(Agentx,NumY - 1 - Agenty, Team_2P);
-
-	for(int y = 0; y < NumY; y++)
+	int Agentx1 = stoi(split(split(text, ':')[NumY + 1], ' ')[1]) - 1;
+	int Agenty1 = stoi(split(split(text, ':')[NumY + 1], ' ')[0]) - 1;
+	int Agentx2 = stoi(split(split(text, ':')[NumY + 2], ' ')[1]) - 1;
+	int Agenty2 = stoi(split(split(text, ':')[NumY + 2], ' ')[0]) - 1;
+	//std::cout << Agentx1 << "," << Agenty1 << std::endl;
+	//std::cout << Agentx2 << "," << Agenty2 << std::endl;
+	for (int y = 0; y < NumY; y++)
 	{
 		for (int x = 0; x < NumX; x++)
 		{
-			char PanelsScore = (char)stoi(split((split(text, ':')[y+1]),' ')[x]);
+			char PanelsScore = (char)stoi(split((split(text, ':')[y + 1]), ' ')[x]);
 			Panels[y][x].Init(PanelsScore);
 		}
 	}
+	Agents[0][0].Init(Agentx2,Agenty2, Team_1P);
+	Agents[0][1].Init(Agenty1,Agentx1, Team_1P);
+	if(Agentx1 == Agentx2)
+	{
+		Agents[1][0].Init(NumX - Agentx1,Agenty1, Team_2P);
+		Agents[1][1].Init(NumX - Agentx2,Agenty2, Team_2P);
+		Panels[Agenty1][NumX - Agentx1].setSate(1);
+		Panels[Agenty2][NumX - Agentx2].setSate(1);
+
+	}
+	else if (Agenty1 == Agenty2)
+	{
+		Agents[1][0].Init(Agentx1, NumY - 1 - Agenty1, Team_2P);
+		Agents[1][1].Init(Agentx2, NumY - 1 - Agenty2, Team_2P);
+		Panels[NumY - 1 - Agenty1][Agentx1].setSate(1);
+		Panels[NumY - 1 - Agenty1][Agentx2].setSate(1);
+
+	}
+	else 
+	{
+		Agents[1][0].Init(Agentx1,Agenty2, Team_2P);
+		Agents[1][1].Init(Agentx2,Agenty1, Team_2P);
+		Panels[Agenty2][Agentx1].setSate(1);
+		Panels[Agenty1][Agentx2].setSate(1);
+
+	}
+	
+
+	Panels[Agenty1][Agentx1].setSate(0);
+	Panels[Agenty2][Agentx2].setSate(0);
+
 }
 
 std::vector<std::string> stage::split(std::string str,char sp)
@@ -335,7 +365,7 @@ bool stage::Move(intention_info(&Infos)[NumTeams][NumAgents], team_no Team, char
 
 stage::stage()
 {
-	InitRandomStage();
+	//InitRandomStage();
 	BinaryStage();
 }
 
@@ -620,14 +650,22 @@ void stage::PrintStage()
 				break;
 
 			case Team_2P:
-				CharColor = COL_RED;
+				CharColor = COL_YELLOW;
 				break;
 			}
-			if(AgentPositions[0][0] == n || AgentPositions[0][1] == n)
+			if(AgentPositions[0][0] == n)
 			{
 				BackColor = COL_BLUE;
 			}
-			if(AgentPositions[1][0] == n || AgentPositions[1][1] == n)
+			if(AgentPositions[0][1] == n)
+			{
+				BackColor = COL_DARKBLUE;
+			}
+			if(AgentPositions[1][0] == n)
+			{
+				BackColor = COL_RED;
+			}
+			if (AgentPositions[1][1] == n)
 			{
 				BackColor = COL_DARKRED;
 			}

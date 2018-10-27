@@ -1,6 +1,7 @@
 ﻿#include "Node.hpp"
 #include "Random.hpp"
 #include <iostream>
+#include <omp.h>
 
 
 const static float Cp = 1.0f;
@@ -113,6 +114,8 @@ int friend_node::Rollout(int NumTurn)
 	{
 		NumTurn = 10;
 	}
+
+	#pragma omp parallel for
 	for (int i = 0; i < NumTurn; ++i)
 	{
 		action_id IntentionIDs[NumTeams][stage::NumAgents];
