@@ -36,7 +36,7 @@ char panel::GetScore()const
 	return Point;
 }
 
-void panel::setSate(team_no s)
+void panel::setState(team_no s)
 {
 	State = s;
 }
@@ -54,9 +54,4 @@ void panel::SetSurrounded(bool IsSurrounded, team_no Team)
 bool panel::GetSurrounded(team_no Team)const
 {
 	return Surrounded[Team];
-}
-
-void panel::setSate(team_no s)
-{
-	State = s;
 }

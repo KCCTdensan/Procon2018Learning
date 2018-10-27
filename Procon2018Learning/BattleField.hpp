@@ -2,7 +2,6 @@
 
 #include "Game.hpp"
 #include "TreeSearchAI.hpp"
-#include <string>
 
 
 class battle_field

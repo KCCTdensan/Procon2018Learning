@@ -45,7 +45,7 @@
     <ClCompile Include="..\Common\TreeSearchAI.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="_BattleField.cpp">
+    <ClCompile Include="BattleField.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

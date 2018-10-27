@@ -117,6 +117,7 @@ private:
 	bool Move(intention_info(&Infos)[NumTeams][NumAgents], team_no t, char a)const;
 
 public:
+	stage();
 	stage(stage_initialize_flag Flag);
 	stage(const char *QRCodeString);
 	stage(std::string QRtext);

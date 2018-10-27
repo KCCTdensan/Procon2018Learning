@@ -153,9 +153,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Common\Agent.hpp" />
+    <ClInclude Include="..\Common\Game.hpp" />
+    <ClInclude Include="..\Common\Intention.hpp" />
+    <ClInclude Include="..\Common\Node.hpp" />
+    <ClInclude Include="..\Common\Panel.hpp" />
+    <ClInclude Include="..\Common\Position.hpp" />
+    <ClInclude Include="..\Common\Random.hpp" />
+    <ClInclude Include="..\Common\TreeSearchAI.hpp" />
     <ClInclude Include="BattleField.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Common\Agent.cpp" />
+    <ClCompile Include="..\Common\Game.cpp" />
+    <ClCompile Include="..\Common\Intention.cpp" />
+    <ClCompile Include="..\Common\Node.cpp" />
+    <ClCompile Include="..\Common\Panel.cpp" />
+    <ClCompile Include="..\Common\Position.cpp" />
+    <ClCompile Include="..\Common\Random.cpp" />
+    <ClCompile Include="..\Common\TreeSearchAI.cpp" />
     <ClCompile Include="BattleField.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>

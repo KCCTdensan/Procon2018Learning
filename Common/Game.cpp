@@ -334,6 +334,12 @@ bool stage::Move(intention_info(&Infos)[NumTeams][NumAgents], team_no Team, char
 	return true;
 }
 
+stage::stage()
+{
+	InitRandomStage();
+	BinaryStage();
+}
+
 stage::stage(stage_initialize_flag Flag)
 {
 	switch (Flag)
@@ -666,7 +672,7 @@ void stage::PrintStage()const
 	ChangeColor(COL_WHITE, COL_BLACK);
 }
 
-void stage::SetState(int x,int y,int state)
+void stage::SetState(int x, int y, int state)
 {
-	Panels[x][y].setSate((team_no)state);
+	Panels[x][y].setState((team_no)state);
 }
