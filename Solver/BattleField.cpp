@@ -15,8 +15,9 @@ namespace battle_field
 
 	namespace
 	{
-		HANDLE hThread;
-		DWORD32 ThreadID;
+		const int NumThreads = 12;
+		HANDLE hThreads[NumThreads];
+		DWORD32 ThreadIDs[NumThreads];
 
 		unsigned __stdcall SearchThread(void *arg)
 		{
@@ -45,8 +46,11 @@ namespace battle_field
 				ChangeColor(COL_WHITE, COL_BLACK);
 				return;
 			}
-			hThread = (HANDLE)_beginthreadex(NULL, 0, SearchThread, CurrentNode, 0, &ThreadID);
-			if (hThread == NULL)
+			for (int i = 0; i < NumThreads; ++i)
+			{
+				hThreads[i] = (HANDLE)_beginthreadex(NULL, 0, SearchThread, CurrentNode, 0, &ThreadIDs[i]);
+			}
+			if (hThreads == NULL)
 			{
 				ChangeColor(COL_RED, COL_BLACK);
 				cout << "Error(In StartSearch) : Failed to create SearchThread" << endl;
@@ -59,8 +63,11 @@ namespace battle_field
 			int ResultN[ID_MaxID][ID_MaxID];
 			int Max = 0;
 			LoopSearch = false;
-			WaitForSingleObject(hThread, INFINITE);
-			CloseHandle(hThread);
+			WaitForMultipleObjects(NumThreads, hThreads, true, INFINITE);
+			for (int i = 0; i < NumThreads; ++i)
+			{
+				CloseHandle(hThreads[i]);
+			}
 			CurrentNode->Result(ResultN);
 			for (char i = 0; i < stage::NumAgents; ++i)
 			{
@@ -262,12 +269,14 @@ namespace battle_field
 		{
 			return;
 		}
+		node::Init();
 		CurrentNode->PrintStage();
 
 		for (int i = 0; i < NumTurns; ++i)
 		{
 			Play(i);
 		}
+		node::Deinit();
 		delete CurrentNode;
 	}
 }
