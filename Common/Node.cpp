@@ -5,6 +5,7 @@
 
 
 unsigned char node::NumTurns = 0;
+CRITICAL_SECTION node::cs;
 
 bool node::IsLeafNode()
 {
@@ -25,6 +26,16 @@ node::~node()
 
 }
 
+void node::Init()
+{
+	InitializeCriticalSection(&cs);
+}
+
+void node::Deinit()
+{
+	DeleteCriticalSection(&cs);
+}
+
 void node::ChangeNumTurns(unsigned char NumTurns)
 {
 	node::NumTurns = NumTurns;
@@ -40,10 +51,12 @@ int friend_node::Play()
 	int Ret;
 	if (N >= Threshold)
 	{
+		EnterCriticalSection(&cs);
 		if (IsLeafNode())
 		{
 			Expansion();
 		}
+		LeaveCriticalSection(&cs);
 		Ret = Selection();
 	}
 	else
@@ -100,6 +113,10 @@ void friend_node::Expansion()
 		}
 		for (action_id j = 0; j < ID_MaxID; ++j)
 		{
+			if (Children[i][j] != nullptr)
+			{
+				continue;
+			}
 			action_id ID[] = { i,j };
 			if (!Stage.CanAction(ID, Team_1P))
 			{
@@ -156,6 +173,7 @@ int friend_node::Rollout(int NumTurn)
 
 void friend_node::ClearChildNode()
 {
+	EnterCriticalSection(&cs);
 	for (action_id i = 0; i < ID_MaxID; ++i)
 	{
 		for (action_id j = 0; j < ID_MaxID; ++j)
@@ -168,6 +186,7 @@ void friend_node::ClearChildNode()
 			Children[i][j] = nullptr;
 		}
 	}
+	LeaveCriticalSection(&cs);
 }
 
 float friend_node::UCB1(float Q, int NChild)
@@ -210,10 +229,12 @@ friend_node::~friend_node()
 
 void friend_node::Search(int NumCallPlay)
 {
+	EnterCriticalSection(&cs);
 	if (IsLeafNode())
 	{
 		Expansion();
 	}
+	LeaveCriticalSection(&cs);
 	for (int i = 0; i < NumCallPlay; ++i)
 	{
 		N++;
@@ -304,10 +325,12 @@ void friend_node::PrintChildNodeInfo()const
 
 int opponent_node::Play()
 {
+	EnterCriticalSection(&cs);
 	if (IsLeafNode())
 	{
 		Expansion();
 	}
+	LeaveCriticalSection(&cs);
 	int Ret = Selection();
 	N++;
 	Record += Ret;
@@ -428,10 +451,12 @@ opponent_node::~opponent_node()
 
 void opponent_node::Search(int NumCallPlay)
 {
+	EnterCriticalSection(&cs);
 	if (IsLeafNode())
 	{
 		Expansion();
 	}
+	LeaveCriticalSection(&cs);
 	for (int i = 0; i < NumCallPlay; ++i)
 	{
 		N++;

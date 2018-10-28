@@ -1,15 +1,17 @@
 ﻿#pragma once
 
 #include "Game.hpp"
+#include <Windows.h>
 
 
 const static int NumCallPlay = 100000;
-const static int Threshold = 300;
+const static int Threshold = 1200;
 const static float Cp = 2.0f;
 
 class node
 {
 protected:
+	static CRITICAL_SECTION cs;
 	static unsigned char NumTurns;
 	unsigned char CntTurns;
 	unsigned char NumChildren;
@@ -22,6 +24,8 @@ protected:
 public:
 	node(unsigned char CntTurns);
 	~node();
+	static void Init();
+	static void Deinit();
 	static void ChangeNumTurns(unsigned char NumTurns);
 	void ChangeCntTurns(unsigned char CntTurns);
 };
